@@ -2,14 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>com.phloc</groupId>
-    <artifactId>phloc-commons-parent-pom</artifactId>
-    <version>1</version>
+    <artifactId>parent-pom</artifactId>
+    <version>17.2</version>
+    <relativePath>../phloc-parent-pom/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>phloc-json</artifactId>
   <version>2.0.9-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>phloc-json</name>
+  <url>http://repo.phloc.com/apidocs/phloc-json/${project.version}</url>
      
   <licenses>
     <license>
