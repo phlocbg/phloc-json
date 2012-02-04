@@ -74,12 +74,12 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseArrayText () throws Exception
   {
-    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[\"" + PINKY_VALUE1 + "\", \"" + PINKY_VALUE2 + "\", \"" + PINKY_VALUE3 + "\"]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[\"" + STR_VALUE1 + "\", \"" + STR_VALUE2 + "\", \"" + STR_VALUE3 + "\"]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     assertNotNull (aJSONList);
     assertEquals (aJSONList.getValues ().size (), 3);
-    assertEquals (aJSONList.getValues ().get (0).getData (), PINKY_VALUE1);
-    assertEquals (aJSONList.getValues ().get (1).getData (), PINKY_VALUE2);
-    assertEquals (aJSONList.getValues ().get (2).getData (), PINKY_VALUE3);
+    assertEquals (aJSONList.getValues ().get (0).getData (), STR_VALUE1);
+    assertEquals (aJSONList.getValues ().get (1).getData (), STR_VALUE2);
+    assertEquals (aJSONList.getValues ().get (2).getData (), STR_VALUE3);
   }
 
   /**
