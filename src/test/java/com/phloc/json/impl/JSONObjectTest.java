@@ -24,8 +24,6 @@ import java.math.BigInteger;
 
 import org.junit.Test;
 
-import com.phloc.json.impl.JSONObject;
-
 /**
  * Test class for class {@link JSONObject}
  * 
@@ -71,5 +69,14 @@ public final class JSONObjectTest
     aObj = new JSONObject ();
     aObj.setLongProperty ("a", 15L);
     assertEquals ("{\"a\":15}", aObj.getJSONString ());
+
+    aObj = new JSONObject ();
+    aObj.setDoubleProperty ("abc", 15.34);
+    assertEquals ("{\"abc\":15.34}", aObj.getJSONString ());
+    assertEquals (Double.valueOf (15.34), aObj.getDoubleProperty ("abc"));
+    aObj.setDoubleProperty ("def", Double.valueOf (16.79));
+    assertEquals ("{\"abc\":15.34,\"def\":16.79}", aObj.getJSONString ());
+    assertEquals (Double.valueOf (15.34), aObj.getDoubleProperty ("abc"));
+    assertEquals (Double.valueOf (16.79), aObj.getDoubleProperty ("def"));
   }
 }

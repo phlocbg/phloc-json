@@ -47,7 +47,7 @@ public class JSONPropertyValueFunction extends AbstractJSONPropertyValue <String
    * @param aParams
    *        The parameter arguments this function takes
    */
-  public JSONPropertyValueFunction (final String sBody, @Nonnull final String... aParams)
+  public JSONPropertyValueFunction (@Nonnull final String sBody, @Nonnull final String... aParams)
   {
     super (_getFunctionCode (sBody, aParams));
     m_sBody = sBody;
@@ -55,7 +55,7 @@ public class JSONPropertyValueFunction extends AbstractJSONPropertyValue <String
   }
 
   @Nonnull
-  private static String _getFunctionCode (final String sBody, final String... aParams)
+  private static String _getFunctionCode (@Nonnull final String sBody, @Nonnull final String... aParams)
   {
     final StringBuilder aData = new StringBuilder ("function(");
     boolean bFirst = true;
