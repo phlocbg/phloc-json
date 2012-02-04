@@ -18,17 +18,16 @@
 package com.phloc.json;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.junit.Test;
 
 import com.phloc.commons.collections.ContainerHelper;
-import com.phloc.json.IJSON;
-import com.phloc.json.IJSONObject;
-import com.phloc.json.IJSONPropertyValue;
+import com.phloc.commons.mock.PhlocTestUtils;
 import com.phloc.json.impl.JSONObject;
 import com.phloc.json.impl.JSONParsingException;
 import com.phloc.json.impl.JSONReader;
@@ -43,8 +42,8 @@ public abstract class AbstractJSONTestCase
   protected static final String PROP_FOUR = "FOUR";
   protected static final String PROP_FIVE = "FIVE";
 
-  protected static final String VALUE_ONE = "HUGO";
-  protected static final String VALUE_TWO = "4711";
+  protected static final String VALUE_ONE = "dummy";
+  protected static final String VALUE_TWO = "1234";
   protected static final String VALUE_THREE = "0815";
   protected static final boolean VALUE_BOOL = true;
   protected static final int VALUE_INT1 = 42;
@@ -54,23 +53,15 @@ public abstract class AbstractJSONTestCase
   protected static final String VALUE_FOUR = "I\"1";
   protected static final String VALUE_FIVE = "I\t2";
 
-  protected static final String PINKY_VALUE1 = "puit";
-  protected static final String PINKY_VALUE2 = "zoot";
-  protected static final String PINKY_VALUE3 = "narf";
+  protected static final String STR_VALUE1 = "puit";
+  protected static final String STR_VALUE2 = "fjord";
+  protected static final String STR_VALUE3 = "narf";
 
   protected final IJSONObject m_aSimpleObject;
   protected final IJSONObject m_aComplexObject;
 
-  /**
-   * Ctor
-   */
-  protected AbstractJSONTestCase ()
-  {
-    m_aSimpleObject = getTestObjectSimple ();
-    m_aComplexObject = getTestObjectComplex ();
-  }
-
-  private static final IJSONObject getTestObjectSimple ()
+  @Nonnull
+  private static final IJSONObject _createTestObjectSimple ()
   {
     final JSONObject aObj = new JSONObject ();
     aObj.setIntegerProperty (PROP_ONE, VALUE_INT1);
@@ -80,30 +71,40 @@ public abstract class AbstractJSONTestCase
     return aObj;
   }
 
-  private static final IJSONObject getTestObjectComplex ()
+  @Nonnull
+  private static final IJSONObject _createTestObjectComplex ()
   {
-    final IJSONObject aObj = getTestObjectSimple ();
-    aObj.setObjectProperty (PROP_FOUR, getTestObjectSimple ());
+    final IJSONObject aObj = _createTestObjectSimple ();
+    aObj.setObjectProperty (PROP_FOUR, _createTestObjectSimple ());
     final JSONPropertyValueList <List <IJSONPropertyValue <IJSONObject>>> aList = new JSONPropertyValueList <List <IJSONPropertyValue <IJSONObject>>> ();
 
     final JSONPropertyValueList <IJSONObject> aInnerListOne = new JSONPropertyValueList <IJSONObject> ();
-    aInnerListOne.addValue (new JSONPropertyValueJSONObject (getTestObjectSimple ()));
-    aInnerListOne.addValue (new JSONPropertyValueJSONObject (getTestObjectSimple ()));
+    aInnerListOne.addValue (new JSONPropertyValueJSONObject (_createTestObjectSimple ()));
+    aInnerListOne.addValue (new JSONPropertyValueJSONObject (_createTestObjectSimple ()));
     aList.addValue (aInnerListOne);
 
     final JSONPropertyValueList <IJSONObject> aInnerListTwo = new JSONPropertyValueList <IJSONObject> ();
-    aInnerListTwo.addValue (new JSONPropertyValueJSONObject (getTestObjectSimple ()));
-    aInnerListTwo.addValue (new JSONPropertyValueJSONObject (getTestObjectSimple ()));
+    aInnerListTwo.addValue (new JSONPropertyValueJSONObject (_createTestObjectSimple ()));
+    aInnerListTwo.addValue (new JSONPropertyValueJSONObject (_createTestObjectSimple ()));
     aList.addValue (aInnerListTwo);
 
     aObj.setListProperty (PROP_FIVE, aList);
     return aObj;
   }
 
+  /**
+   * Ctor
+   */
+  protected AbstractJSONTestCase ()
+  {
+    m_aSimpleObject = _createTestObjectSimple ();
+    m_aComplexObject = _createTestObjectComplex ();
+  }
+
   @Test
   public final void testGetJSONString () throws JSONParsingException
   {
-    final IJSONObject aObj = getTestObjectComplex ();
+    final IJSONObject aObj = _createTestObjectComplex ();
 
     final String sPrettyJSON = aObj.getJSONString (true);
     final String sCompactJSON = aObj.getJSONString ();
@@ -135,12 +136,7 @@ public abstract class AbstractJSONTestCase
   @Test
   public final void doTestClone ()
   {
-    final IJSON aSimpleClone = m_aSimpleObject.getClone ();
-    assertEquals (aSimpleClone, m_aSimpleObject);
-    assertFalse (aSimpleClone == m_aSimpleObject);
-
-    final IJSON aComplexClone = m_aComplexObject.getClone ();
-    assertEquals (aComplexClone, m_aComplexObject);
-    assertFalse (aComplexClone == m_aComplexObject);
+    PhlocTestUtils.testGetClone (m_aSimpleObject);
+    PhlocTestUtils.testGetClone (m_aComplexObject);
   }
 }
