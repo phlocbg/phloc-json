@@ -20,6 +20,7 @@ package com.phloc.json.impl.value;
 import java.math.BigInteger;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.phloc.json.IJSONPropertyValue;
 
@@ -31,7 +32,7 @@ import com.phloc.json.IJSONPropertyValue;
  */
 public class JSONPropertyValueBigInteger extends AbstractJSONPropertyValue <BigInteger>
 {
-  public JSONPropertyValueBigInteger (final BigInteger aData)
+  public JSONPropertyValueBigInteger (@Nullable final BigInteger aData)
   {
     super (aData);
   }

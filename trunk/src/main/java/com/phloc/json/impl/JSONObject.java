@@ -132,6 +132,11 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     addProperty (JSONProperty.create (sName, new JSONPropertyValueBoolean (bDataValue)));
   }
 
+  public void setBooleanProperty (@Nonnull final String sName, @Nullable final Boolean aDataValue)
+  {
+    addProperty (JSONProperty.create (sName, new JSONPropertyValueBoolean (aDataValue)));
+  }
+
   @Nullable
   public Double getDoubleProperty (@Nullable final String sName)
   {
@@ -144,6 +149,11 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   public void setDoubleProperty (@Nonnull final String sName, final double nDataValue)
   {
     addProperty (JSONProperty.create (sName, new JSONPropertyValueDouble (nDataValue)));
+  }
+
+  public void setDoubleProperty (@Nonnull final String sName, @Nullable final Double aDataValue)
+  {
+    addProperty (JSONProperty.create (sName, new JSONPropertyValueDouble (aDataValue)));
   }
 
   @Nullable
@@ -160,6 +170,11 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     addProperty (JSONProperty.create (sName, new JSONPropertyValueInteger (nDataValue)));
   }
 
+  public void setIntegerProperty (@Nonnull final String sName, @Nullable final Integer aDataValue)
+  {
+    addProperty (JSONProperty.create (sName, new JSONPropertyValueInteger (aDataValue)));
+  }
+
   @Nullable
   public Long getLongProperty (@Nullable final String sName)
   {
@@ -174,6 +189,11 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     addProperty (JSONProperty.create (sName, new JSONPropertyValueLong (nDataValue)));
   }
 
+  public void setLongProperty (@Nonnull final String sName, @Nullable final Long aDataValue)
+  {
+    addProperty (JSONProperty.create (sName, new JSONPropertyValueLong (aDataValue)));
+  }
+
   @Nullable
   public String getKeywordProperty (@Nullable final String sName)
   {
@@ -183,12 +203,14 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return null;
   }
 
-  public void setKeywordProperty (@Nonnull final String sName, final String sDataValue)
+  public void setKeywordProperty (@Nonnull final String sName, @Nullable final String sDataValue)
   {
     addProperty (JSONProperty.create (sName, new JSONPropertyValueKeyword (sDataValue)));
   }
 
-  public void setFunctionProperty (@Nonnull final String sName, final String sBody, final String... aParams)
+  public void setFunctionProperty (@Nonnull final String sName,
+                                   @Nonnull final String sBody,
+                                   @Nonnull final String... aParams)
   {
     addProperty (JSONProperty.create (sName, new JSONPropertyValueFunction (sBody, aParams)));
   }
@@ -217,7 +239,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return null;
   }
 
-  public void setObjectProperty (@Nonnull final String sName, final IJSONObject aObject)
+  public void setObjectProperty (@Nonnull final String sName, @Nonnull final IJSONObject aObject)
   {
     addProperty (JSONProperty.create (sName, aObject));
   }
@@ -245,7 +267,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return null;
   }
 
-  public void setBigIntegerProperty (@Nonnull final String sName, final BigInteger aDataValue)
+  public void setBigIntegerProperty (@Nonnull final String sName, @Nullable final BigInteger aDataValue)
   {
     addProperty (JSONProperty.create (sName, new JSONPropertyValueBigInteger (aDataValue)));
   }
@@ -259,7 +281,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return null;
   }
 
-  public void setBigDecimalProperty (@Nonnull final String sName, final BigDecimal aDataValue)
+  public void setBigDecimalProperty (@Nonnull final String sName, @Nullable final BigDecimal aDataValue)
   {
     addProperty (JSONProperty.create (sName, new JSONPropertyValueBigDecimal (aDataValue)));
   }

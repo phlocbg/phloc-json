@@ -18,6 +18,7 @@
 package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.phloc.commons.string.StringHelper;
 import com.phloc.json.IJSONPropertyValue;
@@ -30,7 +31,7 @@ import com.phloc.json.IJSONPropertyValue;
  */
 public class JSONPropertyValueDouble extends AbstractJSONPropertyValue <Double>
 {
-  public JSONPropertyValueDouble (final Double aData)
+  public JSONPropertyValueDouble (@Nullable final Double aData)
   {
     super (aData);
   }

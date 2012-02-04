@@ -18,6 +18,7 @@
 package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -42,7 +43,7 @@ public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String>
    * 
    * @param sData
    */
-  public JSONPropertyValueKeyword (final String sData)
+  public JSONPropertyValueKeyword (@Nullable final String sData)
   {
     super (sData);
   }

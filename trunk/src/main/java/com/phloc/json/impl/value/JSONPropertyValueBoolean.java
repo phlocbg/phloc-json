@@ -18,6 +18,7 @@
 package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.phloc.json.IJSONPropertyValue;
 
@@ -32,11 +33,11 @@ public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean
   /**
    * Ctor
    * 
-   * @param bData
+   * @param aData
    */
-  public JSONPropertyValueBoolean (final Boolean bData)
+  public JSONPropertyValueBoolean (@Nullable final Boolean aData)
   {
-    super (bData);
+    super (aData);
   }
 
   /**
