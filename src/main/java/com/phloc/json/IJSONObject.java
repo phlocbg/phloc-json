@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.phloc.commons.state.EChange;
@@ -32,7 +33,7 @@ import com.phloc.commons.state.EChange;
  * 
  * @author Boris Gregorcic
  */
-public interface IJSONObject extends IJSONPropertyValue <IJSONObject>
+public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
 {
   /**
    * adds the passed property
@@ -178,16 +179,6 @@ public interface IJSONObject extends IJSONPropertyValue <IJSONObject>
   <DATATYPE> void setListProperty (String sName, IJSONPropertyValueList <DATATYPE> aList);
 
   /**
-   * An easy way to set a new JSON object property in a JSON object. Existing
-   * properties with the same name will be replaced!
-   * 
-   * @param sName
-   * @param aObject
-   *        the nested object
-   */
-  void setObjectProperty (String sName, IJSONObject aObject);
-
-  /**
    * Tries to resolve the value of the passed object property. If not found or
    * the property with the passed name is not of type <code>IJSONObject</code>,
    * <code>null</code> will be returned.
@@ -198,6 +189,16 @@ public interface IJSONObject extends IJSONPropertyValue <IJSONObject>
    */
   @Nullable
   IJSONObject getObjectProperty (String sName);
+
+  /**
+   * An easy way to set a new JSON object property in a JSON object. Existing
+   * properties with the same name will be replaced!
+   * 
+   * @param sName
+   * @param aObject
+   *        the nested object
+   */
+  void setObjectProperty (String sName, IJSONObject aObject);
 
   /**
    * Tries to resolve the value of the passed string property. If not found or
@@ -285,7 +286,9 @@ public interface IJSONObject extends IJSONPropertyValue <IJSONObject>
    * @param sName
    *        The name of the property to be removed
    */
+  @Nonnull
   EChange removeProperty (final String sName);
 
+  @Nonnull
   IJSONObject getClone ();
 }
