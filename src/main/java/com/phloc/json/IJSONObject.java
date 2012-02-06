@@ -78,7 +78,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @param sName
    * @param bDataValue
    */
-  void setBooleanProperty (String sName, boolean bDataValue);
+  void setBooleanProperty (@Nonnull String sName, boolean bDataValue);
+
+  void setBooleanProperty (@Nonnull String sName, @Nullable Boolean aDataValue);
 
   /**
    * Tries to resolve the value of the passed double property. If not found or
@@ -97,9 +99,11 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * properties with the same name will be replaced!
    * 
    * @param sName
-   * @param nDataValue
+   * @param dDataValue
    */
-  void setDoubleProperty (String sName, double nDataValue);
+  void setDoubleProperty (String sName, double dDataValue);
+
+  void setDoubleProperty (@Nonnull String sName, @Nullable Double aDataValue);
 
   /**
    * Tries to resolve the value of the passed integer property. If not found or
@@ -121,6 +125,31 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @param nDataValue
    */
   void setIntegerProperty (String sName, int nDataValue);
+
+  void setIntegerProperty (String sName, @Nullable Integer aDataValue);
+
+  /**
+   * Tries to resolve the value of the passed long property. If not found or the
+   * property with the passed name is not of type <code>Long</code>,
+   * <code>null</code> will be returned.
+   * 
+   * @param sName
+   * @return the Long value of the property with the passed name, or
+   *         <code>null</code>
+   */
+  @Nullable
+  Long getLongProperty (String sName);
+
+  /**
+   * An easy way to set a new int property in a JSON object. Existing properties
+   * with the same name will be replaced!
+   * 
+   * @param sName
+   * @param nDataValue
+   */
+  void setLongProperty (String sName, long nDataValue);
+
+  void setLongProperty (String sName, @Nullable Long aDataValue);
 
   /**
    * Tries to resolve the value of the passed keyword property. If not found or
@@ -242,6 +271,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    */
   @Nullable
   List <? extends IJSONPropertyValue <?>> getListValues (final String sName);
+
+  @Nonnull
+  List <IJSONObject> getObjectListProperty (@Nullable String sName);
 
   /**
    * An easy way to set a new JSON object list type property in a JSON object.
