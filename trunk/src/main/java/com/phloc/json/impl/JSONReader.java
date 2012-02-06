@@ -26,6 +26,7 @@ import javax.annotation.concurrent.Immutable;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ArrayNode;
 
+import com.phloc.commons.io.IInputStreamProvider;
 import com.phloc.json.IJSON;
 import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValue;
@@ -115,6 +116,12 @@ public final class JSONReader
     if (ret == null)
       throw new JSONParsingException ("Don't know how to parse JSON from InputStream " + aIS);
     return ret;
+  }
+
+  @Nonnull
+  public static IJSON parse (@Nonnull final IInputStreamProvider aIIS) throws JSONParsingException
+  {
+    return parse (aIIS.getInputStream ());
   }
 
   /**

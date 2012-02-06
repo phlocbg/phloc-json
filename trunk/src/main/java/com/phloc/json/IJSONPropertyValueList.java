@@ -26,7 +26,8 @@ import java.util.List;
  * @param <DATATYPE>
  *        The inner data type
  */
-public interface IJSONPropertyValueList <DATATYPE> extends IJSONPropertyValue <List <IJSONPropertyValue <DATATYPE>>>
+public interface IJSONPropertyValueList <DATATYPE> extends
+                                                   IJSONPropertyValueComplex <List <IJSONPropertyValue <DATATYPE>>>
 {
   /**
    * @return the list of {@link IJSONPropertyValue}s
