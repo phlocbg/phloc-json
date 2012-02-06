@@ -79,10 +79,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
    */
   public JSONObject (@Nullable final IJSONObject aValue)
   {
-    super (aValue);
+    super (aValue == null ? null : aValue.getClone ());
   }
 
-  public JSONObject (@Nonnull final Collection <IJSONProperty <?>> aProps)
+  public JSONObject (@Nonnull final Collection <? extends IJSONProperty <?>> aProps)
   {
     super (null);
     for (final IJSONProperty <?> aProp : aProps)
