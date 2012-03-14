@@ -196,7 +196,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    *         with the passed name, or <code>null</code>
    */
   @Nullable
-  List <?> getListProperty (String sName);
+  <I> List <I> getListProperty (String sName);
 
   /**
    * An easy way to set a new list type property in a JSON object. Existing

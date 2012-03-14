@@ -143,6 +143,13 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
     if (aValue instanceof JSONPropertyValueDouble)
       return ((JSONPropertyValueDouble) aValue).getData ();
+    // we can also return an integer property as a double (if we use double as a
+    // type, still on
+    // parsing Jackson might decide that the type is integer for e.g. '1')
+    if (aValue instanceof JSONPropertyValueInteger)
+    {
+      return Double.valueOf (((JSONPropertyValueInteger) aValue).getData ().doubleValue ());
+    }
     return null;
   }
 
@@ -181,6 +188,13 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
     if (aValue instanceof JSONPropertyValueLong)
       return ((JSONPropertyValueLong) aValue).getData ();
+    // we can also return an integer property as a long (if we use long as a
+    // type, still on
+    // parsing Jackson might decide that the type is integer for e.g. '1')
+    if (aValue instanceof JSONPropertyValueInteger)
+    {
+      return Long.valueOf (((JSONPropertyValueInteger) aValue).getData ().longValue ());
+    }
     return null;
   }
 
@@ -215,11 +229,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     addProperty (JSONProperty.create (sName, new JSONPropertyValueFunction (sBody, aParams)));
   }
 
-  public List <?> getListProperty (@Nullable final String sName)
+  @SuppressWarnings ("unchecked")
+  public <I> List <I> getListProperty (@Nullable final String sName)
   {
     final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
     if (aValue instanceof IJSONPropertyValueList <?>)
-      return ((IJSONPropertyValueList <?>) aValue).getDataValues ();
+      return ((IJSONPropertyValueList <I>) aValue).getDataValues ();
     return null;
   }
 
@@ -264,6 +279,14 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
     if (aValue instanceof JSONPropertyValueBigInteger)
       return ((JSONPropertyValueBigInteger) aValue).getData ();
+    // we can also return an integer property as a BigInteger (if we use
+    // BigInteger as a type, still
+    // on
+    // parsing Jackson might decide that the type is integer for e.g. '1')
+    if (aValue instanceof JSONPropertyValueInteger)
+    {
+      return BigInteger.valueOf (((JSONPropertyValueInteger) aValue).getData ().longValue ());
+    }
     return null;
   }
 
@@ -393,7 +416,13 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
                       if (aValue.isInt ())
                         aObj.setIntegerProperty (sField, aValue.getIntValue ());
                       else
-                        throw new JSONParsingException ("Unhandled value type: " + aValue);
+                        if (aValue.isNull ())
+                        {
+                          // just do not set null values
+                        }
+
+                        else
+                          throw new JSONParsingException ("Unhandled value type: " + aValue);
     }
     return aObj;
   }
