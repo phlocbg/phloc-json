@@ -40,7 +40,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * 
    * @param aProperty
    */
-  void addProperty (IJSONProperty <?> aProperty);
+  void setProperty (IJSONProperty <?> aProperty);
 
   /**
    * Get the property with the specified name
@@ -310,6 +310,18 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @param aIntList
    */
   void setIntegerListProperty (String sName, int [] aIntList);
+
+  /**
+   * This is a helper method to set an arbitrary property not exactly knowing
+   * the internal data type. As a fall-back a string property will be used if no
+   * matching data type can be found
+   * 
+   * @param sName
+   *        Property name
+   * @param aValue
+   *        value to be set
+   */
+  void setProperty (@Nonnull String sName, @Nullable Object aValue);
 
   /**
    * Tries to resolve a property with the passed name and if found, removes the
