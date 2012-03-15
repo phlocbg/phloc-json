@@ -28,7 +28,7 @@ import com.phloc.json.IJSONPropertyValue;
  * 
  * @author Boris Gregorcic
  */
-public class JSONPropertyValueInteger extends AbstractJSONPropertyValue <Integer>
+public class JSONPropertyValueInteger extends AbstractJSONPropertyValueNumeric <Integer>
 {
   public JSONPropertyValueInteger (@Nullable final Integer aData)
   {
@@ -38,11 +38,6 @@ public class JSONPropertyValueInteger extends AbstractJSONPropertyValue <Integer
   public JSONPropertyValueInteger (final int nData)
   {
     this (Integer.valueOf (nData));
-  }
-
-  public void appendJSONString (final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
-  {
-    aResult.append (getData ().toString ());
   }
 
   @Nonnull

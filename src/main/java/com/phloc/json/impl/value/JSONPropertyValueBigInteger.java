@@ -30,16 +30,11 @@ import com.phloc.json.IJSONPropertyValue;
  * 
  * @author philip
  */
-public class JSONPropertyValueBigInteger extends AbstractJSONPropertyValue <BigInteger>
+public class JSONPropertyValueBigInteger extends AbstractJSONPropertyValueNumeric <BigInteger>
 {
   public JSONPropertyValueBigInteger (@Nullable final BigInteger aData)
   {
     super (aData);
-  }
-
-  public void appendJSONString (final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
-  {
-    aResult.append (getData ().toString ());
   }
 
   @Nonnull

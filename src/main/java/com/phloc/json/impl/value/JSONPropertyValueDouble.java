@@ -29,7 +29,7 @@ import com.phloc.json.IJSONPropertyValue;
  * 
  * @author Boris Gregorcic
  */
-public class JSONPropertyValueDouble extends AbstractJSONPropertyValue <Double>
+public class JSONPropertyValueDouble extends AbstractJSONPropertyValueNumeric <Double>
 {
   public JSONPropertyValueDouble (@Nullable final Double aData)
   {
@@ -39,11 +39,6 @@ public class JSONPropertyValueDouble extends AbstractJSONPropertyValue <Double>
   public JSONPropertyValueDouble (final double dData)
   {
     this (Double.valueOf (dData));
-  }
-
-  public void appendJSONString (final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
-  {
-    aResult.append (getData ().toString ());
   }
 
   @Nonnull
