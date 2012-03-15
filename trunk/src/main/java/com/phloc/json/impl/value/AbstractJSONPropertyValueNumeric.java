@@ -17,43 +17,28 @@
  */
 package com.phloc.json.impl.value;
 
-import java.math.BigDecimal;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.phloc.json.IJSONPropertyValue;
 
 /**
- * Implementation of {@link IJSONPropertyValue} with the internal data type
- * {@link BigDecimal}
+ * Implementation of {@link IJSONPropertyValue} with a numeric internal data
+ * type
  * 
  * @author philip
  */
-public class JSONPropertyValueBigDecimal extends AbstractJSONPropertyValueNumeric <BigDecimal>
+public abstract class AbstractJSONPropertyValueNumeric <T extends Number> extends AbstractJSONPropertyValue <T>
 {
-  public JSONPropertyValueBigDecimal (@Nullable final BigDecimal aData)
+  protected AbstractJSONPropertyValueNumeric (@Nullable final T aData)
   {
     super (aData);
   }
 
-  @Nonnull
-  public JSONPropertyValueBigDecimal getClone ()
+  public final void appendJSONString (@Nonnull final StringBuilder aResult,
+                                      final boolean bAlignAndIndent,
+                                      final int nLevel)
   {
-    return new JSONPropertyValueBigDecimal (getData ());
-  }
-
-  /**
-   * Tries to create a {@link JSONPropertyValueBigDecimal} from the passed JSON
-   * string
-   * 
-   * @param sJSON
-   *        the JSON string to convert
-   * @return the resulting object
-   */
-  @Nonnull
-  public static JSONPropertyValueBigDecimal fromJSONString (final String sJSON)
-  {
-    return new JSONPropertyValueBigDecimal (new BigDecimal (sJSON));
+    aResult.append (getData ().toString ());
   }
 }

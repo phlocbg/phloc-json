@@ -57,6 +57,8 @@ import com.phloc.json.impl.value.JSONPropertyValueLong;
 import com.phloc.json.impl.value.JSONPropertyValueString;
 
 /**
+ * Represents a JSON object having a map of named JSON properties
+ * 
  * @author Boris Gregorcic
  */
 public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implements IJSONObject
@@ -64,7 +66,9 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   private final Map <String, IJSONProperty <?>> m_aProperties = new LinkedHashMap <String, IJSONProperty <?>> ();
 
   /**
-   * Default Ctor
+   * Default Ctor. Handle with care as it by default sets a <code>null</code>
+   * value which is most probable be crashing somewhere inside this class, if no
+   * data is provided afterwards!
    */
   public JSONObject ()
   {
@@ -82,15 +86,21 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     super (aValue == null ? null : aValue.getClone ());
   }
 
-  public JSONObject (@Nonnull final Collection <? extends IJSONProperty <?>> aProps)
+  public JSONObject (@Nonnull final Collection <? extends IJSONProperty <?>> aProperties)
   {
     super (null);
-    for (final IJSONProperty <?> aProp : aProps)
-      addProperty (aProp);
+    if (aProperties == null)
+      throw new NullPointerException ("properties");
+
+    for (final IJSONProperty <?> aProperty : aProperties)
+      addProperty (aProperty);
   }
 
   public void addProperty (@Nonnull final IJSONProperty <?> aProperty)
   {
+    if (aProperty == null)
+      throw new NullPointerException ("property");
+
     m_aProperties.put (aProperty.getName (), aProperty.getClone ());
   }
 
@@ -144,12 +154,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     if (aValue instanceof JSONPropertyValueDouble)
       return ((JSONPropertyValueDouble) aValue).getData ();
     // we can also return an integer property as a double (if we use double as a
-    // type, still on
-    // parsing Jackson might decide that the type is integer for e.g. '1')
+    // type, still on parsing Jackson might decide that the type is integer for
+    // e.g. '1')
+    if (aValue instanceof JSONPropertyValueLong)
+      return Double.valueOf (((JSONPropertyValueLong) aValue).getData ().doubleValue ());
     if (aValue instanceof JSONPropertyValueInteger)
-    {
       return Double.valueOf (((JSONPropertyValueInteger) aValue).getData ().doubleValue ());
-    }
     return null;
   }
 
@@ -189,12 +199,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     if (aValue instanceof JSONPropertyValueLong)
       return ((JSONPropertyValueLong) aValue).getData ();
     // we can also return an integer property as a long (if we use long as a
-    // type, still on
-    // parsing Jackson might decide that the type is integer for e.g. '1')
+    // type, still on parsing Jackson might decide that the type is integer for
+    // e.g. '1')
     if (aValue instanceof JSONPropertyValueInteger)
-    {
       return Long.valueOf (((JSONPropertyValueInteger) aValue).getData ().longValue ());
-    }
     return null;
   }
 
@@ -280,13 +288,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     if (aValue instanceof JSONPropertyValueBigInteger)
       return ((JSONPropertyValueBigInteger) aValue).getData ();
     // we can also return an integer property as a BigInteger (if we use
-    // BigInteger as a type, still
-    // on
-    // parsing Jackson might decide that the type is integer for e.g. '1')
+    // BigInteger as a type, still on parsing Jackson might decide that the type
+    // is integer for e.g. '1')
+    if (aValue instanceof JSONPropertyValueLong)
+      return BigInteger.valueOf (((JSONPropertyValueLong) aValue).getData ().longValue ());
     if (aValue instanceof JSONPropertyValueInteger)
-    {
       return BigInteger.valueOf (((JSONPropertyValueInteger) aValue).getData ().longValue ());
-    }
     return null;
   }
 
@@ -301,6 +308,17 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
     if (aValue instanceof JSONPropertyValueBigDecimal)
       return ((JSONPropertyValueBigDecimal) aValue).getData ();
+    // we can also return an integer property as a BigDecimal (if we use
+    // BigDecimal as a type, still on parsing Jackson might decide that the type
+    // is integer for e.g. '1')
+    if (aValue instanceof JSONPropertyValueBigInteger)
+      return new BigDecimal (((JSONPropertyValueBigInteger) aValue).getData ());
+    if (aValue instanceof JSONPropertyValueDouble)
+      return new BigDecimal (((JSONPropertyValueDouble) aValue).getData ().toString ());
+    if (aValue instanceof JSONPropertyValueLong)
+      return BigDecimal.valueOf (((JSONPropertyValueLong) aValue).getData ().longValue ());
+    if (aValue instanceof JSONPropertyValueInteger)
+      return BigDecimal.valueOf (((JSONPropertyValueInteger) aValue).getData ().longValue ());
     return null;
   }
 
@@ -420,7 +438,6 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
                         {
                           // just do not set null values
                         }
-
                         else
                           throw new JSONParsingException ("Unhandled value type: " + aValue);
     }
