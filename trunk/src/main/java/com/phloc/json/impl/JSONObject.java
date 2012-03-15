@@ -59,11 +59,9 @@ import com.phloc.json.impl.value.JSONPropertyValueLong;
 import com.phloc.json.impl.value.JSONPropertyValueString;
 
 /**
- * <<<<<<< .mine
+ * Represents a JSON object having a map of named JSON properties
  * 
- * @author Boris Gregorcic, philip ======= Represents a JSON object having a map
- *         of named JSON properties
- * @author Boris Gregorcic >>>>>>> .r29
+ * @author Boris Gregorcic, philip
  */
 public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implements IJSONObject
 {
@@ -100,6 +98,18 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
     for (final IJSONProperty <?> aProperty : aProperties)
       setProperty (aProperty);
+  }
+
+  /**
+   * Override since otherwise JSONObjects might return null for certain
+   * constructors
+   */
+  @Override
+  @Nonnull
+  public IJSONObject getData ()
+  {
+    final IJSONObject aValue = super.getData ();
+    return aValue == null ? this : aValue;
   }
 
   @Deprecated

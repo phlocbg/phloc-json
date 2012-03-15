@@ -41,7 +41,7 @@ public abstract class AbstractJSONPropertyValue <T> extends AbstractJSON impleme
 
   @Nullable
   @ReturnsMutableObject (reason = "Design")
-  public final T getData ()
+  public T getData ()
   {
     return m_aData;
   }
