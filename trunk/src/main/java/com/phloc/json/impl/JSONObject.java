@@ -41,6 +41,7 @@ import com.phloc.commons.compare.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.state.EChange;
 import com.phloc.commons.string.ToStringGenerator;
+import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONProperty;
 import com.phloc.json.IJSONPropertyValue;
@@ -351,6 +352,11 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   public void setProperty (@Nonnull final String sName, @Nullable final Object aValue)
   {
+    setProperty (sName, aValue, false);
+  }
+
+  public void setProperty (@Nonnull final String sName, @Nullable final Object aValue, final boolean bUseTypeConverter)
+  {
     if (aValue == null)
       removeProperty (sName);
     else
@@ -382,8 +388,20 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
                         setStringProperty (sName, (String) aValue);
                       else
                       {
-                        s_aLogger.warn ("Setting property of type " + aValue.getClass ().getName () + " as String!");
-                        setStringProperty (sName, String.valueOf (aValue));
+                        // Unknown type -> use type converter?
+                        String sValue;
+                        if (bUseTypeConverter)
+                        {
+                          sValue = TypeConverter.convertIfNecessary (aValue, String.class);
+                        }
+                        else
+                        {
+                          s_aLogger.warn ("Setting property of type " +
+                                          aValue.getClass ().getName () +
+                                          " as String without TypeConverter!");
+                          sValue = String.valueOf (aValue);
+                        }
+                        setStringProperty (sName, sValue);
                       }
   }
 
