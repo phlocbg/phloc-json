@@ -352,6 +352,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   public void setProperty (@Nonnull final String sName, @Nullable final Object aValue)
   {
+    // Default: no type converter
     setProperty (sName, aValue, false);
   }
 
