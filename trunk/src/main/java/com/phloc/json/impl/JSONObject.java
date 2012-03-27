@@ -30,11 +30,11 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ArrayNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.phloc.commons.annotations.ReturnsImmutableObject;
 import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.compare.EqualsUtils;
@@ -479,7 +479,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       throw new NullPointerException ("node");
 
     final JSONObject aObj = new JSONObject ();
-    final Iterator <Map.Entry <String, JsonNode>> aFieldIterator = aNode.getFields ();
+    final Iterator <Map.Entry <String, JsonNode>> aFieldIterator = aNode.fields ();
     while (aFieldIterator.hasNext ())
     {
       final Map.Entry <String, JsonNode> aEntry = aFieldIterator.next ();
@@ -493,25 +493,25 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
           aObj.setListProperty (sField, JSONPropertyValueList.fromJSONNode ((ArrayNode) aValue));
         else
           if (aValue.isBoolean ())
-            aObj.setBooleanProperty (sField, aValue.getBooleanValue ());
+            aObj.setBooleanProperty (sField, aValue.booleanValue ());
           else
             if (aValue.isTextual ())
-              aObj.setStringProperty (sField, aValue.getTextValue ());
+              aObj.setStringProperty (sField, aValue.textValue ());
             else
               if (aValue.isBigDecimal ())
-                aObj.setBigDecimalProperty (sField, aValue.getDecimalValue ());
+                aObj.setBigDecimalProperty (sField, aValue.decimalValue ());
               else
                 if (aValue.isFloatingPointNumber ())
-                  aObj.setDoubleProperty (sField, aValue.getDoubleValue ());
+                  aObj.setDoubleProperty (sField, aValue.doubleValue ());
                 else
                   if (aValue.isBigInteger ())
-                    aObj.setBigIntegerProperty (sField, aValue.getBigIntegerValue ());
+                    aObj.setBigIntegerProperty (sField, aValue.bigIntegerValue ());
                   else
                     if (aValue.isLong ())
-                      aObj.setLongProperty (sField, aValue.getLongValue ());
+                      aObj.setLongProperty (sField, aValue.longValue ());
                     else
                       if (aValue.isInt ())
-                        aObj.setIntegerProperty (sField, aValue.getIntValue ());
+                        aObj.setIntegerProperty (sField, aValue.intValue ());
                       else
                         if (aValue.isNull ())
                         {
