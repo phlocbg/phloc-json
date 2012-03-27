@@ -23,9 +23,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ArrayNode;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.phloc.commons.io.IInputStreamProvider;
 import com.phloc.json.IJSON;
 import com.phloc.json.IJSONObject;
@@ -66,25 +65,25 @@ public final class JSONReader
       return _parseArrayInternal (aRootNode);
 
     if (aRootNode.isBoolean ())
-      return new JSONPropertyValueBoolean (aRootNode.getBooleanValue ());
+      return new JSONPropertyValueBoolean (aRootNode.booleanValue ());
 
     if (aRootNode.isBigInteger ())
-      return new JSONPropertyValueBigInteger (aRootNode.getBigIntegerValue ());
+      return new JSONPropertyValueBigInteger (aRootNode.bigIntegerValue ());
 
     if (aRootNode.isLong ())
-      return new JSONPropertyValueLong (aRootNode.getLongValue ());
+      return new JSONPropertyValueLong (aRootNode.longValue ());
 
     if (aRootNode.isInt ())
-      return new JSONPropertyValueInteger (aRootNode.getIntValue ());
+      return new JSONPropertyValueInteger (aRootNode.intValue ());
 
     if (aRootNode.isBigDecimal ())
-      return new JSONPropertyValueBigDecimal (aRootNode.getDecimalValue ());
+      return new JSONPropertyValueBigDecimal (aRootNode.decimalValue ());
 
     if (aRootNode.isDouble ())
-      return new JSONPropertyValueDouble (aRootNode.getDoubleValue ());
+      return new JSONPropertyValueDouble (aRootNode.doubleValue ());
 
     if (aRootNode.isTextual ())
-      return new JSONPropertyValueString (aRootNode.getTextValue ());
+      return new JSONPropertyValueString (aRootNode.textValue ());
 
     return null;
   }
@@ -182,7 +181,7 @@ public final class JSONReader
   {
     final JSONPropertyValueList <Boolean> aList = new JSONPropertyValueList <Boolean> ();
     for (final JsonNode aValue : aValues)
-      aList.addValue (new JSONPropertyValueBoolean (aValue.getBooleanValue ()));
+      aList.addValue (new JSONPropertyValueBoolean (aValue.booleanValue ()));
     return aList;
   }
 
@@ -199,7 +198,7 @@ public final class JSONReader
   {
     final JSONPropertyValueList <Integer> aList = new JSONPropertyValueList <Integer> ();
     for (final JsonNode aValue : aValues)
-      aList.addValue (new JSONPropertyValueInteger (aValue.getIntValue ()));
+      aList.addValue (new JSONPropertyValueInteger (aValue.intValue ()));
     return aList;
   }
 
@@ -216,7 +215,7 @@ public final class JSONReader
   {
     final JSONPropertyValueList <String> aList = new JSONPropertyValueList <String> ();
     for (final JsonNode aValue : aValues)
-      aList.addValue (new JSONPropertyValueString (aValue.getTextValue ()));
+      aList.addValue (new JSONPropertyValueString (aValue.textValue ()));
     return aList;
   }
 
@@ -257,7 +256,7 @@ public final class JSONReader
     {
       if (aInnerList.isArray ())
       {
-        if (aInnerList.getElements ().hasNext ())
+        if (aInnerList.elements ().hasNext ())
           aList.addValue ((IJSONPropertyValue <T>) JSONPropertyValueList.fromJSONNode ((ArrayNode) aInnerList));
         else
           aList.addValue ((IJSONPropertyValue <T>) new JSONPropertyValueList <Object> ());

@@ -20,8 +20,6 @@ package com.phloc.json.impl.value;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.codehaus.jackson.map.ObjectMapper;
-
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.JSONHelper;
 import com.phloc.json.impl.JSONReader;
@@ -32,7 +30,8 @@ import com.phloc.json.impl.JSONReader;
  * <br>
  * <b>ATTENTION:</b> keyword properties cannot be parsed again due to the fact,
  * that the {@link JSONReader#parseObject(String)} uses the default
- * {@link ObjectMapper} which is not capable to handle keywords.
+ * {@link com.fasterxml.jackson.databind.ObjectMapper} which is not capable to
+ * handle keywords.
  * 
  * @author Boris Gregorcic
  */

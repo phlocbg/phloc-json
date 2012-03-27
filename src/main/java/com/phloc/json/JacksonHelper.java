@@ -24,12 +24,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.phloc.commons.io.IInputStreamProvider;
 import com.phloc.json.impl.JSONParsingException;
 import com.phloc.json.impl.JSONReader;
@@ -51,8 +50,7 @@ public final class JacksonHelper
     // names (which is allowed by Javascript, but not by JSON specification).
     aObjectMapper.configure (JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
     // Always use BigDecimal
-    aObjectMapper.setDeserializationConfig (aObjectMapper.getDeserializationConfig ()
-                                                         .with (DeserializationConfig.Feature.USE_BIG_DECIMAL_FOR_FLOATS));
+    aObjectMapper.enable (DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
     return aObjectMapper;
   }
 
