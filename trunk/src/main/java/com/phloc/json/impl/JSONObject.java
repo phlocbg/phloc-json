@@ -113,12 +113,6 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return aValue == null ? this : aValue;
   }
 
-  @Deprecated
-  public void addProperty (@Nonnull final IJSONProperty <?> aProperty)
-  {
-    setProperty (aProperty);
-  }
-
   public void setProperty (@Nonnull final IJSONProperty <?> aProperty)
   {
     if (aProperty == null)

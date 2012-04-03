@@ -314,7 +314,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * This is a helper method to set an arbitrary property not exactly knowing
    * the internal data type. As a fall-back a string property will be used if no
-   * matching data type can be found
+   * matching data type can be found. No type conversion happens by default.
    * 
    * @param sName
    *        Property name
@@ -322,6 +322,21 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    *        value to be set
    */
   void setProperty (@Nonnull String sName, @Nullable Object aValue);
+
+  /**
+   * This is a helper method to set an arbitrary property not exactly knowing
+   * the internal data type. As a fall-back a the type converter to string will
+   * be used if the parameter is <code>true</code>.
+   * 
+   * @param sName
+   *        Property name
+   * @param aValue
+   *        value to be set
+   * @param bUseTypeConverter
+   *        if <code>true</code> the type converter to {@link String} will be
+   *        used if no type could be determined.
+   */
+  void setProperty (@Nonnull String sName, @Nullable Object aValue, boolean bUseTypeConverter);
 
   /**
    * Tries to resolve a property with the passed name and if found, removes the
