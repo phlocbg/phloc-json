@@ -187,6 +187,18 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   void setFunctionProperty (String sName, String sBody, String... aParams);
 
   /**
+   * An easy way to set a new function property (not escaped) in a JSON object.
+   * The function code must be completely ready starting with the "function"
+   * keyword and with the body!
+   * 
+   * @param sName
+   *        The name of the function property
+   * @param sFunctionCode
+   *        The function JS code
+   */
+  void setFunctionPrebuildProperty (@Nonnull String sName, @Nonnull String sFunctionCode);
+
+  /**
    * Tries to resolve the value of the passed list property. If not found or the
    * property with the passed name is not of type
    * <code>IJSONPropertyValueList <?></code>, <code>null</code> will returned.

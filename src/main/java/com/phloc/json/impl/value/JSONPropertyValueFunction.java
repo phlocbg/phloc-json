@@ -19,6 +19,7 @@ package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
 
+import com.phloc.commons.collections.ArrayHelper;
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.impl.JSONReader;
 
@@ -38,21 +39,6 @@ public class JSONPropertyValueFunction extends AbstractJSONPropertyValue <String
   private final String m_sBody;
   private final String [] m_aParams;
 
-  /**
-   * Ctor
-   * 
-   * @param sBody
-   *        The function body (executed code)
-   * @param aParams
-   *        The parameter arguments this function takes
-   */
-  public JSONPropertyValueFunction (@Nonnull final String sBody, @Nonnull final String... aParams)
-  {
-    super (_getFunctionCode (sBody, aParams));
-    m_sBody = sBody;
-    m_aParams = aParams;
-  }
-
   @Nonnull
   private static String _getFunctionCode (@Nonnull final String sBody, @Nonnull final String... aParams)
   {
@@ -67,6 +53,21 @@ public class JSONPropertyValueFunction extends AbstractJSONPropertyValue <String
     }
     aData.append ("){").append (sBody).append ("}");
     return aData.toString ();
+  }
+
+  /**
+   * Ctor
+   * 
+   * @param sBody
+   *        The function body (executed code)
+   * @param aParams
+   *        The parameter arguments this function takes
+   */
+  public JSONPropertyValueFunction (@Nonnull final String sBody, @Nonnull final String... aParams)
+  {
+    super (_getFunctionCode (sBody, aParams));
+    m_sBody = sBody;
+    m_aParams = ArrayHelper.getCopy (aParams);
   }
 
   public void appendJSONString (final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
