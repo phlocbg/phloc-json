@@ -52,6 +52,7 @@ import com.phloc.json.impl.value.JSONPropertyValueBigInteger;
 import com.phloc.json.impl.value.JSONPropertyValueBoolean;
 import com.phloc.json.impl.value.JSONPropertyValueDouble;
 import com.phloc.json.impl.value.JSONPropertyValueFunction;
+import com.phloc.json.impl.value.JSONPropertyValueFunctionPrebuild;
 import com.phloc.json.impl.value.JSONPropertyValueInteger;
 import com.phloc.json.impl.value.JSONPropertyValueJSONObject;
 import com.phloc.json.impl.value.JSONPropertyValueKeyword;
@@ -252,6 +253,11 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
                                    @Nonnull final String... aParams)
   {
     setProperty (JSONProperty.create (sName, new JSONPropertyValueFunction (sBody, aParams)));
+  }
+
+  public void setFunctionPrebuildProperty (@Nonnull final String sName, @Nonnull final String sFunctionCode)
+  {
+    setProperty (JSONProperty.create (sName, new JSONPropertyValueFunctionPrebuild (sFunctionCode)));
   }
 
   @SuppressWarnings ("unchecked")
