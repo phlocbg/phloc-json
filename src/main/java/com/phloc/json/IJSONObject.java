@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.phloc.commons.state.EChange;
+import com.phloc.json.impl.JSONReader;
 
 /**
  * A basic JSON object
@@ -165,17 +166,27 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
 
   /**
    * An easy way to set a new keyword property (not quoted) in a JSON object.
-   * Existing properties with the same name will be replaced!
+   * Existing properties with the same name will be replaced!<br>
+   * <b>ATTENTION:</b> keyword properties cannot be parsed again due to the
+   * fact, that the {@link JSONReader#parseObject(String)} uses the default
+   * {@link com.fasterxml.jackson.databind.ObjectMapper} which is not capable to
+   * handle keywords.
    * 
    * @param sName
+   *        Property name
    * @param sDataValue
+   *        The property value. Will be JSON escaped.
    */
   void setKeywordProperty (String sName, String sDataValue);
 
   /**
-   * An easy way to set a new function property (not escaped) in a JSON object.
-   * The function keyword and the parenthesis for parameters as well as the body
-   * braces will be automatically created.
+   * An easy way to set a new function property (not JSON escaped) in a JSON
+   * object. The function keyword and the parenthesis for parameters as well as
+   * the body braces will be automatically created.<br>
+   * <b>ATTENTION:</b> function properties cannot be parsed again due to the
+   * fact, that the {@link JSONReader#parseObject(String)} uses the default
+   * {@link com.fasterxml.jackson.databind.ObjectMapper} which is not capable to
+   * handle functions.
    * 
    * @param sName
    *        The name of the function property
@@ -187,9 +198,15 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   void setFunctionProperty (String sName, String sBody, String... aParams);
 
   /**
-   * An easy way to set a new function property (not escaped) in a JSON object.
-   * The function code must be completely ready starting with the "function"
-   * keyword and with the body!
+   * An easy way to set a new function property (not JSON escaped) in a JSON
+   * object. The function code must be completely ready starting with the
+   * "function" keyword and with the body! The code must already be JavaScript
+   * escaped, as strings inside the function body will not be escaped
+   * again!!!!!!!<br>
+   * <b>ATTENTION:</b> function properties cannot be parsed again due to the
+   * fact, that the {@link JSONReader#parseObject(String)} uses the default
+   * {@link com.fasterxml.jackson.databind.ObjectMapper} which is not capable to
+   * handle functions.
    * 
    * @param sName
    *        The name of the function property

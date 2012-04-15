@@ -21,20 +21,22 @@ import javax.annotation.Nonnull;
 
 import com.phloc.commons.collections.ArrayHelper;
 import com.phloc.json.IJSONPropertyValue;
+import com.phloc.json.IJSONPropertyValueNotParsable;
 import com.phloc.json.impl.JSONReader;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
  * {@link String}<br>
  * <br>
- * <b>ATTENTION:</b> keyword properties cannot be parsed again due to the fact,
+ * <b>ATTENTION:</b> function properties cannot be parsed again due to the fact,
  * that the {@link JSONReader#parseObject(String)} uses the default
  * {@link com.fasterxml.jackson.databind.ObjectMapper} which is not capable to
- * handle keywords.
+ * handle functions.
  * 
  * @author Boris Gregorcic
  */
-public class JSONPropertyValueFunction extends AbstractJSONPropertyValue <String>
+public class JSONPropertyValueFunction extends AbstractJSONPropertyValue <String> implements
+                                                                                 IJSONPropertyValueNotParsable <String>
 {
   private final String m_sBody;
   private final String [] m_aParams;

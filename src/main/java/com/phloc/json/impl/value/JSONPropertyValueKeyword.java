@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.phloc.json.IJSONPropertyValue;
+import com.phloc.json.IJSONPropertyValueNotParsable;
 import com.phloc.json.JSONHelper;
 import com.phloc.json.impl.JSONReader;
 
@@ -35,7 +36,8 @@ import com.phloc.json.impl.JSONReader;
  * 
  * @author Boris Gregorcic
  */
-public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String>
+public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String> implements
+                                                                                IJSONPropertyValueNotParsable <String>
 {
   /**
    * Ctor

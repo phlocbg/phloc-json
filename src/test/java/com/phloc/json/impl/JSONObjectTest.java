@@ -32,43 +32,63 @@ import org.junit.Test;
 public final class JSONObjectTest
 {
   @Test
-  public void testSimple ()
+  public void testSimple () throws JSONParsingException
   {
     JSONObject aObj = new JSONObject ();
     aObj.setStringProperty ("a", "b");
     assertEquals ("{\"a\":\"b\"}", aObj.getJSONString ());
+    assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setBigDecimalProperty ("x", new BigDecimal ("1514131211.0987654321"));
     assertEquals ("{\"x\":1514131211.0987654321}", aObj.getJSONString ());
+    assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
-    aObj.setBigIntegerProperty ("a", new BigInteger ("1514131211"));
-    assertEquals ("{\"a\":1514131211}", aObj.getJSONString ());
+    aObj.setBigIntegerProperty ("a", new BigInteger ("1514131288877788877711"));
+    assertEquals ("{\"a\":1514131288877788877711}", aObj.getJSONString ());
+    assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setBooleanProperty ("a", false);
     assertEquals ("{\"a\":false}", aObj.getJSONString ());
+    assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setDoubleProperty ("a", 123.45);
     assertEquals ("{\"a\":123.45}", aObj.getJSONString ());
+    // Parsed object will be BigDecimal!
+    if (false)
+      assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setFunctionProperty ("a", "alert;", "foo", "bar");
     assertEquals ("{\"a\":function(foo,bar){alert;}}", aObj.getJSONString ());
+    if (false)
+      assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
+
+    aObj = new JSONObject ();
+    aObj.setFunctionPrebuildProperty ("a", " function (page) { alert (page + \" of 17\"); } ");
+    assertEquals ("{\"a\": function (page) { alert (page + \" of 17\"); } }", aObj.getJSONString ());
+    if (false)
+      assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setIntegerProperty ("a", 15);
     assertEquals ("{\"a\":15}", aObj.getJSONString ());
+    assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setKeywordProperty ("a", "null");
     assertEquals ("{\"a\":null}", aObj.getJSONString ());
+    // Special handling for null and keyword
+    if (false)
+      assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
-    aObj.setLongProperty ("a", 15L);
-    assertEquals ("{\"a\":15}", aObj.getJSONString ());
+    aObj.setLongProperty ("a", 12345678901L);
+    assertEquals ("{\"a\":12345678901}", aObj.getJSONString ());
+    assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setDoubleProperty ("abc", 15.34);
@@ -78,5 +98,8 @@ public final class JSONObjectTest
     assertEquals ("{\"abc\":15.34,\"def\":16.79}", aObj.getJSONString ());
     assertEquals (Double.valueOf (15.34), aObj.getDoubleProperty ("abc"));
     assertEquals (Double.valueOf (16.79), aObj.getDoubleProperty ("def"));
+    // Will be parsed as BigDecimal
+    if (false)
+      assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
   }
 }
