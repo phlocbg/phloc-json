@@ -20,14 +20,21 @@ package com.phloc.json.impl.value;
 import javax.annotation.Nonnull;
 
 import com.phloc.json.IJSONPropertyValue;
+import com.phloc.json.IJSONPropertyValueNotParsable;
+import com.phloc.json.impl.JSONReader;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
- * {@link String} representing a pre-build function
+ * {@link String} representing a pre-build function <br>
+ * <b>ATTENTION:</b> function properties cannot be parsed again due to the fact,
+ * that the {@link JSONReader#parseObject(String)} uses the default
+ * {@link com.fasterxml.jackson.databind.ObjectMapper} which is not capable to
+ * handle functions.
  * 
- * @author Boris Gregorcic
+ * @author philip
  */
-public class JSONPropertyValueFunctionPrebuild extends AbstractJSONPropertyValue <String>
+public class JSONPropertyValueFunctionPrebuild extends AbstractJSONPropertyValue <String> implements
+                                                                                         IJSONPropertyValueNotParsable <String>
 {
   /**
    * Ctor
