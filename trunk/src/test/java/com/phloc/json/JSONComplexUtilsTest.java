@@ -26,8 +26,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.phloc.json.IJSONObject;
-import com.phloc.json.JSONComplexUtils;
 import com.phloc.json.impl.CJSONConstants;
 import com.phloc.json.impl.value.JSONPropertyValueKeyword;
 
@@ -53,6 +51,7 @@ public final class JSONComplexUtilsTest
       assertNotNull (aObj);
       assertEquals (aObj.getAllPropertyNames ().size (), 0);
     }
+
     // test mixed types
     {
       final Map <String, Object> aProperties = new HashMap <String, Object> ();
