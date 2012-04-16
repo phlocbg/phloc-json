@@ -18,6 +18,8 @@
 package com.phloc.json.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -37,26 +39,31 @@ public final class JSONObjectTest
     JSONObject aObj = new JSONObject ();
     aObj.setStringProperty ("a", "b");
     assertEquals ("{\"a\":\"b\"}", aObj.getJSONString ());
+    assertFalse (aObj.containsNotParsableProperty ());
     assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setBigDecimalProperty ("x", new BigDecimal ("1514131211.0987654321"));
     assertEquals ("{\"x\":1514131211.0987654321}", aObj.getJSONString ());
+    assertFalse (aObj.containsNotParsableProperty ());
     assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setBigIntegerProperty ("a", new BigInteger ("1514131288877788877711"));
     assertEquals ("{\"a\":1514131288877788877711}", aObj.getJSONString ());
+    assertFalse (aObj.containsNotParsableProperty ());
     assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setBooleanProperty ("a", false);
     assertEquals ("{\"a\":false}", aObj.getJSONString ());
+    assertFalse (aObj.containsNotParsableProperty ());
     assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setDoubleProperty ("a", 123.45);
     assertEquals ("{\"a\":123.45}", aObj.getJSONString ());
+    assertFalse (aObj.containsNotParsableProperty ());
     // Parsed object will be BigDecimal!
     if (false)
       assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
@@ -64,30 +71,34 @@ public final class JSONObjectTest
     aObj = new JSONObject ();
     aObj.setFunctionProperty ("a", "alert;", "foo", "bar");
     assertEquals ("{\"a\":function(foo,bar){alert;}}", aObj.getJSONString ());
+    assertTrue (aObj.containsNotParsableProperty ());
     if (false)
       assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setFunctionPrebuildProperty ("a", " function (page) { alert (page + \" of 17\"); } ");
     assertEquals ("{\"a\": function (page) { alert (page + \" of 17\"); } }", aObj.getJSONString ());
+    assertTrue (aObj.containsNotParsableProperty ());
     if (false)
       assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setIntegerProperty ("a", 15);
     assertEquals ("{\"a\":15}", aObj.getJSONString ());
+    assertFalse (aObj.containsNotParsableProperty ());
     assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
-    aObj.setKeywordProperty ("a", "null");
-    assertEquals ("{\"a\":null}", aObj.getJSONString ());
-    // Special handling for null and keyword
+    aObj.setKeywordProperty ("a", "anything");
+    assertEquals ("{\"a\":anything}", aObj.getJSONString ());
+    assertTrue (aObj.containsNotParsableProperty ());
     if (false)
       assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
     aObj.setLongProperty ("a", 12345678901L);
     assertEquals ("{\"a\":12345678901}", aObj.getJSONString ());
+    assertFalse (aObj.containsNotParsableProperty ());
     assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
 
     aObj = new JSONObject ();
@@ -98,6 +109,7 @@ public final class JSONObjectTest
     assertEquals ("{\"abc\":15.34,\"def\":16.79}", aObj.getJSONString ());
     assertEquals (Double.valueOf (15.34), aObj.getDoubleProperty ("abc"));
     assertEquals (Double.valueOf (16.79), aObj.getDoubleProperty ("def"));
+    assertFalse (aObj.containsNotParsableProperty ());
     // Will be parsed as BigDecimal
     if (false)
       assertEquals (aObj, JSONReader.parseObject (aObj.getJSONString ()));
