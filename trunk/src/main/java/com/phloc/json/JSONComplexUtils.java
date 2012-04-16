@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.annotation.CheckForNull;
 import javax.annotation.concurrent.Immutable;
 
+import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.json.impl.CJSONConstants;
 import com.phloc.json.impl.JSONObject;
 
@@ -45,34 +46,54 @@ public final class JSONComplexUtils
    * @param aProperties
    * @return the created JSON object
    */
-  // TODO BG: extend to be able to process nested containers and objects (e.g
-  // IJSONConvertible)
   public static IJSONObject convertToJSON (@CheckForNull final Map <String, Object> aProperties)
+  {
+    return convertToJSON (aProperties, false);
+  }
+
+  /**
+   * Converts the passed property map to a new JSON object containing all
+   * properties from the map.<br/>
+   * <b>ATTENTION:</b> Currently only simple types are supported, no container
+   * types or nested objects!
+   * 
+   * @param aProperties
+   *        The source map
+   * @param bUseTypeConverter
+   *        If <code>true</code> the type converter registry should be used to
+   *        convert simple values.
+   * @return the created JSON object
+   */
+  public static IJSONObject convertToJSON (@CheckForNull final Map <String, Object> aProperties,
+                                           final boolean bUseTypeConverter)
   {
     final IJSONObject aJSON = new JSONObject ();
     if (aProperties != null)
-      for (final Map.Entry <String, Object> aEntry : aProperties.entrySet ())
+    {
+      // Sort map by key, to create reproducible results
+      for (final Map.Entry <String, Object> aEntry : ContainerHelper.getSortedByKey (aProperties).entrySet ())
       {
         final String sPropertyName = aEntry.getKey ();
         final Object aValue = aEntry.getValue ();
         if (aValue == null)
           aJSON.setKeywordProperty (sPropertyName, CJSONConstants.KEYWORD_NULL);
         else
-          if (aValue instanceof String)
-            aJSON.setStringProperty (sPropertyName, (String) aValue);
+          if (aValue instanceof IJSONConvertible)
+          {
+            final IJSONObject aNestedValue = ((IJSONConvertible) aValue).getAsJSON ();
+            aJSON.setObjectProperty (sPropertyName, aNestedValue);
+          }
           else
-            if (aValue instanceof Integer)
-              aJSON.setIntegerProperty (sPropertyName, ((Integer) aValue).intValue ());
+            if (aValue instanceof Map <?, ?>)
+            {
+              @SuppressWarnings ("unchecked")
+              final IJSONObject aNestedValue = convertToJSON ((Map <String, Object>) aValue);
+              aJSON.setObjectProperty (sPropertyName, aNestedValue);
+            }
             else
-              if (aValue instanceof Boolean)
-                aJSON.setBooleanProperty (sPropertyName, ((Boolean) aValue).booleanValue ());
-              else
-                if (aValue instanceof Double)
-                  aJSON.setDoubleProperty (sPropertyName, ((Double) aValue).doubleValue ());
-                else
-                  throw new UnsupportedOperationException ("JSON conversion is currently not possible for values of type " +
-                                                           aValue.getClass ().getName ());
+              aJSON.setProperty (sPropertyName, aValue, bUseTypeConverter);
       }
+    }
     return aJSON;
   }
 }
