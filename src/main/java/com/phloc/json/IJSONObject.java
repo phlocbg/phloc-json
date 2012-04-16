@@ -377,6 +377,12 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   @Nonnull
   EChange removeProperty (final String sName);
 
+  /**
+   * @return <code>true</code> if this object contains not parsable property
+   *         values
+   */
+  // boolean containsNotParsableProperty ();
+
   @Nonnull
   IJSONObject getClone ();
 }
