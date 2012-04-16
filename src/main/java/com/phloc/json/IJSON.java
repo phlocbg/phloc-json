@@ -49,12 +49,15 @@ public interface IJSON extends ICloneable <IJSON>, Serializable
 
   /**
    * This is an internal method appending the resulting JSON String to a already
-   * existing passed StringBuilder. This is more efficient than to create a new
-   * StringBuilder at each level.
+   * existing passed {@link StringBuilder}. This is more efficient than to
+   * create a new {@link StringBuilder} at each level.
    * 
    * @param aResult
+   *        The {@link StringBuilder} to append to
    * @param bAlignAndIndent
+   *        <code>true</code> if pretty print should be used
    * @param nLevel
+   *        Current level of indentation
    */
   void appendJSONString (StringBuilder aResult, boolean bAlignAndIndent, int nLevel);
 }

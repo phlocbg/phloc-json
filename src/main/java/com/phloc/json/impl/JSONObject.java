@@ -46,6 +46,7 @@ import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONProperty;
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.IJSONPropertyValueList;
+import com.phloc.json.IJSONPropertyValueNotParsable;
 import com.phloc.json.impl.value.AbstractJSONPropertyValue;
 import com.phloc.json.impl.value.JSONPropertyValueBigDecimal;
 import com.phloc.json.impl.value.JSONPropertyValueBigInteger;
@@ -550,6 +551,19 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   public EChange removeProperty (final String sName)
   {
     return EChange.valueOf (m_aProperties.remove (sName) != null);
+  }
+
+  public boolean containsNotParsableProperty ()
+  {
+    for (final IJSONProperty <?> aProperty : m_aProperties.values ())
+    {
+      final IJSONPropertyValue <?> aValue = aProperty.getValue ();
+      if (aValue instanceof IJSONPropertyValueNotParsable <?>)
+        return true;
+      if (aValue instanceof IJSONObject && ((IJSONObject) aValue).containsNotParsableProperty ())
+        return true;
+    }
+    return false;
   }
 
   @Nonnull
