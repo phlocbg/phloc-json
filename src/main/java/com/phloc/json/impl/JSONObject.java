@@ -300,7 +300,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return null;
   }
 
-  public void setStringProperty (@Nonnull final String sName, final String sDataValue)
+  public void setStringProperty (@Nonnull final String sName, @Nullable final String sDataValue)
   {
     setProperty (JSONProperty.create (sName, new JSONPropertyValueString (sDataValue)));
   }
@@ -362,11 +362,11 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     if (aValue == null)
       removeProperty (sName);
     else
-      if (aValue instanceof IJSONPropertyValue <?>)
-        setProperty (JSONProperty.create (sName, (IJSONPropertyValue <?>) aValue));
+      if (aValue instanceof IJSONObject)
+        setObjectProperty (sName, (IJSONObject) aValue);
       else
-        if (aValue instanceof IJSONObject)
-          setObjectProperty (sName, (IJSONObject) aValue);
+        if (aValue instanceof IJSONPropertyValue <?>)
+          setProperty (JSONProperty.create (sName, (IJSONPropertyValue <?>) aValue));
         else
           if (aValue instanceof Boolean)
             setBooleanProperty (sName, (Boolean) aValue);
