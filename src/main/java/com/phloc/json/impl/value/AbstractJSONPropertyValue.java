@@ -20,7 +20,7 @@ package com.phloc.json.impl.value;
 import javax.annotation.Nullable;
 
 import com.phloc.commons.annotations.ReturnsMutableObject;
-import com.phloc.commons.compare.EqualsUtils;
+import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json.IJSONPropertyValue;
@@ -59,7 +59,7 @@ public abstract class AbstractJSONPropertyValue <T> extends AbstractJSON impleme
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final AbstractJSONPropertyValue <?> rhs = (AbstractJSONPropertyValue <?>) o;
-    return EqualsUtils.nullSafeEquals (m_aData, rhs.m_aData);
+    return EqualsUtils.equals (m_aData, rhs.m_aData);
   }
 
   @Override

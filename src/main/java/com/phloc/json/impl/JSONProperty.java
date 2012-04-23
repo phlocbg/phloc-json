@@ -20,7 +20,7 @@ package com.phloc.json.impl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.phloc.commons.compare.EqualsUtils;
+import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.string.ToStringGenerator;
@@ -98,7 +98,7 @@ public final class JSONProperty <T> extends AbstractJSON implements IJSONPropert
     if (!(o instanceof JSONProperty <?>))
       return false;
     final JSONProperty <?> rhs = (JSONProperty <?>) o;
-    return EqualsUtils.nullSafeEquals (m_sName, rhs.m_sName) && m_aValue.equals (rhs.m_aValue);
+    return EqualsUtils.equals (m_sName, rhs.m_sName) && m_aValue.equals (rhs.m_aValue);
   }
 
   @Override
