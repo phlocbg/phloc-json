@@ -37,7 +37,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.phloc.commons.annotations.ReturnsImmutableObject;
 import com.phloc.commons.collections.ContainerHelper;
-import com.phloc.commons.compare.EqualsUtils;
+import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.state.EChange;
 import com.phloc.commons.string.ToStringGenerator;
@@ -580,7 +580,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     if (!super.equals (o))
       return false;
     final JSONObject rhs = (JSONObject) o;
-    return EqualsUtils.nullSafeEquals (m_aProperties, rhs.m_aProperties);
+    return EqualsUtils.equals (m_aProperties, rhs.m_aProperties);
   }
 
   @Override
