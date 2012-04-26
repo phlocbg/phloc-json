@@ -20,6 +20,7 @@ package com.phloc.json.impl.value;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.phloc.commons.string.StringHelper;
 import com.phloc.json.IJSONPropertyValue;
 
 /**
@@ -52,10 +53,16 @@ public class JSONPropertyValueLong extends AbstractJSONPropertyValueNumeric <Lon
    * @param sJSON
    *        the JSON string to convert
    * @return the resulting object
+   * @throws IllegalArgumentException
+   *         If the passed string is not null but cannot be converted to a
+   *         {@link Long}
    */
   @Nonnull
   public static JSONPropertyValueLong fromJSONString (final String sJSON)
   {
-    return new JSONPropertyValueLong (Long.parseLong (sJSON));
+    final Long aValue = StringHelper.parseLongObj (sJSON);
+    if (sJSON != null && aValue == null)
+      throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not a long !");
+    return new JSONPropertyValueLong (aValue);
   }
 }

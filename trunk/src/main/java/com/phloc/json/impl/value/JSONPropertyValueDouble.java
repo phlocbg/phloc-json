@@ -54,10 +54,16 @@ public class JSONPropertyValueDouble extends AbstractJSONPropertyValueNumeric <D
    * @param sJSON
    *        the JSON string to convert
    * @return the resulting object
+   * @throws IllegalArgumentException
+   *         If the passed string is not null but cannot be converted to a
+   *         {@link Double}
    */
   @Nonnull
   public static JSONPropertyValueDouble fromJSONString (final String sJSON)
   {
-    return new JSONPropertyValueDouble (StringHelper.parseDoubleObj (sJSON));
+    final Double aValue = StringHelper.parseDoubleObj (sJSON);
+    if (sJSON != null && aValue == null)
+      throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not a double!");
+    return new JSONPropertyValueDouble (aValue);
   }
 }
