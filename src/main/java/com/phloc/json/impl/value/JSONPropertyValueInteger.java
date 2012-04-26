@@ -20,6 +20,7 @@ package com.phloc.json.impl.value;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.phloc.commons.string.StringHelper;
 import com.phloc.json.IJSONPropertyValue;
 
 /**
@@ -53,10 +54,16 @@ public class JSONPropertyValueInteger extends AbstractJSONPropertyValueNumeric <
    * @param sJSON
    *        the JSON string to convert
    * @return the resulting object
+   * @throws IllegalArgumentException
+   *         If the passed string is not null but cannot be converted to an
+   *         {@link Integer}
    */
   @Nonnull
   public static JSONPropertyValueInteger fromJSONString (final String sJSON)
   {
-    return new JSONPropertyValueInteger (Integer.parseInt (sJSON));
+    final Integer aValue = StringHelper.parseIntObj (sJSON);
+    if (sJSON != null && aValue == null)
+      throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not an integer!");
+    return new JSONPropertyValueInteger (aValue);
   }
 }
