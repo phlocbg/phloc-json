@@ -48,7 +48,7 @@ public final class JSONHelper
       return sInput;
 
     final char [] aInput = sInput.toCharArray ();
-    if (!StringHelper.multiContains (aInput, CHARS_TO_MASK))
+    if (!StringHelper.containsAny (aInput, CHARS_TO_MASK))
       return sInput;
 
     final char [] ret = new char [aInput.length * 2];
