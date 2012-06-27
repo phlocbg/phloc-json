@@ -38,7 +38,7 @@ public final class ThirdPartyModuleProvider_phloc_json implements IThirdPartyMod
   private static final IThirdPartyModule JACKSON = new ThirdPartyModule ("Jackson",
                                                                          "codehaus",
                                                                          ELicense.APACHE2,
-                                                                         new Version (2, 0, 2),
+                                                                         new Version (2, 0, 4),
                                                                          "http://wiki.fasterxml.com/JacksonHome");
 
   @Nullable
