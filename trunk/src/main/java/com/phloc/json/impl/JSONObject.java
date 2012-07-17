@@ -61,6 +61,8 @@ import com.phloc.json.impl.value.JSONPropertyValueList;
 import com.phloc.json.impl.value.JSONPropertyValueLong;
 import com.phloc.json.impl.value.JSONPropertyValueString;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Represents a JSON object having a map of named JSON properties
  * 
@@ -147,7 +149,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   // the property is not found or of wrong type (null). Un-boxing is prevented
   // by PMD anyway and the method is annotated as @Nullable
   @Nullable
-  @edu.umd.cs.findbugs.annotations.SuppressWarnings ("NP_BOOLEAN_RETURN_NULL")
+  @SuppressFBWarnings ("NP_BOOLEAN_RETURN_NULL")
   public Boolean getBooleanProperty (final String sName)
   {
     final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
