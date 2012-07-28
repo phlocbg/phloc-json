@@ -40,6 +40,7 @@ import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.state.EChange;
+import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.json.IJSONObject;
@@ -340,7 +341,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     if (aValue instanceof JSONPropertyValueBigInteger)
       return new BigDecimal (((JSONPropertyValueBigInteger) aValue).getData ());
     if (aValue instanceof JSONPropertyValueDouble)
-      return new BigDecimal (((JSONPropertyValueDouble) aValue).getData ().toString ());
+      return StringHelper.parseBigDecimal (((JSONPropertyValueDouble) aValue).getData ().toString ());
     if (aValue instanceof JSONPropertyValueLong)
       return BigDecimal.valueOf (((JSONPropertyValueLong) aValue).getData ().longValue ());
     if (aValue instanceof JSONPropertyValueInteger)
