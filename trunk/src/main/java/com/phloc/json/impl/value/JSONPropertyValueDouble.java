@@ -20,7 +20,7 @@ package com.phloc.json.impl.value;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.phloc.commons.string.StringHelper;
+import com.phloc.commons.string.StringParser;
 import com.phloc.json.IJSONPropertyValue;
 
 /**
@@ -61,7 +61,7 @@ public class JSONPropertyValueDouble extends AbstractJSONPropertyValueNumeric <D
   @Nonnull
   public static JSONPropertyValueDouble fromJSONString (final String sJSON)
   {
-    final Double aValue = StringHelper.parseDoubleObj (sJSON);
+    final Double aValue = StringParser.parseDoubleObj (sJSON);
     if (sJSON != null && aValue == null)
       throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not a double!");
     return new JSONPropertyValueDouble (aValue);

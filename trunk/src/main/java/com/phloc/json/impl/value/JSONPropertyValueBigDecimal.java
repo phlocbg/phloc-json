@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.phloc.commons.string.StringHelper;
+import com.phloc.commons.string.StringParser;
 import com.phloc.json.IJSONPropertyValue;
 
 /**
@@ -58,7 +58,7 @@ public class JSONPropertyValueBigDecimal extends AbstractJSONPropertyValueNumeri
   @Nonnull
   public static JSONPropertyValueBigDecimal fromJSONString (final String sJSON)
   {
-    final BigDecimal aValue = StringHelper.parseBigDecimal (sJSON);
+    final BigDecimal aValue = StringParser.parseBigDecimal (sJSON);
     if (sJSON != null && aValue == null)
       throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not a BigDecimal!");
     return new JSONPropertyValueBigDecimal (aValue);

@@ -22,7 +22,7 @@ import java.math.BigInteger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.phloc.commons.string.StringHelper;
+import com.phloc.commons.string.StringParser;
 import com.phloc.json.IJSONPropertyValue;
 
 /**
@@ -58,7 +58,7 @@ public class JSONPropertyValueBigInteger extends AbstractJSONPropertyValueNumeri
   @Nonnull
   public static JSONPropertyValueBigInteger fromJSONString (final String sJSON)
   {
-    final BigInteger aValue = StringHelper.parseBigInteger (sJSON);
+    final BigInteger aValue = StringParser.parseBigInteger (sJSON);
     if (sJSON != null && aValue == null)
       throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not a BigInteger!");
     return new JSONPropertyValueBigInteger (aValue);
