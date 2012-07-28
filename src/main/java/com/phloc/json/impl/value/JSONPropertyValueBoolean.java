@@ -20,7 +20,7 @@ package com.phloc.json.impl.value;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.phloc.commons.string.StringHelper;
+import com.phloc.commons.string.StringParser;
 import com.phloc.json.IJSONPropertyValue;
 
 /**
@@ -73,6 +73,6 @@ public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean
   @Nonnull
   public static JSONPropertyValueBoolean fromJSONString (final String sJSON)
   {
-    return new JSONPropertyValueBoolean (StringHelper.parseBool (sJSON));
+    return new JSONPropertyValueBoolean (StringParser.parseBool (sJSON));
   }
 }

@@ -17,7 +17,6 @@
  */
 package com.phloc.json;
 
-
 /**
  * Interface for a JSON property value that cannot be parsed again, as the
  * implementation is only valid for JavaScript output!
