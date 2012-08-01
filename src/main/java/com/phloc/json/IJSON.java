@@ -19,6 +19,8 @@ package com.phloc.json;
 
 import java.io.Serializable;
 
+import javax.annotation.Nonnull;
+
 import com.phloc.commons.ICloneable;
 
 /**
@@ -59,5 +61,5 @@ public interface IJSON extends ICloneable <IJSON>, Serializable
    * @param nLevel
    *        Current level of indentation
    */
-  void appendJSONString (StringBuilder aResult, boolean bAlignAndIndent, int nLevel);
+  void appendJSONString (@Nonnull StringBuilder aResult, boolean bAlignAndIndent, int nLevel);
 }

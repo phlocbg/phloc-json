@@ -29,10 +29,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.phloc.commons.io.IInputStreamProvider;
-import com.phloc.json.impl.JSONParsingException;
-import com.phloc.json.impl.JSONReader;
 
+/**
+ * Utility class around the Jackson JSON implementation
+ * 
+ * @author philip
+ */
 @Immutable
 public final class JacksonHelper
 {
@@ -49,6 +51,11 @@ public final class JacksonHelper
     // Feature that determines whether parser will allow use of unquoted field
     // names (which is allowed by Javascript, but not by JSON specification).
     aObjectMapper.configure (JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+    if (false)
+    {
+      // Allow single quotes for strings?
+      aObjectMapper.configure (JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+    }
     // Always use BigDecimal
     aObjectMapper.enable (DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
     return aObjectMapper;
@@ -61,10 +68,9 @@ public final class JacksonHelper
    * @param sJSON
    *        the JSON string to convert, can be any valid JSON mark-up
    * @return the resulting JSON node structure
-   * @throws JSONParsingException
    */
   @Nullable
-  public static JsonNode parseToNode (@Nonnull final String sJSON) throws JSONParsingException
+  public static JsonNode parseToNode (@Nonnull final String sJSON)
   {
     try
     {
@@ -72,11 +78,11 @@ public final class JacksonHelper
     }
     catch (final JsonProcessingException e)
     {
-      throw new IllegalArgumentException ("Error parsing tree " + sJSON, e);
+      throw new IllegalArgumentException ("Error parsing tree '" + sJSON + "'", e);
     }
     catch (final IOException e)
     {
-      throw new IllegalArgumentException ("Error parsing tree " + sJSON, e);
+      throw new IllegalArgumentException ("Error parsing tree '" + sJSON + "'", e);
     }
   }
 
@@ -87,10 +93,9 @@ public final class JacksonHelper
    * @param aIS
    *        the JSON input stream to convert, can be any valid JSON mark-up
    * @return the resulting JSON node structure
-   * @throws JSONParsingException
    */
   @Nullable
-  public static JsonNode parseToNode (@Nonnull final InputStream aIS) throws JSONParsingException
+  public static JsonNode parseToNode (@Nonnull final InputStream aIS)
   {
     if (aIS == null)
       throw new NullPointerException ("inputStream");
@@ -106,11 +111,5 @@ public final class JacksonHelper
     {
       throw new IllegalArgumentException ("Error parsing JSON tree from InputStream", e);
     }
-  }
-
-  @Nonnull
-  public static IJSON parse (@Nonnull final IInputStreamProvider aISP) throws JSONParsingException
-  {
-    return JSONReader.parse (aISP.getInputStream ());
   }
 }

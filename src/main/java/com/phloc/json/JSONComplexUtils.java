@@ -19,7 +19,8 @@ package com.phloc.json;
 
 import java.util.Map;
 
-import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import com.phloc.commons.collections.ContainerHelper;
@@ -46,7 +47,8 @@ public final class JSONComplexUtils
    * @param aProperties
    * @return the created JSON object
    */
-  public static IJSONObject convertToJSON (@CheckForNull final Map <String, Object> aProperties)
+  @Nonnull
+  public static IJSONObject convertToJSON (@Nullable final Map <String, Object> aProperties)
   {
     return convertToJSON (aProperties, false);
   }
@@ -64,7 +66,8 @@ public final class JSONComplexUtils
    *        convert simple values.
    * @return the created JSON object
    */
-  public static IJSONObject convertToJSON (@CheckForNull final Map <String, Object> aProperties,
+  @Nonnull
+  public static IJSONObject convertToJSON (@Nullable final Map <String, Object> aProperties,
                                            final boolean bUseTypeConverter)
   {
     final IJSONObject aJSON = new JSONObject ();
@@ -76,22 +79,30 @@ public final class JSONComplexUtils
         final String sPropertyName = aEntry.getKey ();
         final Object aValue = aEntry.getValue ();
         if (aValue == null)
+        {
+          // Special null keyword
           aJSON.setKeywordProperty (sPropertyName, CJSONConstants.KEYWORD_NULL);
+        }
         else
           if (aValue instanceof IJSONConvertible)
           {
+            // Object itself can be converted to JSON
             final IJSONObject aNestedValue = ((IJSONConvertible) aValue).getAsJSON ();
             aJSON.setObjectProperty (sPropertyName, aNestedValue);
           }
           else
             if (aValue instanceof Map <?, ?>)
             {
+              // Its a nested map so recurse into it
               @SuppressWarnings ("unchecked")
               final IJSONObject aNestedValue = convertToJSON ((Map <String, Object>) aValue);
               aJSON.setObjectProperty (sPropertyName, aNestedValue);
             }
             else
+            {
+              // Main set property value
               aJSON.setProperty (sPropertyName, aValue, bUseTypeConverter);
+            }
       }
     }
     return aJSON;
