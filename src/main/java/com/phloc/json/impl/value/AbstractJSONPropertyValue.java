@@ -28,25 +28,25 @@ import com.phloc.json.impl.AbstractJSON;
 
 /**
  * @author Boris Gregorcic
- * @param <T>
+ * @param <DATATYPE>
  */
-public abstract class AbstractJSONPropertyValue <T> extends AbstractJSON implements IJSONPropertyValue <T>
+public abstract class AbstractJSONPropertyValue <DATATYPE> extends AbstractJSON implements IJSONPropertyValue <DATATYPE>
 {
-  private T m_aData;
+  private DATATYPE m_aData;
 
-  protected AbstractJSONPropertyValue (@Nullable final T aData)
+  protected AbstractJSONPropertyValue (@Nullable final DATATYPE aData)
   {
     m_aData = aData;
   }
 
   @Nullable
   @ReturnsMutableObject (reason = "Design")
-  public T getData ()
+  public DATATYPE getData ()
   {
     return m_aData;
   }
 
-  public final void setData (@Nullable final T aValue)
+  public final void setData (@Nullable final DATATYPE aValue)
   {
     m_aData = aValue;
   }

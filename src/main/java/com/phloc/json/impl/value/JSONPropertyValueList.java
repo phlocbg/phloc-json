@@ -35,48 +35,49 @@ import com.phloc.json.impl.CJSONConstants;
  * Default implementation of {@link IJSONPropertyValueList}
  * 
  * @author Boris Gregorcic
- * @param <DATATYPE>
+ * @param <ELEMENTTYPE>
  *        The inner data type
  */
-public class JSONPropertyValueList <DATATYPE> extends AbstractJSONPropertyValue <List <IJSONPropertyValue <DATATYPE>>> implements
-                                                                                                                      IJSONPropertyValueList <DATATYPE>
+public class JSONPropertyValueList <ELEMENTTYPE> extends
+                                                 AbstractJSONPropertyValue <List <IJSONPropertyValue <ELEMENTTYPE>>> implements
+                                                                                                                    IJSONPropertyValueList <ELEMENTTYPE>
 {
   /**
    * Ctor
    */
-  public JSONPropertyValueList (@Nullable final List <IJSONPropertyValue <DATATYPE>> aList)
+  public JSONPropertyValueList (@Nullable final List <IJSONPropertyValue <ELEMENTTYPE>> aList)
   {
     super (ContainerHelper.newList (aList));
   }
 
   public JSONPropertyValueList ()
   {
-    super (new ArrayList <IJSONPropertyValue <DATATYPE>> ());
+    super (new ArrayList <IJSONPropertyValue <ELEMENTTYPE>> ());
   }
 
-  public void addValue (@Nullable final IJSONPropertyValue <DATATYPE> aValue)
+  public void addValue (@Nullable final IJSONPropertyValue <ELEMENTTYPE> aValue)
   {
     getData ().add (aValue);
   }
 
-  public void addAllValues (@Nonnull final List <IJSONPropertyValue <DATATYPE>> aValues)
+  public void addAllValues (@Nonnull final List <IJSONPropertyValue <ELEMENTTYPE>> aValues)
   {
     getData ().addAll (aValues);
   }
 
   @Nonnull
   @ReturnsImmutableObject
-  public List <IJSONPropertyValue <DATATYPE>> getValues ()
+  public List <IJSONPropertyValue <ELEMENTTYPE>> getValues ()
   {
     return ContainerHelper.makeUnmodifiable (getData ());
   }
 
   @Nonnull
   @ReturnsMutableCopy
-  public List <DATATYPE> getDataValues ()
+  public List <ELEMENTTYPE> getDataValues ()
   {
-    final List <DATATYPE> aDataValues = new ArrayList <DATATYPE> ();
-    for (final IJSONPropertyValue <DATATYPE> aValue : getData ())
+    final List <ELEMENTTYPE> aDataValues = new ArrayList <ELEMENTTYPE> ();
+    for (final IJSONPropertyValue <ELEMENTTYPE> aValue : getData ())
       aDataValues.add (aValue.getData ());
     return aDataValues;
   }
@@ -89,7 +90,7 @@ public class JSONPropertyValueList <DATATYPE> extends AbstractJSONPropertyValue 
     appendNewLine (aResult, bAlignAndIndent);
 
     int nIndex = 0;
-    for (final IJSONPropertyValue <DATATYPE> aValue : getData ())
+    for (final IJSONPropertyValue <ELEMENTTYPE> aValue : getData ())
     {
       if (!(aValue instanceof IJSONPropertyValueList) &&
           !(aValue instanceof IJSONObject) &&
@@ -118,8 +119,8 @@ public class JSONPropertyValueList <DATATYPE> extends AbstractJSONPropertyValue 
   }
 
   @Nonnull
-  public JSONPropertyValueList <DATATYPE> getClone ()
+  public JSONPropertyValueList <ELEMENTTYPE> getClone ()
   {
-    return new JSONPropertyValueList <DATATYPE> (getData ());
+    return new JSONPropertyValueList <ELEMENTTYPE> (getData ());
   }
 }
