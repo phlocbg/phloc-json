@@ -78,11 +78,11 @@ public final class JacksonHelper
     }
     catch (final JsonProcessingException e)
     {
-      throw new IllegalArgumentException ("Error parsing tree '" + sJSON + "'", e);
+      throw new IllegalArgumentException ("Error parsing as JSON tree: '" + sJSON + "'", e);
     }
     catch (final IOException e)
     {
-      throw new IllegalArgumentException ("Error parsing tree '" + sJSON + "'", e);
+      throw new IllegalArgumentException ("Error parsing as JSON tree: '" + sJSON + "'", e);
     }
   }
 
@@ -105,11 +105,11 @@ public final class JacksonHelper
     }
     catch (final JsonProcessingException e)
     {
-      throw new IllegalArgumentException ("Error parsing JSON tree from InputStream", e);
+      throw new IllegalArgumentException ("Error parsing as JSON tree from InputStream", e);
     }
     catch (final IOException e)
     {
-      throw new IllegalArgumentException ("Error parsing JSON tree from InputStream", e);
+      throw new IllegalArgumentException ("Error parsing as JSON tree from InputStream", e);
     }
   }
 }
