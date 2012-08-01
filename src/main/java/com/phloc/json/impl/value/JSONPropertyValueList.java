@@ -38,9 +38,9 @@ import com.phloc.json.impl.CJSONConstants;
  * @param <DATATTYPE>
  *        The inner data type
  */
-public class JSONPropertyValueList <VALUETYPE, DATATTYPE extends IJSONPropertyValue <VALUETYPE>> extends
-                                                                                                 AbstractJSONPropertyValue <List <DATATTYPE>> implements
-                                                                                                                                             IJSONPropertyValueList <VALUETYPE, DATATTYPE>
+public class JSONPropertyValueList <DATATTYPE extends IJSONPropertyValue <?>> extends
+                                                                              AbstractJSONPropertyValue <List <DATATTYPE>> implements
+                                                                                                                          IJSONPropertyValueList <DATATTYPE>
 {
 
   public JSONPropertyValueList ()
@@ -75,9 +75,9 @@ public class JSONPropertyValueList <VALUETYPE, DATATTYPE extends IJSONPropertyVa
 
   @Nonnull
   @ReturnsMutableCopy
-  public List <VALUETYPE> getDataValues ()
+  public List <Object> getDataValues ()
   {
-    final List <VALUETYPE> aDataValues = new ArrayList <VALUETYPE> ();
+    final List <Object> aDataValues = new ArrayList <Object> ();
     for (final DATATTYPE aValue : getData ())
       aDataValues.add (aValue.getData ());
     return aDataValues;
@@ -121,8 +121,8 @@ public class JSONPropertyValueList <VALUETYPE, DATATTYPE extends IJSONPropertyVa
   }
 
   @Nonnull
-  public JSONPropertyValueList <VALUETYPE, DATATTYPE> getClone ()
+  public JSONPropertyValueList <DATATTYPE> getClone ()
   {
-    return new JSONPropertyValueList <VALUETYPE, DATATTYPE> (getData ());
+    return new JSONPropertyValueList <DATATTYPE> (getData ());
   }
 }

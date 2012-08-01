@@ -69,7 +69,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseArrayText () throws Exception
   {
-    final IJSONPropertyValueList <?, ?> aJSONList = JSONReader.parseArray ("[\"" + STR_VALUE1 + "\", \"" + STR_VALUE2 + "\", \"" + STR_VALUE3 + "\"]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[\"" + STR_VALUE1 + "\", \"" + STR_VALUE2 + "\", \"" + STR_VALUE3 + "\"]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     assertNotNull (aJSONList);
     assertEquals (aJSONList.getValues ().size (), 3);
     assertEquals (aJSONList.getValues ().get (0).getData (), STR_VALUE1);
@@ -84,7 +84,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseArrayBoolean () throws Exception
   {
-    final IJSONPropertyValueList <?, ?> aJSONList = JSONReader.parseArray ("[" + Boolean.TRUE + ", " + Boolean.FALSE + ", " + Boolean.TRUE + "]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[" + Boolean.TRUE + ", " + Boolean.FALSE + ", " + Boolean.TRUE + "]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     assertNotNull (aJSONList);
     assertEquals (aJSONList.getValues ().size (), 3);
     assertEquals (aJSONList.getValues ().get (0).getData (), Boolean.TRUE);
@@ -99,7 +99,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseArrayInteger () throws Exception
   {
-    final IJSONPropertyValueList <?, ?> aJSONList = JSONReader.parseArray ("[" + VALUE_INT1 + ", " + VALUE_INT2 + ", " + VALUE_INT3 + "]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[" + VALUE_INT1 + ", " + VALUE_INT2 + ", " + VALUE_INT3 + "]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     assertNotNull (aJSONList);
     assertEquals (aJSONList.getValues ().size (), 3);
     assertEquals (aJSONList.getValues ().get (0).getData (), Integer.valueOf (VALUE_INT1));
@@ -114,7 +114,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseArrayEmpty ()
   {
-    final IJSONPropertyValueList <?, ?> aJSONList = JSONReader.parseArray ("[]");
+    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[]");
     assertNotNull (aJSONList);
     assertEquals (aJSONList.getValues ().size (), 0);
   }
@@ -126,7 +126,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseArrayEmptyString ()
   {
-    final IJSONPropertyValueList <?, ?> aJSONList = JSONReader.parseArray ("[\"\"]");
+    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[\"\"]");
     assertNotNull (aJSONList);
     assertEquals (aJSONList.getValues ().size (), 1);
   }
@@ -201,8 +201,8 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   {
     final IJSON aJSON = JSONReader.parse ("[" + VALUE_INT1 + ", " + VALUE_INT2 + ", " + VALUE_INT3 + "]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     assertNotNull (aJSON);
-    assertTrue (aJSON instanceof IJSONPropertyValueList <?, ?>);
-    final IJSONPropertyValueList <?, ?> aJSONList = (IJSONPropertyValueList <?, ?>) aJSON;
+    assertTrue (aJSON instanceof IJSONPropertyValueList <?>);
+    final IJSONPropertyValueList <?> aJSONList = (IJSONPropertyValueList <?>) aJSON;
     assertEquals (aJSONList.getValues ().size (), 3);
     assertEquals (aJSONList.getValues ().get (0).getData (), Integer.valueOf (VALUE_INT1));
     assertEquals (aJSONList.getValues ().get (1).getData (), Integer.valueOf (VALUE_INT2));
