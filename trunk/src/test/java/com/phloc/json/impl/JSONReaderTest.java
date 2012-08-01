@@ -110,9 +110,11 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing an empty JSON array into a property value list using the
    * {@link JSONReader}
+   * 
+   * @throws JSONParsingException
    */
   @Test
-  public void testParseArrayEmpty ()
+  public void testParseArrayEmpty () throws JSONParsingException
   {
     final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[]");
     assertNotNull (aJSONList);
@@ -122,9 +124,11 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing an empty JSON array into a property value list using the
    * {@link JSONReader}
+   * 
+   * @throws JSONParsingException
    */
   @Test
-  public void testParseArrayEmptyString ()
+  public void testParseArrayEmptyString () throws JSONParsingException
   {
     final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[\"\"]");
     assertNotNull (aJSONList);

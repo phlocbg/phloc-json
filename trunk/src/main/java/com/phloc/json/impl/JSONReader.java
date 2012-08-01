@@ -18,6 +18,7 @@
 package com.phloc.json.impl;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -29,8 +30,10 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.phloc.commons.collections.iterate.IterableIterator;
 import com.phloc.commons.io.IInputStreamProvider;
+import com.phloc.commons.io.IReaderProvider;
 import com.phloc.json.IJSON;
 import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValue;
@@ -65,7 +68,7 @@ public final class JSONReader
   public static IJSONPropertyValue <?> convert (@Nonnull final JsonNode aNode)
   {
     if (aNode.isObject ())
-      return convertObject (aNode);
+      return convertObject ((ObjectNode) aNode);
 
     if (aNode.isArray ())
       return convertArray ((ArrayNode) aNode);
@@ -74,7 +77,7 @@ public final class JSONReader
     if (aNode.isBoolean ())
       return new JSONPropertyValueBoolean (aNode.booleanValue ());
 
-    // ints
+    // integers
     if (aNode.isInt ())
       return new JSONPropertyValueInteger (aNode.intValue ());
 
@@ -108,12 +111,10 @@ public final class JSONReader
    * @return the resulting object
    */
   @Nonnull
-  public static JSONObject convertObject (@Nonnull final JsonNode aNode)
+  public static JSONObject convertObject (@Nonnull final ObjectNode aNode)
   {
     if (aNode == null)
       throw new NullPointerException ("node");
-    if (!aNode.isObject ())
-      throw new IllegalArgumentException ("node is not a JSON object");
 
     final JSONObject aObj = new JSONObject ();
     for (final Map.Entry <String, JsonNode> aEntry : IterableIterator.create (aNode.fields ()))
@@ -145,6 +146,15 @@ public final class JSONReader
     return ret;
   }
 
+  @Nonnull
+  private static IJSON _convert (@Nonnull final JsonNode aNode) throws JSONParsingException
+  {
+    final IJSON aJSON = convert (aNode);
+    if (aJSON == null)
+      throw new JSONParsingException ("Failed to convert JSON node to internal representation: " + aJSON);
+    return aJSON;
+  }
+
   /**
    * Parse the passed JSON string into whatever resulting {@link IJSON}
    * representation
@@ -157,27 +167,31 @@ public final class JSONReader
   @Nonnull
   public static IJSON parse (@Nonnull final String sJSON) throws JSONParsingException
   {
-    final JsonNode aRootNode = JacksonHelper.parseToNode (sJSON);
-    final IJSON aJSON = convert (aRootNode);
-    if (aJSON == null)
-      throw new JSONParsingException ("Don't know how to parse JSON:" + sJSON);
-    return aJSON;
+    return _convert (JacksonHelper.parseToNode (sJSON));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final InputStream aIS) throws JSONParsingException
   {
-    final JsonNode aRootNode = JacksonHelper.parseToNode (aIS);
-    final IJSON aJSON = convert (aRootNode);
-    if (aJSON == null)
-      throw new JSONParsingException ("Don't know how to parse JSON from InputStream " + aIS);
-    return aJSON;
+    return _convert (JacksonHelper.parseToNode (aIS));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final IInputStreamProvider aIIS) throws JSONParsingException
   {
-    return parse (aIIS.getInputStream ());
+    return _convert (JacksonHelper.parseToNode (aIIS.getInputStream ()));
+  }
+
+  @Nonnull
+  public static IJSON parse (@Nonnull final Reader aReader) throws JSONParsingException
+  {
+    return _convert (JacksonHelper.parseToNode (aReader));
+  }
+
+  @Nonnull
+  public static IJSON parse (@Nonnull final IReaderProvider aReaderProvider) throws JSONParsingException
+  {
+    return _convert (JacksonHelper.parseToNode (aReaderProvider.getReader ()));
   }
 
   /**
@@ -191,12 +205,12 @@ public final class JSONReader
    *         in case parsing fails
    */
   @Nonnull
-  public static IJSONObject parseObject (@Nonnull final String sJSON)
+  public static IJSONObject parseObject (@Nonnull final String sJSON) throws JSONParsingException
   {
     final JsonNode aParsedNode = JacksonHelper.parseToNode (sJSON);
     if (!aParsedNode.isObject ())
-      throw new IllegalArgumentException ("Passed JSON string is not an object: '" + sJSON + "'");
-    return convertObject (aParsedNode);
+      throw new JSONParsingException ("Passed JSON string is not an object: '" + sJSON + "'");
+    return convertObject ((ObjectNode) aParsedNode);
   }
 
   /**
@@ -211,12 +225,28 @@ public final class JSONReader
    *         in case parsing fails
    */
   @Nonnull
-  public static IJSONPropertyValueList <?> parseArray (@Nonnull final String sJSON)
+  public static IJSONPropertyValueList <?> parseArray (@Nonnull final String sJSON) throws JSONParsingException
   {
     final JsonNode aParsedNode = JacksonHelper.parseToNode (sJSON);
     if (!aParsedNode.isArray ())
-      throw new IllegalArgumentException ("Passed JSON string is not an array: '" + sJSON + "'");
+      throw new JSONParsingException ("Passed JSON string is not an array: '" + sJSON + "'");
     return convertArray ((ArrayNode) aParsedNode);
+  }
+
+  /**
+   * Utility method handling arrays with inner array member type {@link Boolean}
+   * .
+   * 
+   * @param aValues
+   *        the {@link ArrayNode} to convert
+   * @return the resulting {@link JSONPropertyValueList}
+   * @deprecated Use {@link #convertBooleanList(ArrayNode)} instead
+   */
+  @Deprecated
+  @Nonnull
+  public static JSONPropertyValueList <JSONPropertyValueBoolean> getBooleanList (final ArrayNode aValues)
+  {
+    return convertBooleanList (aValues);
   }
 
   /**
@@ -228,7 +258,7 @@ public final class JSONReader
    * @return the resulting {@link JSONPropertyValueList}
    */
   @Nonnull
-  public static JSONPropertyValueList <JSONPropertyValueBoolean> getBooleanList (final ArrayNode aValues)
+  public static JSONPropertyValueList <JSONPropertyValueBoolean> convertBooleanList (final ArrayNode aValues)
   {
     final JSONPropertyValueList <JSONPropertyValueBoolean> aList = new JSONPropertyValueList <JSONPropertyValueBoolean> ();
     for (final JsonNode aValue : aValues)
@@ -243,9 +273,25 @@ public final class JSONReader
    * @param aValues
    *        the {@link ArrayNode} to convert
    * @return the resulting {@link JSONPropertyValueList}
+   * @deprecated Use {@link #convertIntegerList(ArrayNode)} instead
    */
+  @Deprecated
   @Nonnull
   public static JSONPropertyValueList <JSONPropertyValueInteger> getIntegerList (final ArrayNode aValues)
+  {
+    return convertIntegerList (aValues);
+  }
+
+  /**
+   * Utility method handling arrays with inner array member type {@link Integer}
+   * .
+   * 
+   * @param aValues
+   *        the {@link ArrayNode} to convert
+   * @return the resulting {@link JSONPropertyValueList}
+   */
+  @Nonnull
+  public static JSONPropertyValueList <JSONPropertyValueInteger> convertIntegerList (final ArrayNode aValues)
   {
     final JSONPropertyValueList <JSONPropertyValueInteger> aList = new JSONPropertyValueList <JSONPropertyValueInteger> ();
     for (final JsonNode aValue : aValues)
@@ -259,9 +305,24 @@ public final class JSONReader
    * @param aValues
    *        the {@link ArrayNode} to convert
    * @return the resulting {@link JSONPropertyValueList}
+   * @deprecated Use {@link #convertStringList(ArrayNode)} instead
    */
+  @Deprecated
   @Nonnull
   public static JSONPropertyValueList <JSONPropertyValueString> getStringList (final ArrayNode aValues)
+  {
+    return convertStringList (aValues);
+  }
+
+  /**
+   * Utility method handling arrays with inner array member type {@link String}.
+   * 
+   * @param aValues
+   *        the {@link ArrayNode} to convert
+   * @return the resulting {@link JSONPropertyValueList}
+   */
+  @Nonnull
+  public static JSONPropertyValueList <JSONPropertyValueString> convertStringList (final ArrayNode aValues)
   {
     final JSONPropertyValueList <JSONPropertyValueString> aList = new JSONPropertyValueList <JSONPropertyValueString> ();
     for (final JsonNode aValue : aValues)
@@ -276,13 +337,29 @@ public final class JSONReader
    * @param aValues
    *        the {@link ArrayNode} to convert
    * @return the resulting {@link JSONPropertyValueList}
+   * @deprecated Use {@link #convertObjectList(ArrayNode)} instead
    */
+  @Deprecated
   @Nonnull
   public static JSONPropertyValueList <IJSONObject> getObjectList (final ArrayNode aValues)
   {
+    return convertObjectList (aValues);
+  }
+
+  /**
+   * Utility method handling arrays with inner array member type
+   * {@link IJSONObject}.
+   * 
+   * @param aValues
+   *        the {@link ArrayNode} to convert
+   * @return the resulting {@link JSONPropertyValueList}
+   */
+  @Nonnull
+  public static JSONPropertyValueList <IJSONObject> convertObjectList (final ArrayNode aValues)
+  {
     final JSONPropertyValueList <IJSONObject> aList = new JSONPropertyValueList <IJSONObject> ();
     for (final JsonNode aValue : aValues)
-      aList.addValue (convertObject (aValue));
+      aList.addValue (convertObject ((ObjectNode) aValue));
     return aList;
   }
 }
