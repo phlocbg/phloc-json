@@ -17,18 +17,17 @@
  */
 package com.phloc.json;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.phloc.json.impl.JSONParsingException;
 
 /**
  * Utility class around the Jackson JSON implementation
@@ -69,33 +68,29 @@ public final class JacksonHelper
    *        the JSON string to convert, can be any valid JSON mark-up
    * @return the resulting JSON node structure
    */
-  @Nullable
-  public static JsonNode parseToNode (@Nonnull final String sJSON)
+  @Nonnull
+  public static JsonNode parseToNode (@Nonnull final String sJSON) throws JSONParsingException
   {
     try
     {
       return createObjectMapper ().readTree (sJSON);
     }
-    catch (final JsonProcessingException e)
+    catch (final Throwable t)
     {
-      throw new IllegalArgumentException ("Error parsing as JSON tree: '" + sJSON + "'", e);
-    }
-    catch (final IOException e)
-    {
-      throw new IllegalArgumentException ("Error parsing as JSON tree: '" + sJSON + "'", e);
+      throw new JSONParsingException ("Error parsing as JSON tree: '" + sJSON + "'", t);
     }
   }
 
   /**
-   * Parse the passed JSON string into a {@link JsonNode} structure for further
-   * processing
+   * Parse the passed {@link InputStream} into a {@link JsonNode} structure for
+   * further processing
    * 
    * @param aIS
    *        the JSON input stream to convert, can be any valid JSON mark-up
    * @return the resulting JSON node structure
    */
-  @Nullable
-  public static JsonNode parseToNode (@Nonnull final InputStream aIS)
+  @Nonnull
+  public static JsonNode parseToNode (@Nonnull final InputStream aIS) throws JSONParsingException
   {
     if (aIS == null)
       throw new NullPointerException ("inputStream");
@@ -103,13 +98,32 @@ public final class JacksonHelper
     {
       return createObjectMapper ().readTree (aIS);
     }
-    catch (final JsonProcessingException e)
+    catch (final Throwable t)
     {
-      throw new IllegalArgumentException ("Error parsing as JSON tree from InputStream", e);
+      throw new JSONParsingException ("Error parsing as JSON tree from InputStream", t);
     }
-    catch (final IOException e)
+  }
+
+  /**
+   * Parse the passed {@link Reader} into a {@link JsonNode} structure for
+   * further processing
+   * 
+   * @param aReader
+   *        the JSON Reader to convert, can be any valid JSON mark-up
+   * @return the resulting JSON node structure
+   */
+  @Nonnull
+  public static JsonNode parseToNode (@Nonnull final Reader aReader) throws JSONParsingException
+  {
+    if (aReader == null)
+      throw new NullPointerException ("reader");
+    try
     {
-      throw new IllegalArgumentException ("Error parsing as JSON tree from InputStream", e);
+      return createObjectMapper ().readTree (aReader);
+    }
+    catch (final Throwable t)
+    {
+      throw new JSONParsingException ("Error parsing as JSON tree from Reader", t);
     }
   }
 }

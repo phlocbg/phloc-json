@@ -29,6 +29,7 @@ import org.junit.Test;
 import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.mock.PhlocTestUtils;
 import com.phloc.json.impl.JSONObject;
+import com.phloc.json.impl.JSONParsingException;
 import com.phloc.json.impl.JSONReader;
 import com.phloc.json.impl.value.JSONPropertyValueList;
 
@@ -100,7 +101,7 @@ public abstract class AbstractJSONTestCase
   }
 
   @Test
-  public final void testGetJSONString ()
+  public final void testGetJSONString () throws JSONParsingException
   {
     final IJSONObject aObj = _createTestObjectComplex ();
 
