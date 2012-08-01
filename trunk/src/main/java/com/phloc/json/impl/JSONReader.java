@@ -151,7 +151,7 @@ public final class JSONReader
   {
     final IJSON aJSON = convert (aNode);
     if (aJSON == null)
-      throw new JSONParsingException ("Failed to convert JSON node to internal representation: " + aJSON);
+      throw new JSONParsingException ("Failed to convert JSON node to internal representation: " + aNode);
     return aJSON;
   }
 
