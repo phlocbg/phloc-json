@@ -74,14 +74,14 @@ public abstract class AbstractJSONTestCase
   {
     final IJSONObject aObj = _createTestObjectSimple ();
     aObj.setObjectProperty (PROP_FOUR, _createTestObjectSimple ());
-    final IJSONPropertyValueList <List <IJSONObject>, IJSONPropertyValueList <IJSONObject, IJSONObject>> aList = new JSONPropertyValueList <List <IJSONObject>, IJSONPropertyValueList <IJSONObject, IJSONObject>> ();
+    final IJSONPropertyValueList <IJSONPropertyValueList <IJSONObject>> aList = new JSONPropertyValueList <IJSONPropertyValueList <IJSONObject>> ();
 
-    final JSONPropertyValueList <IJSONObject, IJSONObject> aInnerListOne = new JSONPropertyValueList <IJSONObject, IJSONObject> ();
+    final JSONPropertyValueList <IJSONObject> aInnerListOne = new JSONPropertyValueList <IJSONObject> ();
     aInnerListOne.addValue (_createTestObjectSimple ());
     aInnerListOne.addValue (_createTestObjectSimple ());
     aList.addValue (aInnerListOne);
 
-    final JSONPropertyValueList <IJSONObject, IJSONObject> aInnerListTwo = new JSONPropertyValueList <IJSONObject, IJSONObject> ();
+    final JSONPropertyValueList <IJSONObject> aInnerListTwo = new JSONPropertyValueList <IJSONObject> ();
     aInnerListTwo.addValue (_createTestObjectSimple ());
     aInnerListTwo.addValue (_createTestObjectSimple ());
     aList.addValue (aInnerListTwo);

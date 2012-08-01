@@ -25,13 +25,11 @@ import javax.annotation.Nonnull;
  * Interface representing a list of property values ({@link IJSONPropertyValue})
  * 
  * @author Boris Gregorcic
- * @param <VALUETYPE>
- *        The type contained in the IJSONPropertyValue
  * @param <DATATYPE>
  *        The concrete {@link IJSONPropertyValue} type to use
  */
-public interface IJSONPropertyValueList <VALUETYPE, DATATYPE extends IJSONPropertyValue <VALUETYPE>> extends
-                                                                                                     IJSONPropertyValueComplex <List <DATATYPE>>
+public interface IJSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> extends
+                                                                                  IJSONPropertyValueComplex <List <DATATYPE>>
 {
   /**
    * @return the list of {@link IJSONPropertyValue}s
@@ -42,7 +40,7 @@ public interface IJSONPropertyValueList <VALUETYPE, DATATYPE extends IJSONProper
    * @return A list of the inner data values (the data items stored inside the
    *         {@link IJSONPropertyValue}s)
    */
-  List <VALUETYPE> getDataValues ();
+  List <?> getDataValues ();
 
   /**
    * adds the passed value in the list
@@ -64,5 +62,5 @@ public interface IJSONPropertyValueList <VALUETYPE, DATATYPE extends IJSONProper
    * {@inheritDoc}
    */
   @Nonnull
-  IJSONPropertyValueList <VALUETYPE, DATATYPE> getClone ();
+  IJSONPropertyValueList <DATATYPE> getClone ();
 }

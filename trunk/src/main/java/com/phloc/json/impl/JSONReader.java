@@ -136,13 +136,12 @@ public final class JSONReader
    * @param aValues
    * @return a property list representing the passed array
    */
-  @SuppressWarnings ("unchecked")
   @Nonnull
-  public static JSONPropertyValueList <?, ?> convertArray (final ArrayNode aValues)
+  public static JSONPropertyValueList <?> convertArray (final ArrayNode aValues)
   {
-    final JSONPropertyValueList <Object, IJSONPropertyValue <Object>> ret = new JSONPropertyValueList <Object, IJSONPropertyValue <Object>> ();
+    final JSONPropertyValueList <IJSONPropertyValue <?>> ret = new JSONPropertyValueList <IJSONPropertyValue <?>> ();
     for (final JsonNode aNode : aValues)
-      ret.addValue ((IJSONPropertyValue <Object>) convert (aNode));
+      ret.addValue (convert (aNode));
     return ret;
   }
 
@@ -212,7 +211,7 @@ public final class JSONReader
    *         in case parsing fails
    */
   @Nonnull
-  public static IJSONPropertyValueList <?, ?> parseArray (@Nonnull final String sJSON)
+  public static IJSONPropertyValueList <?> parseArray (@Nonnull final String sJSON)
   {
     final JsonNode aParsedNode = JacksonHelper.parseToNode (sJSON);
     if (!aParsedNode.isArray ())
@@ -229,9 +228,9 @@ public final class JSONReader
    * @return the resulting {@link JSONPropertyValueList}
    */
   @Nonnull
-  public static JSONPropertyValueList <Boolean, JSONPropertyValueBoolean> getBooleanList (final ArrayNode aValues)
+  public static JSONPropertyValueList <JSONPropertyValueBoolean> getBooleanList (final ArrayNode aValues)
   {
-    final JSONPropertyValueList <Boolean, JSONPropertyValueBoolean> aList = new JSONPropertyValueList <Boolean, JSONPropertyValueBoolean> ();
+    final JSONPropertyValueList <JSONPropertyValueBoolean> aList = new JSONPropertyValueList <JSONPropertyValueBoolean> ();
     for (final JsonNode aValue : aValues)
       aList.addValue (new JSONPropertyValueBoolean (aValue.booleanValue ()));
     return aList;
@@ -246,9 +245,9 @@ public final class JSONReader
    * @return the resulting {@link JSONPropertyValueList}
    */
   @Nonnull
-  public static JSONPropertyValueList <Integer, JSONPropertyValueInteger> getIntegerList (final ArrayNode aValues)
+  public static JSONPropertyValueList <JSONPropertyValueInteger> getIntegerList (final ArrayNode aValues)
   {
-    final JSONPropertyValueList <Integer, JSONPropertyValueInteger> aList = new JSONPropertyValueList <Integer, JSONPropertyValueInteger> ();
+    final JSONPropertyValueList <JSONPropertyValueInteger> aList = new JSONPropertyValueList <JSONPropertyValueInteger> ();
     for (final JsonNode aValue : aValues)
       aList.addValue (new JSONPropertyValueInteger (aValue.intValue ()));
     return aList;
@@ -262,9 +261,9 @@ public final class JSONReader
    * @return the resulting {@link JSONPropertyValueList}
    */
   @Nonnull
-  public static JSONPropertyValueList <String, JSONPropertyValueString> getStringList (final ArrayNode aValues)
+  public static JSONPropertyValueList <JSONPropertyValueString> getStringList (final ArrayNode aValues)
   {
-    final JSONPropertyValueList <String, JSONPropertyValueString> aList = new JSONPropertyValueList <String, JSONPropertyValueString> ();
+    final JSONPropertyValueList <JSONPropertyValueString> aList = new JSONPropertyValueList <JSONPropertyValueString> ();
     for (final JsonNode aValue : aValues)
       aList.addValue (new JSONPropertyValueString (aValue.textValue ()));
     return aList;
@@ -279,9 +278,9 @@ public final class JSONReader
    * @return the resulting {@link JSONPropertyValueList}
    */
   @Nonnull
-  public static JSONPropertyValueList <IJSONObject, IJSONObject> getObjectList (final ArrayNode aValues)
+  public static JSONPropertyValueList <IJSONObject> getObjectList (final ArrayNode aValues)
   {
-    final JSONPropertyValueList <IJSONObject, IJSONObject> aList = new JSONPropertyValueList <IJSONObject, IJSONObject> ();
+    final JSONPropertyValueList <IJSONObject> aList = new JSONPropertyValueList <IJSONObject> ();
     for (final JsonNode aValue : aValues)
       aList.addValue (convertObject (aValue));
     return aList;
