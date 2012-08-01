@@ -19,6 +19,7 @@ package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
 
+import com.phloc.commons.annotations.DevelopersNote;
 import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValue;
 
@@ -28,6 +29,8 @@ import com.phloc.json.IJSONPropertyValue;
  * 
  * @author Boris Gregorcic
  */
+@Deprecated
+@DevelopersNote ("Used JSONObject directly!")
 public class JSONPropertyValueJSONObject extends AbstractJSONPropertyValue <IJSONObject>
 {
   /**

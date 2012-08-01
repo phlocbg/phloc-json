@@ -30,7 +30,6 @@ import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.mock.PhlocTestUtils;
 import com.phloc.json.impl.JSONObject;
 import com.phloc.json.impl.JSONReader;
-import com.phloc.json.impl.value.JSONPropertyValueJSONObject;
 import com.phloc.json.impl.value.JSONPropertyValueList;
 
 public abstract class AbstractJSONTestCase
@@ -75,16 +74,16 @@ public abstract class AbstractJSONTestCase
   {
     final IJSONObject aObj = _createTestObjectSimple ();
     aObj.setObjectProperty (PROP_FOUR, _createTestObjectSimple ());
-    final JSONPropertyValueList <List <IJSONPropertyValue <IJSONObject>>> aList = new JSONPropertyValueList <List <IJSONPropertyValue <IJSONObject>>> ();
+    final IJSONPropertyValueList <List <IJSONObject>, IJSONPropertyValueList <IJSONObject, IJSONObject>> aList = new JSONPropertyValueList <List <IJSONObject>, IJSONPropertyValueList <IJSONObject, IJSONObject>> ();
 
-    final JSONPropertyValueList <IJSONObject> aInnerListOne = new JSONPropertyValueList <IJSONObject> ();
-    aInnerListOne.addValue (new JSONPropertyValueJSONObject (_createTestObjectSimple ()));
-    aInnerListOne.addValue (new JSONPropertyValueJSONObject (_createTestObjectSimple ()));
+    final JSONPropertyValueList <IJSONObject, IJSONObject> aInnerListOne = new JSONPropertyValueList <IJSONObject, IJSONObject> ();
+    aInnerListOne.addValue (_createTestObjectSimple ());
+    aInnerListOne.addValue (_createTestObjectSimple ());
     aList.addValue (aInnerListOne);
 
-    final JSONPropertyValueList <IJSONObject> aInnerListTwo = new JSONPropertyValueList <IJSONObject> ();
-    aInnerListTwo.addValue (new JSONPropertyValueJSONObject (_createTestObjectSimple ()));
-    aInnerListTwo.addValue (new JSONPropertyValueJSONObject (_createTestObjectSimple ()));
+    final JSONPropertyValueList <IJSONObject, IJSONObject> aInnerListTwo = new JSONPropertyValueList <IJSONObject, IJSONObject> ();
+    aInnerListTwo.addValue (_createTestObjectSimple ());
+    aInnerListTwo.addValue (_createTestObjectSimple ());
     aList.addValue (aInnerListTwo);
 
     aObj.setListProperty (PROP_FIVE, aList);

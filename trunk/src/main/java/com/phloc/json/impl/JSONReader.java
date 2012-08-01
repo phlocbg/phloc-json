@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.collections.iterate.IterableIterator;
 import com.phloc.commons.io.IInputStreamProvider;
 import com.phloc.json.IJSON;
@@ -42,7 +41,6 @@ import com.phloc.json.impl.value.JSONPropertyValueBigInteger;
 import com.phloc.json.impl.value.JSONPropertyValueBoolean;
 import com.phloc.json.impl.value.JSONPropertyValueDouble;
 import com.phloc.json.impl.value.JSONPropertyValueInteger;
-import com.phloc.json.impl.value.JSONPropertyValueJSONObject;
 import com.phloc.json.impl.value.JSONPropertyValueList;
 import com.phloc.json.impl.value.JSONPropertyValueLong;
 import com.phloc.json.impl.value.JSONPropertyValueString;
@@ -64,7 +62,7 @@ public final class JSONReader
   }
 
   @Nullable
-  public static IJSON convert (@Nonnull final JsonNode aNode)
+  public static IJSONPropertyValue <?> convert (@Nonnull final JsonNode aNode)
   {
     if (aNode.isObject ())
       return convertObject (aNode);
@@ -138,28 +136,14 @@ public final class JSONReader
    * @param aValues
    * @return a property list representing the passed array
    */
+  @SuppressWarnings ("unchecked")
   @Nonnull
-  public static JSONPropertyValueList <?> convertArray (final ArrayNode aValues)
+  public static JSONPropertyValueList <?, ?> convertArray (final ArrayNode aValues)
   {
-    // FIXME this is extremely bogus!
-    // check the first token to determine list data type
-    final JsonNode aFirst = ContainerHelper.getFirstElement (aValues);
-    if (aFirst != null)
-    {
-      if (aFirst.isObject ())
-        return getObjectList (aValues);
-      if (aFirst.isArray ())
-        return getSubList (aValues);
-      if (aFirst.isBoolean ())
-        return getBooleanList (aValues);
-      if (aFirst.isInt ())
-        return getIntegerList (aValues);
-      if (aFirst.isTextual ())
-        return getStringList (aValues);
-      s_aLogger.warn ("Unhandled value type: " + aFirst.getClass ());
-    }
-    // empty list, we cannot tell the type, so use Object
-    return new JSONPropertyValueList <Object> ();
+    final JSONPropertyValueList <Object, IJSONPropertyValue <Object>> ret = new JSONPropertyValueList <Object, IJSONPropertyValue <Object>> ();
+    for (final JsonNode aNode : aValues)
+      ret.addValue ((IJSONPropertyValue <Object>) convert (aNode));
+    return ret;
   }
 
   /**
@@ -228,7 +212,7 @@ public final class JSONReader
    *         in case parsing fails
    */
   @Nonnull
-  public static IJSONPropertyValueList <?> parseArray (@Nonnull final String sJSON)
+  public static IJSONPropertyValueList <?, ?> parseArray (@Nonnull final String sJSON)
   {
     final JsonNode aParsedNode = JacksonHelper.parseToNode (sJSON);
     if (!aParsedNode.isArray ())
@@ -237,97 +221,69 @@ public final class JSONReader
   }
 
   /**
-   * Utility method as specialization of {@link #getSubList(ArrayNode)} handling
-   * arrays with inner array member type {@link Boolean}.
+   * Utility method handling arrays with inner array member type {@link Boolean}
+   * .
    * 
    * @param aValues
    *        the {@link ArrayNode} to convert
    * @return the resulting {@link JSONPropertyValueList}
    */
   @Nonnull
-  public static JSONPropertyValueList <Boolean> getBooleanList (final ArrayNode aValues)
+  public static JSONPropertyValueList <Boolean, JSONPropertyValueBoolean> getBooleanList (final ArrayNode aValues)
   {
-    final JSONPropertyValueList <Boolean> aList = new JSONPropertyValueList <Boolean> ();
+    final JSONPropertyValueList <Boolean, JSONPropertyValueBoolean> aList = new JSONPropertyValueList <Boolean, JSONPropertyValueBoolean> ();
     for (final JsonNode aValue : aValues)
       aList.addValue (new JSONPropertyValueBoolean (aValue.booleanValue ()));
     return aList;
   }
 
   /**
-   * Utility method as specialization of {@link #getSubList(ArrayNode)} handling
-   * arrays with inner array member type {@link Integer}.
+   * Utility method handling arrays with inner array member type {@link Integer}
+   * .
    * 
    * @param aValues
    *        the {@link ArrayNode} to convert
    * @return the resulting {@link JSONPropertyValueList}
    */
   @Nonnull
-  public static JSONPropertyValueList <Integer> getIntegerList (final ArrayNode aValues)
+  public static JSONPropertyValueList <Integer, JSONPropertyValueInteger> getIntegerList (final ArrayNode aValues)
   {
-    final JSONPropertyValueList <Integer> aList = new JSONPropertyValueList <Integer> ();
+    final JSONPropertyValueList <Integer, JSONPropertyValueInteger> aList = new JSONPropertyValueList <Integer, JSONPropertyValueInteger> ();
     for (final JsonNode aValue : aValues)
       aList.addValue (new JSONPropertyValueInteger (aValue.intValue ()));
     return aList;
   }
 
   /**
-   * Utility method as specialization of {@link #getSubList(ArrayNode)} handling
-   * arrays with inner array member type {@link String}.
+   * Utility method handling arrays with inner array member type {@link String}.
    * 
    * @param aValues
    *        the {@link ArrayNode} to convert
    * @return the resulting {@link JSONPropertyValueList}
    */
   @Nonnull
-  public static JSONPropertyValueList <String> getStringList (final ArrayNode aValues)
+  public static JSONPropertyValueList <String, JSONPropertyValueString> getStringList (final ArrayNode aValues)
   {
-    final JSONPropertyValueList <String> aList = new JSONPropertyValueList <String> ();
+    final JSONPropertyValueList <String, JSONPropertyValueString> aList = new JSONPropertyValueList <String, JSONPropertyValueString> ();
     for (final JsonNode aValue : aValues)
       aList.addValue (new JSONPropertyValueString (aValue.textValue ()));
     return aList;
   }
 
   /**
-   * Utility method as specialization of {@link #getSubList(ArrayNode)} handling
-   * arrays with inner array member type {@link IJSONObject}.
+   * Utility method handling arrays with inner array member type
+   * {@link IJSONObject}.
    * 
    * @param aValues
    *        the {@link ArrayNode} to convert
    * @return the resulting {@link JSONPropertyValueList}
    */
   @Nonnull
-  public static JSONPropertyValueList <IJSONObject> getObjectList (final ArrayNode aValues)
+  public static JSONPropertyValueList <IJSONObject, IJSONObject> getObjectList (final ArrayNode aValues)
   {
-    final JSONPropertyValueList <IJSONObject> aList = new JSONPropertyValueList <IJSONObject> ();
+    final JSONPropertyValueList <IJSONObject, IJSONObject> aList = new JSONPropertyValueList <IJSONObject, IJSONObject> ();
     for (final JsonNode aValue : aValues)
-      aList.addValue (new JSONPropertyValueJSONObject (convertObject (aValue)));
-    return aList;
-  }
-
-  /**
-   * Utility method for converting a nested array (array also having inner type
-   * array) into a corresponding {@link JSONPropertyValueList}
-   * 
-   * @param <T>
-   *        the common super type (defaults to Object)
-   * @param aNode
-   *        the {@link ArrayNode} to convert
-   * @return the resulting {@link JSONPropertyValueList}
-   */
-  @SuppressWarnings ("unchecked")
-  public static <T> JSONPropertyValueList <T> getSubList (@Nonnull final ArrayNode aNode)
-  {
-    final JSONPropertyValueList <T> aList = new JSONPropertyValueList <T> ();
-    for (final JsonNode aChildNode : aNode)
-    {
-      if (aChildNode.isArray ())
-      {
-        if (aChildNode.elements ().hasNext ())
-          aList.addValue ((IJSONPropertyValue <T>) convertArray ((ArrayNode) aChildNode));
-        else
-          aList.addValue ((IJSONPropertyValue <T>) new JSONPropertyValueList <Object> ());
-      }
-    }
+      aList.addValue (convertObject (aValue));
     return aList;
   }
 }

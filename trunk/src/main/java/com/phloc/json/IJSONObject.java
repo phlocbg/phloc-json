@@ -234,7 +234,8 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @param sName
    * @param aList
    */
-  <DATATYPE> void setListProperty (String sName, IJSONPropertyValueList <DATATYPE> aList);
+  <VALUETYPE, DATATYPE extends IJSONPropertyValue <VALUETYPE>> void setListProperty (String sName,
+                                                                                     IJSONPropertyValueList <VALUETYPE, DATATYPE> aList);
 
   /**
    * Tries to resolve the value of the passed object property. If not found or

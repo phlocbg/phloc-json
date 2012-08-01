@@ -66,6 +66,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * 
  * @author Boris Gregorcic, philip
  */
+@SuppressWarnings ("deprecation")
 public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implements IJSONObject
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (JSONObject.class);
@@ -265,12 +266,13 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   public <I> List <I> getListProperty (@Nullable final String sName)
   {
     final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
-    if (aValue instanceof IJSONPropertyValueList <?>)
-      return ((IJSONPropertyValueList <I>) aValue).getDataValues ();
+    if (aValue instanceof IJSONPropertyValueList <?, ?>)
+      return ((IJSONPropertyValueList <I, ?>) aValue).getDataValues ();
     return null;
   }
 
-  public <DATATYPE> void setListProperty (@Nonnull final String sName, final IJSONPropertyValueList <DATATYPE> aList)
+  public <VALUETYPE, DATATYPE extends IJSONPropertyValue <VALUETYPE>> void setListProperty (@Nonnull final String sName,
+                                                                                            final IJSONPropertyValueList <VALUETYPE, DATATYPE> aList)
   {
     setProperty (JSONProperty.create (sName, aList));
   }
@@ -411,16 +413,16 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   public List <? extends IJSONPropertyValue <?>> getListValues (@Nullable final String sName)
   {
     final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
-    if (aValue instanceof IJSONPropertyValueList <?>)
-      return ((IJSONPropertyValueList <?>) aValue).getValues ();
+    if (aValue instanceof IJSONPropertyValueList <?, ?>)
+      return ((IJSONPropertyValueList <?, ?>) aValue).getValues ();
     return null;
   }
 
   public void setObjectListProperty (@Nonnull final String sName, final Collection <? extends IJSONObject> aObjectList)
   {
-    final IJSONPropertyValueList <IJSONObject> aList = new JSONPropertyValueList <IJSONObject> ();
+    final IJSONPropertyValueList <IJSONObject, IJSONObject> aList = new JSONPropertyValueList <IJSONObject, IJSONObject> ();
     for (final IJSONObject aObject : aObjectList)
-      aList.addValue (new JSONPropertyValueJSONObject (aObject));
+      aList.addValue (aObject);
     setProperty (JSONProperty.create (sName, aList));
   }
 
@@ -438,7 +440,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   public void setStringListProperty (@Nonnull final String sName, @Nonnull final Collection <String> aStringList)
   {
-    final IJSONPropertyValueList <String> aList = new JSONPropertyValueList <String> ();
+    final IJSONPropertyValueList <String, JSONPropertyValueString> aList = new JSONPropertyValueList <String, JSONPropertyValueString> ();
     for (final String sValue : aStringList)
       aList.addValue (new JSONPropertyValueString (sValue));
     setProperty (JSONProperty.create (sName, aList));
@@ -446,7 +448,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   public void setIntegerListProperty (@Nonnull final String sName, @Nonnull final int [] aIntList)
   {
-    final IJSONPropertyValueList <Integer> aList = new JSONPropertyValueList <Integer> ();
+    final IJSONPropertyValueList <Integer, JSONPropertyValueInteger> aList = new JSONPropertyValueList <Integer, JSONPropertyValueInteger> ();
     for (final int nValue : aIntList)
       aList.addValue (new JSONPropertyValueInteger (nValue));
     setProperty (JSONProperty.create (sName, aList));
@@ -455,10 +457,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   public void setListOfListProperty (@Nonnull final String sName,
                                      @Nonnull final Collection <Collection <String>> aListOfList)
   {
-    final JSONPropertyValueList <List <IJSONPropertyValue <String>>> aList = new JSONPropertyValueList <List <IJSONPropertyValue <String>>> ();
+    final JSONPropertyValueList <List <JSONPropertyValueString>, IJSONPropertyValueList <String, JSONPropertyValueString>> aList = new JSONPropertyValueList <List <JSONPropertyValueString>, IJSONPropertyValueList <String, JSONPropertyValueString>> ();
     for (final Collection <String> aRow : aListOfList)
     {
-      final IJSONPropertyValueList <String> aRowList = new JSONPropertyValueList <String> ();
+      final IJSONPropertyValueList <String, JSONPropertyValueString> aRowList = new JSONPropertyValueList <String, JSONPropertyValueString> ();
       for (final String aCell : aRow)
         aRowList.addValue (new JSONPropertyValueString (aCell));
       aList.addValue (aRowList);
