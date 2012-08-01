@@ -34,7 +34,7 @@ import org.junit.Test;
 public final class JSONObjectTest
 {
   @Test
-  public void testSimple () throws JSONParsingException
+  public void testSimple ()
   {
     JSONObject aObj = new JSONObject ();
     aObj.setStringProperty ("a", "b");

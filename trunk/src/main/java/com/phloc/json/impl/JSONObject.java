@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +32,6 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.phloc.commons.annotations.ReturnsImmutableObject;
 import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.equals.EqualsUtils;
@@ -467,64 +464,6 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       aList.addValue (aRowList);
     }
     setProperty (JSONProperty.create (sName, aList));
-  }
-
-  /**
-   * Converts a passed {@link JsonNode} into a {@link JSONObject}
-   * 
-   * @param aNode
-   * @return the resulting object
-   * @throws JSONParsingException
-   */
-  @Nonnull
-  public static JSONObject fromJSONNode (@Nonnull final JsonNode aNode) throws JSONParsingException
-  {
-    if (aNode == null)
-      throw new NullPointerException ("node");
-
-    final JSONObject aObj = new JSONObject ();
-    final Iterator <Map.Entry <String, JsonNode>> aFieldIterator = aNode.fields ();
-    while (aFieldIterator.hasNext ())
-    {
-      final Map.Entry <String, JsonNode> aEntry = aFieldIterator.next ();
-      final String sField = aEntry.getKey ();
-      final JsonNode aValue = aEntry.getValue ();
-
-      if (aValue.isObject ())
-        aObj.setObjectProperty (sField, JSONObject.fromJSONNode (aValue));
-      else
-        if (aValue.isArray ())
-          aObj.setListProperty (sField, JSONPropertyValueList.fromJSONNode ((ArrayNode) aValue));
-        else
-          if (aValue.isBoolean ())
-            aObj.setBooleanProperty (sField, aValue.booleanValue ());
-          else
-            if (aValue.isTextual ())
-              aObj.setStringProperty (sField, aValue.textValue ());
-            else
-              if (aValue.isBigDecimal ())
-                aObj.setBigDecimalProperty (sField, aValue.decimalValue ());
-              else
-                if (aValue.isFloatingPointNumber ())
-                  aObj.setDoubleProperty (sField, aValue.doubleValue ());
-                else
-                  if (aValue.isBigInteger ())
-                    aObj.setBigIntegerProperty (sField, aValue.bigIntegerValue ());
-                  else
-                    if (aValue.isLong ())
-                      aObj.setLongProperty (sField, aValue.longValue ());
-                    else
-                      if (aValue.isInt ())
-                        aObj.setIntegerProperty (sField, aValue.intValue ());
-                      else
-                        if (aValue.isNull ())
-                        {
-                          // just do not set null values
-                        }
-                        else
-                          throw new JSONParsingException ("Unhandled value type: " + aValue);
-    }
-    return aObj;
   }
 
   @Override

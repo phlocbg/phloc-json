@@ -23,8 +23,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.phloc.commons.annotations.ReturnsImmutableObject;
 import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.collections.ContainerHelper;
@@ -32,8 +30,6 @@ import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.IJSONPropertyValueList;
 import com.phloc.json.impl.CJSONConstants;
-import com.phloc.json.impl.JSONParsingException;
-import com.phloc.json.impl.JSONReader;
 
 /**
  * Default implementation of {@link IJSONPropertyValueList}
@@ -119,37 +115,6 @@ public class JSONPropertyValueList <DATATYPE> extends AbstractJSONPropertyValue 
     }
     indent (aResult, nLevel, bAlignAndIndent);
     aResult.append (CJSONConstants.LIST_END);
-  }
-
-  /**
-   * Converts the passed {@link ArrayNode} to a corresponding
-   * {@link JSONPropertyValueList}
-   * 
-   * @param aValues
-   * @return a property list representing the passed array
-   * @throws JSONParsingException
-   */
-  @Nonnull
-  public static JSONPropertyValueList <?> fromJSONNode (final ArrayNode aValues) throws JSONParsingException
-  {
-    // check the first token to determine list data type
-    final JsonNode aFirst = ContainerHelper.getFirstElement (aValues);
-    if (aFirst != null)
-    {
-      if (aFirst.isObject ())
-        return JSONReader.getObjectList (aValues);
-      if (aFirst.isArray ())
-        return JSONReader.getSubList (aValues);
-      if (aFirst.isBoolean ())
-        return JSONReader.getBooleanList (aValues);
-      if (aFirst.isInt ())
-        return JSONReader.getIntegerList (aValues);
-      if (aFirst.isTextual ())
-        return JSONReader.getStringList (aValues);
-      throw new JSONParsingException ("Unhandled value type: " + aFirst.getClass ());
-    }
-    // empty list, we cannot tell the type, so use Object
-    return new JSONPropertyValueList <Object> ();
   }
 
   @Nonnull

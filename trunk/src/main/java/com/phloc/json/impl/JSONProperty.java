@@ -32,20 +32,22 @@ import com.phloc.json.JSONHelper;
  * Default implementation of {@link IJSONProperty}
  * 
  * @author Boris Gregorcic
- * @param <T>
+ * @param <DATATYPE>
  */
-public final class JSONProperty <T> extends AbstractJSON implements IJSONProperty <T>
+public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSONProperty <DATATYPE>
 {
   private final String m_sName;
-  private IJSONPropertyValue <T> m_aValue;
+  private IJSONPropertyValue <DATATYPE> m_aValue;
 
   /**
    * Ctor
    * 
    * @param sName
+   *        property name. May not be <code>null</code>.
    * @param aValue
+   *        Property value. May be <code>null</code>.
    */
-  private JSONProperty (@Nullable final String sName, @Nonnull final IJSONPropertyValue <T> aValue)
+  private JSONProperty (@Nullable final String sName, @Nonnull final IJSONPropertyValue <DATATYPE> aValue)
   {
     if (aValue == null)
       throw new NullPointerException ("value");
@@ -60,12 +62,12 @@ public final class JSONProperty <T> extends AbstractJSON implements IJSONPropert
   }
 
   @Nonnull
-  public IJSONPropertyValue <T> getValue ()
+  public IJSONPropertyValue <DATATYPE> getValue ()
   {
     return m_aValue;
   }
 
-  public void setValue (@Nonnull final IJSONPropertyValue <T> aValue)
+  public void setValue (@Nonnull final IJSONPropertyValue <DATATYPE> aValue)
   {
     if (aValue == null)
       throw new NullPointerException ("value");
@@ -85,9 +87,9 @@ public final class JSONProperty <T> extends AbstractJSON implements IJSONPropert
   }
 
   @Nonnull
-  public JSONProperty <T> getClone ()
+  public JSONProperty <DATATYPE> getClone ()
   {
-    return new JSONProperty <T> (m_sName, m_aValue);
+    return new JSONProperty <DATATYPE> (m_sName, m_aValue);
   }
 
   @Override
@@ -114,8 +116,8 @@ public final class JSONProperty <T> extends AbstractJSON implements IJSONPropert
   }
 
   @Nonnull
-  public static <U> JSONProperty <U> create (@Nullable final String sName, @Nonnull final IJSONPropertyValue <U> aValue)
+  public static <DATATYPE> JSONProperty <DATATYPE> create (@Nullable final String sName, @Nonnull final IJSONPropertyValue <DATATYPE> aValue)
   {
-    return new JSONProperty <U> (sName, aValue);
+    return new JSONProperty <DATATYPE> (sName, aValue);
   }
 }

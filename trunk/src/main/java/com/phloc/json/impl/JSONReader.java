@@ -18,13 +18,19 @@
 package com.phloc.json.impl;
 
 import java.io.InputStream;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.phloc.commons.collections.ContainerHelper;
+import com.phloc.commons.collections.iterate.IterableIterator;
 import com.phloc.commons.io.IInputStreamProvider;
 import com.phloc.json.IJSON;
 import com.phloc.json.IJSONObject;
@@ -50,42 +56,110 @@ import com.phloc.json.impl.value.JSONPropertyValueString;
 @Immutable
 public final class JSONReader
 {
+  private static final Logger s_aLogger = LoggerFactory.getLogger (JSONReader.class);
+
   private JSONReader ()
   {
     // private
   }
 
   @Nullable
-  private static IJSON _convert (@Nonnull final JsonNode aRootNode) throws JSONParsingException
+  public static IJSON convert (@Nonnull final JsonNode aNode)
   {
-    if (aRootNode.isObject ())
-      return _parseObjectInternal (aRootNode);
+    if (aNode.isObject ())
+      return convertObject (aNode);
 
-    if (aRootNode.isArray ())
-      return _parseArrayInternal (aRootNode);
+    if (aNode.isArray ())
+      return convertArray ((ArrayNode) aNode);
 
-    if (aRootNode.isBoolean ())
-      return new JSONPropertyValueBoolean (aRootNode.booleanValue ());
+    // boolean
+    if (aNode.isBoolean ())
+      return new JSONPropertyValueBoolean (aNode.booleanValue ());
 
-    if (aRootNode.isBigInteger ())
-      return new JSONPropertyValueBigInteger (aRootNode.bigIntegerValue ());
+    // ints
+    if (aNode.isInt ())
+      return new JSONPropertyValueInteger (aNode.intValue ());
 
-    if (aRootNode.isLong ())
-      return new JSONPropertyValueLong (aRootNode.longValue ());
+    if (aNode.isLong ())
+      return new JSONPropertyValueLong (aNode.longValue ());
 
-    if (aRootNode.isInt ())
-      return new JSONPropertyValueInteger (aRootNode.intValue ());
+    if (aNode.isBigInteger ())
+      return new JSONPropertyValueBigInteger (aNode.bigIntegerValue ());
 
-    if (aRootNode.isBigDecimal ())
-      return new JSONPropertyValueBigDecimal (aRootNode.decimalValue ());
+    // floating points
+    if (aNode.isDouble ())
+      return new JSONPropertyValueDouble (aNode.doubleValue ());
 
-    if (aRootNode.isDouble ())
-      return new JSONPropertyValueDouble (aRootNode.doubleValue ());
+    if (aNode.isBigDecimal ())
+      return new JSONPropertyValueBigDecimal (aNode.decimalValue ());
 
-    if (aRootNode.isTextual ())
-      return new JSONPropertyValueString (aRootNode.textValue ());
+    // Text
+    if (aNode.isTextual ())
+      return new JSONPropertyValueString (aNode.textValue ());
+
+    if (!aNode.isNull ())
+      s_aLogger.info ("Having JSON Node with weird type: " + aNode);
 
     return null;
+  }
+
+  /**
+   * Converts a passed {@link JsonNode} into a {@link JSONObject}
+   * 
+   * @param aNode
+   * @return the resulting object
+   */
+  @Nonnull
+  public static JSONObject convertObject (@Nonnull final JsonNode aNode)
+  {
+    if (aNode == null)
+      throw new NullPointerException ("node");
+    if (!aNode.isObject ())
+      throw new IllegalArgumentException ("node is not a JSON object");
+
+    final JSONObject aObj = new JSONObject ();
+    for (final Map.Entry <String, JsonNode> aEntry : IterableIterator.create (aNode.fields ()))
+    {
+      final String sFieldName = aEntry.getKey ();
+      final JsonNode aValue = aEntry.getValue ();
+      final IJSON aConvertedValue = convert (aValue);
+
+      // Do not set null values
+      if (aConvertedValue != null)
+        aObj.setProperty (sFieldName, aConvertedValue);
+    }
+    return aObj;
+  }
+
+  /**
+   * Converts the passed {@link ArrayNode} to a corresponding
+   * {@link JSONPropertyValueList}
+   * 
+   * @param aValues
+   * @return a property list representing the passed array
+   */
+  @Nonnull
+  public static JSONPropertyValueList <?> convertArray (final ArrayNode aValues)
+  {
+    // FIXME this is extremely bogus!
+    // check the first token to determine list data type
+    final JsonNode aFirst = ContainerHelper.getFirstElement (aValues);
+    if (aFirst != null)
+    {
+      if (aFirst.isObject ())
+        return getObjectList (aValues);
+      if (aFirst.isArray ())
+        return getSubList (aValues);
+      if (aFirst.isBoolean ())
+        return getBooleanList (aValues);
+      if (aFirst.isInt ())
+        return getIntegerList (aValues);
+      if (aFirst.isTextual ())
+        return getStringList (aValues);
+      s_aLogger.warn ("Unhandled value type: " + aFirst.getClass ());
+    }
+    // empty list, we cannot tell the type, so use Object
+    return new JSONPropertyValueList <Object> ();
   }
 
   /**
@@ -101,20 +175,20 @@ public final class JSONReader
   public static IJSON parse (@Nonnull final String sJSON) throws JSONParsingException
   {
     final JsonNode aRootNode = JacksonHelper.parseToNode (sJSON);
-    final IJSON ret = _convert (aRootNode);
-    if (ret == null)
+    final IJSON aJSON = convert (aRootNode);
+    if (aJSON == null)
       throw new JSONParsingException ("Don't know how to parse JSON:" + sJSON);
-    return ret;
+    return aJSON;
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final InputStream aIS) throws JSONParsingException
   {
     final JsonNode aRootNode = JacksonHelper.parseToNode (aIS);
-    final IJSON ret = _convert (aRootNode);
-    if (ret == null)
+    final IJSON aJSON = convert (aRootNode);
+    if (aJSON == null)
       throw new JSONParsingException ("Don't know how to parse JSON from InputStream " + aIS);
-    return ret;
+    return aJSON;
   }
 
   @Nonnull
@@ -130,19 +204,16 @@ public final class JSONReader
    *        the JSON string to convert, must be a valid JSON object
    *        representation!
    * @return the resulting object
-   * @throws JSONParsingException
+   * @throws IllegalArgumentException
+   *         in case parsing fails
    */
   @Nonnull
-  public static IJSONObject parseObject (@Nonnull final String sJSON) throws JSONParsingException
+  public static IJSONObject parseObject (@Nonnull final String sJSON)
   {
-    try
-    {
-      return _parseObjectInternal (JacksonHelper.parseToNode (sJSON));
-    }
-    catch (final JSONParsingException e)
-    {
-      throw new IllegalArgumentException ("Error parsing tree " + sJSON, e);
-    }
+    final JsonNode aParsedNode = JacksonHelper.parseToNode (sJSON);
+    if (!aParsedNode.isObject ())
+      throw new IllegalArgumentException ("Passed JSON string is not an object: '" + sJSON + "'");
+    return convertObject (aParsedNode);
   }
 
   /**
@@ -153,19 +224,16 @@ public final class JSONReader
    *        representation!
    * @return the resulting list. The inner list type will be decided depending
    *         on the type of the first item in the array
-   * @throws JSONParsingException
+   * @throws IllegalArgumentException
+   *         in case parsing fails
    */
   @Nonnull
-  public static IJSONPropertyValueList <?> parseArray (@Nonnull final String sJSON) throws JSONParsingException
+  public static IJSONPropertyValueList <?> parseArray (@Nonnull final String sJSON)
   {
-    try
-    {
-      return _parseArrayInternal (JacksonHelper.parseToNode (sJSON));
-    }
-    catch (final JSONParsingException e)
-    {
-      throw new IllegalArgumentException ("Error parsing tree " + sJSON, e);
-    }
+    final JsonNode aParsedNode = JacksonHelper.parseToNode (sJSON);
+    if (!aParsedNode.isArray ())
+      throw new IllegalArgumentException ("Passed JSON string is not an array: '" + sJSON + "'");
+    return convertArray ((ArrayNode) aParsedNode);
   }
 
   /**
@@ -226,14 +294,13 @@ public final class JSONReader
    * @param aValues
    *        the {@link ArrayNode} to convert
    * @return the resulting {@link JSONPropertyValueList}
-   * @throws JSONParsingException
    */
   @Nonnull
-  public static JSONPropertyValueList <IJSONObject> getObjectList (final ArrayNode aValues) throws JSONParsingException
+  public static JSONPropertyValueList <IJSONObject> getObjectList (final ArrayNode aValues)
   {
     final JSONPropertyValueList <IJSONObject> aList = new JSONPropertyValueList <IJSONObject> ();
     for (final JsonNode aValue : aValues)
-      aList.addValue (new JSONPropertyValueJSONObject (JSONObject.fromJSONNode (aValue)));
+      aList.addValue (new JSONPropertyValueJSONObject (convertObject (aValue)));
     return aList;
   }
 
@@ -243,59 +310,24 @@ public final class JSONReader
    * 
    * @param <T>
    *        the common super type (defaults to Object)
-   * @param aValues
+   * @param aNode
    *        the {@link ArrayNode} to convert
    * @return the resulting {@link JSONPropertyValueList}
-   * @throws JSONParsingException
    */
   @SuppressWarnings ("unchecked")
-  public static <T> JSONPropertyValueList <T> getSubList (@Nonnull final ArrayNode aValues) throws JSONParsingException
+  public static <T> JSONPropertyValueList <T> getSubList (@Nonnull final ArrayNode aNode)
   {
     final JSONPropertyValueList <T> aList = new JSONPropertyValueList <T> ();
-    for (final JsonNode aInnerList : aValues)
+    for (final JsonNode aChildNode : aNode)
     {
-      if (aInnerList.isArray ())
+      if (aChildNode.isArray ())
       {
-        if (aInnerList.elements ().hasNext ())
-          aList.addValue ((IJSONPropertyValue <T>) JSONPropertyValueList.fromJSONNode ((ArrayNode) aInnerList));
+        if (aChildNode.elements ().hasNext ())
+          aList.addValue ((IJSONPropertyValue <T>) convertArray ((ArrayNode) aChildNode));
         else
           aList.addValue ((IJSONPropertyValue <T>) new JSONPropertyValueList <Object> ());
       }
     }
     return aList;
-  }
-
-  /**
-   * Parse the passed JSON string into an {@link IJSONObject}
-   * 
-   * @param aRootNode
-   *        the JSON root node to convert, must be representing a JSON object!
-   * @return the resulting object
-   * @throws JSONParsingException
-   */
-  @Nonnull
-  private static IJSONObject _parseObjectInternal (@Nonnull final JsonNode aRootNode) throws JSONParsingException
-  {
-    if (!aRootNode.isObject ())
-      throw new JSONParsingException ("Passed JSON node does not represent an object!");
-
-    return JSONObject.fromJSONNode (aRootNode);
-  }
-
-  /**
-   * Parse the passed JSON array into an {@link IJSONPropertyValueList}
-   * 
-   * @param aRootNode
-   *        the JSON root node to convert, must be representing a JSON array!
-   * @return the resulting list. The inner list type will be decided depending
-   *         on the type of the first item in the array
-   * @throws JSONParsingException
-   */
-  @Nonnull
-  private static IJSONPropertyValueList <?> _parseArrayInternal (@Nonnull final JsonNode aRootNode) throws JSONParsingException
-  {
-    if (!aRootNode.isArray ())
-      throw new JSONParsingException ("Passed JSON node does not represent an array!");
-    return JSONPropertyValueList.fromJSONNode ((ArrayNode) aRootNode);
   }
 }

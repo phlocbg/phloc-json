@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.phloc.commons.mock.PhlocAssert;
@@ -28,7 +29,6 @@ import com.phloc.json.AbstractJSONTestCase;
 import com.phloc.json.IJSON;
 import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValueList;
-import com.phloc.json.impl.JSONReader;
 import com.phloc.json.impl.value.JSONPropertyValueBigDecimal;
 import com.phloc.json.impl.value.JSONPropertyValueBoolean;
 import com.phloc.json.impl.value.JSONPropertyValueInteger;
@@ -44,8 +44,6 @@ public final class JSONReaderTest extends AbstractJSONTestCase
 {
   /**
    * Tests parsing a simple JSON object using the {@link JSONReader}
-   * 
-   * @throws Exception
    */
   @Test
   public void testParseObjectSimple () throws Exception
@@ -56,8 +54,6 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing a complex JSON object including a nested object using the
    * {@link JSONReader}
-   * 
-   * @throws Exception
    */
   @Test
   public void testParseObjectComplex () throws Exception
@@ -68,8 +64,6 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing a JSON string array into a property value list using the
    * {@link JSONReader}
-   * 
-   * @throws Exception
    */
   @Test
   public void testParseArrayText () throws Exception
@@ -85,8 +79,6 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing a JSON boolean array into a property value list using the
    * {@link JSONReader}
-   * 
-   * @throws Exception
    */
   @Test
   public void testParseArrayBoolean () throws Exception
@@ -102,8 +94,6 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing a JSON integer array into a property value list using the
    * {@link JSONReader}
-   * 
-   * @throws Exception
    */
   @Test
   public void testParseArrayInteger () throws Exception
@@ -119,11 +109,9 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing an empty JSON array into a property value list using the
    * {@link JSONReader}
-   * 
-   * @throws Exception
    */
   @Test
-  public void testParseArrayEmpty () throws Exception
+  public void testParseArrayEmpty ()
   {
     final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[]");
     assertNotNull (aJSONList);
@@ -133,11 +121,9 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing an empty JSON array into a property value list using the
    * {@link JSONReader}
-   * 
-   * @throws Exception
    */
   @Test
-  public void testParseArrayEmptyString () throws Exception
+  public void testParseArrayEmptyString ()
   {
     final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[\"\"]");
     assertNotNull (aJSONList);
@@ -147,10 +133,10 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing a JSON string value using the automated type detection
    * 
-   * @throws Exception
+   * @throws JSONParsingException
    */
   @Test
-  public void testAutoParseString () throws Exception
+  public void testAutoParseString () throws JSONParsingException
   {
     final IJSON aJSON = JSONReader.parse ("\"" + VALUE_ONE + "\""); //$NON-NLS-2$ 
     assertNotNull (aJSON);
@@ -161,10 +147,10 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing a JSON integer value using the automated type detection
    * 
-   * @throws Exception
+   * @throws JSONParsingException
    */
   @Test
-  public void testAutoParseInteger () throws Exception
+  public void testAutoParseInteger () throws JSONParsingException
   {
     final IJSON aJSON = JSONReader.parse (String.valueOf (VALUE_INT1));
     assertNotNull (aJSON);
@@ -176,10 +162,10 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing a JSON boolean value using the automated type detection
    * 
-   * @throws Exception
+   * @throws JSONParsingException
    */
   @Test
-  public void testAutoParseBoolean () throws Exception
+  public void testAutoParseBoolean () throws JSONParsingException
   {
     final IJSON aJSON = JSONReader.parse (String.valueOf (VALUE_BOOL));
     assertNotNull (aJSON);
@@ -191,10 +177,10 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing a JSON double value using the automated type detection
    * 
-   * @throws Exception
+   * @throws JSONParsingException
    */
   @Test
-  public void testAutoParseDouble () throws Exception
+  public void testAutoParseDouble () throws JSONParsingException
   {
     final IJSON aJSON = JSONReader.parse (String.valueOf (VALUE_DOUBLE));
     assertNotNull (aJSON);
@@ -207,10 +193,10 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing a JSON array value using the automated type detection
    * 
-   * @throws Exception
+   * @throws JSONParsingException
    */
   @Test
-  public void testAutoParseArray () throws Exception
+  public void testAutoParseArray () throws JSONParsingException
   {
     final IJSON aJSON = JSONReader.parse ("[" + VALUE_INT1 + ", " + VALUE_INT2 + ", " + VALUE_INT3 + "]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     assertNotNull (aJSON);
@@ -225,14 +211,48 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   /**
    * Tests parsing a JSON object value using the automated type detection
    * 
-   * @throws Exception
+   * @throws JSONParsingException
    */
   @Test
-  public void testAutoParseObject () throws Exception
+  public void testAutoParseObject () throws JSONParsingException
   {
     final IJSON aJSON = JSONReader.parse (m_aComplexObject.getJSONString ());
     assertNotNull (aJSON);
     assertTrue (aJSON instanceof IJSONObject);
     assertEquals (aJSON, m_aComplexObject);
+  }
+
+  @Test
+  public void testParseMany () throws JSONParsingException
+  {
+    final String sLongNum = "-123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587.1236471263179823781236715236751236561283581623587123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587";
+    for (final String s : new String [] { "5",
+                                         "12345",
+                                         "-12345",
+                                         "1236471263179823781236715236751236561283581623587",
+                                         "-1236471263179823781236715236751236561283581623587",
+                                         "0E-39",
+                                         "123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587.1236471263179823781236715236751236561283581623587123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587",
+                                         sLongNum })
+    {
+      final IJSON aJSON = JSONReader.parse (s);
+      assertNotNull ("Failed to parse " + s, aJSON);
+      assertEquals (s, aJSON.getJSONString (false));
+    }
+  }
+
+  @Ignore
+  @Test
+  public void testError () throws JSONParsingException
+  {// This fails because of different types within the list
+    final String sLongNum = "-123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587.1236471263179823781236715236751236561283581623587123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587";
+    final String s = "[[4,5],[4,6],[4,7,8,9,10],\"abc\",[[4,7,8,9,10],[4,7,8,9,10],[4,7,8," +
+                     sLongNum +
+                     ",9,10]," +
+                     sLongNum +
+                     ",[4,7,8,9,10]]]";
+    final IJSON aJSON = JSONReader.parse (s);
+    assertNotNull ("Failed to parse " + s, aJSON);
+    assertEquals (s, aJSON.getJSONString (false));
   }
 }

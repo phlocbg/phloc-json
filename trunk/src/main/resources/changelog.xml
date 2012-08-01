@@ -20,6 +20,16 @@
 -->
 <changelog xmlns="http://www.phloc.com/ns/changelog/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-json">
+  <entry date="2012-08-01" category="tech" action="update">
+    <change>
+      <text locale="en">Using checked exception JSONParsingException more careful</text>
+    </change>
+  </entry>
+  <entry date="2012-08-01" category="api" action="change" incompatible="true">
+    <change>
+      <text locale="en">Moved JSONObject.fromJSONNode and JSONPropertyValueList.fromJSONNode to JSONReader.convertObject and JSONReader.convertArray for easier recursing</text>
+    </change>
+  </entry>
   <entry date="2012-07-30" category="tech" action="update">
     <change>
       <text locale="en">Updated to Jackson 2.0.5</text>

@@ -58,6 +58,9 @@ public interface IJSONProperty <T> extends IJSON
    */
   void setValue (@Nonnull IJSONPropertyValue <T> aValue);
 
+  /**
+   * {@inheritDoc}
+   */
   @Nonnull
   IJSONProperty <T> getClone ();
 }

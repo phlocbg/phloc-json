@@ -42,6 +42,9 @@ public interface IJSONPropertyValue <DATATYPE> extends IJSON
    */
   void setData (DATATYPE aValue);
 
+  /**
+   * {@inheritDoc}
+   */
   @Nonnull
   IJSONPropertyValue <DATATYPE> getClone ();
 }

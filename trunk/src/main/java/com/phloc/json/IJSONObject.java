@@ -383,6 +383,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    */
   boolean containsNotParsableProperty ();
 
+  /**
+   * {@inheritDoc}
+   */
   @Nonnull
   IJSONObject getClone ();
 }
