@@ -28,6 +28,9 @@ import javax.annotation.Nonnull;
  */
 public interface IJSONPropertyValueComplex <DATATYPE> extends IJSONPropertyValue <DATATYPE>
 {
+  /**
+   * {@inheritDoc}
+   */
   @Nonnull
   IJSONPropertyValueComplex <DATATYPE> getClone ();
 }

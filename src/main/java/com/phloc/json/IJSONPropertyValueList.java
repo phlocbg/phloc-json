@@ -19,26 +19,30 @@ package com.phloc.json;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 /**
  * Interface representing a list of property values ({@link IJSONPropertyValue})
  * 
  * @author Boris Gregorcic
+ * @param <VALUETYPE>
+ *        The type contained in the IJSONPropertyValue
  * @param <DATATYPE>
- *        The inner data type
+ *        The concrete {@link IJSONPropertyValue} type to use
  */
-public interface IJSONPropertyValueList <DATATYPE> extends
-                                                   IJSONPropertyValueComplex <List <IJSONPropertyValue <DATATYPE>>>
+public interface IJSONPropertyValueList <VALUETYPE, DATATYPE extends IJSONPropertyValue <VALUETYPE>> extends
+                                                                                                     IJSONPropertyValueComplex <List <DATATYPE>>
 {
   /**
    * @return the list of {@link IJSONPropertyValue}s
    */
-  List <IJSONPropertyValue <DATATYPE>> getValues ();
+  List <DATATYPE> getValues ();
 
   /**
    * @return A list of the inner data values (the data items stored inside the
    *         {@link IJSONPropertyValue}s)
    */
-  List <DATATYPE> getDataValues ();
+  List <VALUETYPE> getDataValues ();
 
   /**
    * adds the passed value in the list
@@ -46,7 +50,7 @@ public interface IJSONPropertyValueList <DATATYPE> extends
    * @param aValue
    *        the value to add
    */
-  void addValue (IJSONPropertyValue <DATATYPE> aValue);
+  void addValue (DATATYPE aValue);
 
   /**
    * adds all passed values in the list
@@ -54,7 +58,11 @@ public interface IJSONPropertyValueList <DATATYPE> extends
    * @param aValues
    *        the values to add
    */
-  void addAllValues (List <IJSONPropertyValue <DATATYPE>> aValues);
+  void addAllValues (List <? extends DATATYPE> aValues);
 
-  IJSONPropertyValueList <DATATYPE> getClone ();
+  /**
+   * {@inheritDoc}
+   */
+  @Nonnull
+  IJSONPropertyValueList <VALUETYPE, DATATYPE> getClone ();
 }
