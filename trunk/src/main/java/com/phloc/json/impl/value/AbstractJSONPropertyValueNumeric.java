@@ -28,9 +28,9 @@ import com.phloc.json.IJSONPropertyValue;
  * 
  * @author philip
  */
-public abstract class AbstractJSONPropertyValueNumeric <T extends Number> extends AbstractJSONPropertyValue <T>
+public abstract class AbstractJSONPropertyValueNumeric <DATATYPE extends Number> extends AbstractJSONPropertyValue <DATATYPE>
 {
-  protected AbstractJSONPropertyValueNumeric (@Nullable final T aData)
+  protected AbstractJSONPropertyValueNumeric (@Nullable final DATATYPE aData)
   {
     super (aData);
   }
