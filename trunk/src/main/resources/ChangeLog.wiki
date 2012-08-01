@@ -1,7 +1,13 @@
 #summary Change log of phloc-json
 = Change log =
 <wiki:comment>This content is generated. Do not modify!</wiki:comment>
-<table border="1" cellspacing="0"><thead><tr><th>Date</th><th>Action</th><th>Category</th><th>Incompatible?</th><th>Description</th></tr></thead><tbody><tr><td>7/30/12</td><td>update</td><td>tech</td><td></td><td>Updated to Jackson 2.0.5</td></tr>
+<table border="1" cellspacing="0"><thead><tr><th>Date</th><th>Action</th><th>Category</th><th>Incompatible?</th><th>Description</th></tr></thead><tbody><tr border="1"><td>8/1/12</td><td colspan="4">_Release *2.3.0*_</td></tr>
+<tr><td>8/1/12</td><td>change</td><td>api</td><td>*yes*</td><td>The generic parameters of IJSONPropertyValueList were changed</td></tr>
+<tr><td>8/1/12</td><td>add</td><td>feature</td><td></td><td>Now arrays with different child types can easily be parsed</td></tr>
+<tr><td>8/1/12</td><td>remove</td><td>api</td><td></td><td>Deprecated JSONPropertyValueJSONObject as IJSONObject can be used directly</td></tr>
+<tr><td>8/1/12</td><td>update</td><td>tech</td><td></td><td>Using checked exception JSONParsingException more careful</td></tr>
+<tr><td>8/1/12</td><td>change</td><td>api</td><td>*yes*</td><td>Moved JSONObject.fromJSONNode and JSONPropertyValueList.fromJSONNode to JSONReader.convertObject and JSONReader.convertArray for easier recursing</td></tr>
+<tr><td>7/30/12</td><td>update</td><td>tech</td><td></td><td>Updated to Jackson 2.0.5</td></tr>
 <tr border="1"><td>7/13/12</td><td colspan="4">_Release *2.2.8*_</td></tr>
 <tr><td>6/27/12</td><td>update</td><td>tech</td><td></td><td>Updated to Jackson 2.0.4</td></tr>
 <tr border="1"><td>5/16/12</td><td colspan="4">_Release *2.2.7*_</td></tr>
