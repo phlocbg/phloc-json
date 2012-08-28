@@ -19,6 +19,7 @@ package com.phloc.json.impl.value;
 
 import javax.annotation.Nullable;
 
+import com.phloc.commons.annotations.OverrideOnDemand;
 import com.phloc.commons.annotations.ReturnsMutableObject;
 import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
@@ -30,7 +31,8 @@ import com.phloc.json.impl.AbstractJSON;
  * @author Boris Gregorcic
  * @param <DATATYPE>
  */
-public abstract class AbstractJSONPropertyValue <DATATYPE> extends AbstractJSON implements IJSONPropertyValue <DATATYPE>
+public abstract class AbstractJSONPropertyValue <DATATYPE> extends AbstractJSON implements
+                                                                               IJSONPropertyValue <DATATYPE>
 {
   private DATATYPE m_aData;
 
@@ -41,6 +43,7 @@ public abstract class AbstractJSONPropertyValue <DATATYPE> extends AbstractJSON 
 
   @Nullable
   @ReturnsMutableObject (reason = "Design")
+  @OverrideOnDemand
   public DATATYPE getData ()
   {
     return m_aData;

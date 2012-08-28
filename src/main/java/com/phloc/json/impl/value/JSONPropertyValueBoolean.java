@@ -51,7 +51,7 @@ public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean
     this (Boolean.valueOf (bData));
   }
 
-  public void appendJSONString (final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
+  public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     aResult.append (Boolean.toString (getData ().booleanValue ()));
   }
