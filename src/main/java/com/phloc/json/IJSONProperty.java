@@ -18,9 +18,9 @@
 package com.phloc.json;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import com.phloc.commons.annotations.DevelopersNote;
+import com.phloc.commons.annotations.Nonempty;
+import com.phloc.commons.name.IHasName;
 import com.phloc.json.impl.JSONObject;
 
 /**
@@ -34,14 +34,14 @@ import com.phloc.json.impl.JSONObject;
  * 
  * @author Boris Gregorcic
  */
-@DevelopersNote ("Does not implement IHasName because the non-null contract cannot be fulfilled!")
-public interface IJSONProperty <T> extends IJSON
+public interface IJSONProperty <T> extends IJSON, IHasName
 {
   /**
    * @return the name of the property (unique in the scope of a
    *         {@link JSONObject})
    */
-  @Nullable
+  @Nonnull
+  @Nonempty
   String getName ();
 
   /**

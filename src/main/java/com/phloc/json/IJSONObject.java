@@ -19,7 +19,6 @@ package com.phloc.json;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -90,7 +89,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   IJSONObject setBooleanProperty (@Nonnull String sName, boolean bDataValue);
 
   @Nonnull
-  IJSONObject setBooleanProperty (@Nonnull String sName, @Nullable Boolean aDataValue);
+  IJSONObject setBooleanProperty (@Nonnull String sName, @Nonnull Boolean aDataValue);
 
   /**
    * Tries to resolve the value of the passed double property. If not found or
@@ -116,7 +115,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   IJSONObject setDoubleProperty (@Nonnull String sName, double dDataValue);
 
   @Nonnull
-  IJSONObject setDoubleProperty (@Nonnull String sName, @Nullable Double aDataValue);
+  IJSONObject setDoubleProperty (@Nonnull String sName, @Nonnull Double aDataValue);
 
   /**
    * Tries to resolve the value of the passed integer property. If not found or
@@ -142,7 +141,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   IJSONObject setIntegerProperty (@Nonnull String sName, int nDataValue);
 
   @Nonnull
-  IJSONObject setIntegerProperty (@Nonnull String sName, @Nullable Integer aDataValue);
+  IJSONObject setIntegerProperty (@Nonnull String sName, @Nonnull Integer aDataValue);
 
   /**
    * Tries to resolve the value of the passed long property. If not found or the
@@ -168,7 +167,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   IJSONObject setLongProperty (@Nonnull String sName, long nDataValue);
 
   @Nonnull
-  IJSONObject setLongProperty (@Nonnull String sName, @Nullable Long aDataValue);
+  IJSONObject setLongProperty (@Nonnull String sName, @Nonnull Long aDataValue);
 
   /**
    * Tries to resolve the value of the passed keyword property. If not found or
@@ -197,7 +196,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @return this
    */
   @Nonnull
-  IJSONObject setKeywordProperty (@Nonnull String sName, String sDataValue);
+  IJSONObject setKeywordProperty (@Nonnull String sName, @Nonnull String sDataValue);
 
   /**
    * An easy way to set a new function property (not JSON escaped) in a JSON
@@ -217,7 +216,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @return this
    */
   @Nonnull
-  IJSONObject setFunctionProperty (String sName, String sBody, String... aParams);
+  IJSONObject setFunctionProperty (@Nonnull String sName, @Nonnull String sBody, @Nullable String... aParams);
 
   /**
    * An easy way to set a new function property (not JSON escaped) in a JSON
@@ -260,7 +259,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @return this
    */
   @Nonnull
-  IJSONObject setListProperty (@Nonnull String sName, IJSONPropertyValueList <?> aList);
+  IJSONObject setListProperty (@Nonnull String sName, @Nonnull IJSONPropertyValueList <?> aList);
 
   /**
    * Tries to resolve the value of the passed object property. If not found or
@@ -307,19 +306,19 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @return this
    */
   @Nonnull
-  IJSONObject setStringProperty (@Nonnull String sName, String sDataValue);
-
-  @Nullable
-  BigDecimal getBigDecimalProperty (@Nullable String sName);
-
-  @Nonnull
-  IJSONObject setBigDecimalProperty (@Nonnull String sName, BigDecimal aDataValue);
+  IJSONObject setStringProperty (@Nonnull String sName, @Nonnull String sDataValue);
 
   @Nullable
   BigInteger getBigIntegerProperty (@Nullable String sName);
 
   @Nonnull
-  IJSONObject setBigIntegerProperty (@Nonnull String sName, BigInteger aDataValue);
+  IJSONObject setBigIntegerProperty (@Nonnull String sName, @Nonnull BigInteger aDataValue);
+
+  @Nullable
+  BigDecimal getBigDecimalProperty (@Nullable String sName);
+
+  @Nonnull
+  IJSONObject setBigDecimalProperty (@Nonnull String sName, @Nonnull BigDecimal aDataValue);
 
   /**
    * Tries to resolve the value of the passed list property. If not found or the
@@ -345,7 +344,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @return this
    */
   @Nonnull
-  IJSONObject setObjectListProperty (@Nonnull String sName, Collection <? extends IJSONObject> aObjectList);
+  IJSONObject setObjectListProperty (@Nonnull String sName, @Nonnull Iterable <? extends IJSONObject> aObjectList);
 
   /**
    * An easy way to set a new nested list (array of string arrays) property in a
@@ -356,7 +355,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @return this
    */
   @Nonnull
-  IJSONObject setListOfListProperty (@Nonnull String sName, Iterable <? extends Iterable <String>> aListOfList);
+  IJSONObject setListOfListProperty (@Nonnull String sName, @Nonnull Iterable <? extends Iterable <String>> aListOfList);
 
   /**
    * An easy way to set a new string list type property in a JSON object.
@@ -367,7 +366,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @return this
    */
   @Nonnull
-  IJSONObject setStringListProperty (@Nonnull String sName, Iterable <String> aStringList);
+  IJSONObject setStringListProperty (@Nonnull String sName, @Nonnull Iterable <String> aStringList);
 
   /**
    * An easy way to set a new integer list type property in a JSON object.
@@ -378,7 +377,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @return this
    */
   @Nonnull
-  IJSONObject setIntegerListProperty (@Nonnull String sName, int [] aIntList);
+  IJSONObject setIntegerListProperty (@Nonnull String sName, @Nonnull int [] aIntList);
 
   /**
    * This is a helper method to set an arbitrary property not exactly knowing
@@ -388,7 +387,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @param sName
    *        Property name
    * @param aValue
-   *        value to be set
+   *        value to be set. <code>null</code> means remove the property
    * @return this
    */
   @Nonnull
@@ -402,7 +401,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @param sName
    *        Property name
    * @param aValue
-   *        value to be set
+   *        value to be set. <code>null</code> means remove the property.
    * @param bUseTypeConverter
    *        if <code>true</code> the type converter to {@link String} will be
    *        used if no type could be determined.

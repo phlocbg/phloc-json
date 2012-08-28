@@ -32,6 +32,7 @@ public interface IJSONPropertyValue <DATATYPE> extends IJSON
   /**
    * @return the internal data value
    */
+  @Nonnull
   DATATYPE getData ();
 
   /**
@@ -40,7 +41,8 @@ public interface IJSONPropertyValue <DATATYPE> extends IJSON
    * @param aValue
    *        the value to set
    */
-  void setData (DATATYPE aValue);
+  @Deprecated
+  void setData (@Nonnull DATATYPE aValue);
 
   /**
    * {@inheritDoc}

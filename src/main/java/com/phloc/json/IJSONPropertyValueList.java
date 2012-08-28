@@ -17,6 +17,7 @@
  */
 package com.phloc.json;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -34,12 +35,14 @@ public interface IJSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>
   /**
    * @return the list of {@link IJSONPropertyValue}s
    */
+  @Nonnull
   List <DATATYPE> getValues ();
 
   /**
    * @return A list of the inner data values (the data items stored inside the
    *         {@link IJSONPropertyValue}s)
    */
+  @Nonnull
   List <?> getDataValues ();
 
   /**
@@ -47,16 +50,20 @@ public interface IJSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>
    * 
    * @param aValue
    *        the value to add
+   * @return this
    */
-  void addValue (DATATYPE aValue);
+  @Nonnull
+  IJSONPropertyValueList <DATATYPE> addValue (@Nonnull DATATYPE aValue);
 
   /**
    * adds all passed values in the list
    * 
    * @param aValues
    *        the values to add
+   * @return this
    */
-  void addAllValues (List <? extends DATATYPE> aValues);
+  @Nonnull
+  IJSONPropertyValueList <DATATYPE> addAllValues (@Nonnull Collection <? extends DATATYPE> aValues);
 
   /**
    * {@inheritDoc}
