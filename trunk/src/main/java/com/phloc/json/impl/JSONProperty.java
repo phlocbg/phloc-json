@@ -18,10 +18,11 @@
 package com.phloc.json.impl;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import com.phloc.commons.annotations.Nonempty;
 import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
+import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json.IJSONProperty;
 import com.phloc.json.IJSONPropertyValue;
@@ -42,19 +43,22 @@ public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSON
    * Ctor
    * 
    * @param sName
-   *        property name. May not be <code>null</code>.
+   *        property name. May neither be <code>null</code> nor empty.
    * @param aValue
-   *        Property value. May be <code>null</code>.
+   *        Property value. May not be <code>null</code>.
    */
-  private JSONProperty (@Nullable final String sName, @Nonnull final IJSONPropertyValue <DATATYPE> aValue)
+  private JSONProperty (@Nonnull @Nonempty final String sName, @Nonnull final IJSONPropertyValue <DATATYPE> aValue)
   {
+    if (StringHelper.hasNoText (sName))
+      throw new IllegalArgumentException ("name may not be empty");
     if (aValue == null)
       throw new NullPointerException ("value");
     m_sName = sName;
     m_aValue = aValue.getClone ();
   }
 
-  @Nullable
+  @Nonnull
+  @Nonempty
   public String getName ()
   {
     return m_sName;
@@ -113,7 +117,7 @@ public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSON
   }
 
   @Nonnull
-  public static <DATATYPE> JSONProperty <DATATYPE> create (@Nullable final String sName,
+  public static <DATATYPE> JSONProperty <DATATYPE> create (@Nonnull @Nonempty final String sName,
                                                            @Nonnull final IJSONPropertyValue <DATATYPE> aValue)
   {
     return new JSONProperty <DATATYPE> (sName, aValue);

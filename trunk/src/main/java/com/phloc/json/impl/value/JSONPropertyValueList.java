@@ -18,12 +18,12 @@
 package com.phloc.json.impl.value;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.phloc.commons.annotations.ReturnsImmutableObject;
 import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.json.IJSONObject;
@@ -35,42 +35,54 @@ import com.phloc.json.impl.CJSONConstants;
  * Default implementation of {@link IJSONPropertyValueList}
  * 
  * @author Boris Gregorcic
- * @param <DATATTYPE>
+ * @param <DATATYPE>
  *        The inner data type
  */
-public class JSONPropertyValueList <DATATTYPE extends IJSONPropertyValue <?>> extends
-                                                                              AbstractJSONPropertyValue <List <DATATTYPE>> implements
-                                                                                                                          IJSONPropertyValueList <DATATTYPE>
+public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> extends
+                                                                             AbstractJSONPropertyValue <List <DATATYPE>> implements
+                                                                                                                        IJSONPropertyValueList <DATATYPE>
 {
-
+  /**
+   * Default ctor
+   */
   public JSONPropertyValueList ()
   {
-    super (new ArrayList <DATATTYPE> ());
+    super (new ArrayList <DATATYPE> ());
   }
 
   /**
    * Ctor
    */
-  public JSONPropertyValueList (@Nullable final List <? extends DATATTYPE> aList)
+  public JSONPropertyValueList (@Nullable final Iterable <? extends DATATYPE> aList)
   {
     super (ContainerHelper.newList (aList));
   }
 
-  public void addValue (@Nullable final DATATTYPE aValue)
+  @Nonnull
+  public JSONPropertyValueList <DATATYPE> addValue (@Nonnull final DATATYPE aValue)
   {
-    getData ().add (aValue);
-  }
+    if (aValue == null)
+      throw new NullPointerException ("value");
 
-  public void addAllValues (@Nonnull final List <? extends DATATTYPE> aValues)
-  {
-    getData ().addAll (aValues);
+    getData ().add (aValue);
+    return this;
   }
 
   @Nonnull
-  @ReturnsImmutableObject
-  public List <DATATTYPE> getValues ()
+  public JSONPropertyValueList <DATATYPE> addAllValues (@Nonnull final Collection <? extends DATATYPE> aValues)
   {
-    return ContainerHelper.makeUnmodifiable (getData ());
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    getData ().addAll (aValues);
+    return this;
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public List <DATATYPE> getValues ()
+  {
+    return ContainerHelper.newList (getData ());
   }
 
   @Nonnull
@@ -78,7 +90,7 @@ public class JSONPropertyValueList <DATATTYPE extends IJSONPropertyValue <?>> ex
   public List <Object> getDataValues ()
   {
     final List <Object> aDataValues = new ArrayList <Object> ();
-    for (final DATATTYPE aValue : getData ())
+    for (final DATATYPE aValue : getData ())
       aDataValues.add (aValue.getData ());
     return aDataValues;
   }
@@ -92,7 +104,9 @@ public class JSONPropertyValueList <DATATTYPE extends IJSONPropertyValue <?>> ex
     appendNewLine (aResult, bAlignAndIndent);
 
     int nIndex = 0;
-    for (final DATATTYPE aValue : getData ())
+    final List <DATATYPE> aData = getData ();
+    final int nElementCount = aData.size ();
+    for (final DATATYPE aValue : aData)
     {
       if (!(aValue instanceof IJSONPropertyValueList) &&
           !(aValue instanceof IJSONObject) &&
@@ -111,7 +125,7 @@ public class JSONPropertyValueList <DATATTYPE extends IJSONPropertyValue <?>> ex
         aValue.appendJSONString (aResult, bAlignAndIndent, nLevel + 1);
       }
 
-      if (nIndex < getData ().size () - 1)
+      if (nIndex < nElementCount - 1)
         aResult.append (CJSONConstants.TOKEN_SEPARATOR);
       appendNewLine (aResult, bAlignAndIndent);
       nIndex++;
@@ -121,8 +135,8 @@ public class JSONPropertyValueList <DATATTYPE extends IJSONPropertyValue <?>> ex
   }
 
   @Nonnull
-  public JSONPropertyValueList <DATATTYPE> getClone ()
+  public JSONPropertyValueList <DATATYPE> getClone ()
   {
-    return new JSONPropertyValueList <DATATTYPE> (getData ());
+    return new JSONPropertyValueList <DATATYPE> (getData ());
   }
 }

@@ -20,7 +20,6 @@ package com.phloc.json.impl.value;
 import java.math.BigDecimal;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.phloc.commons.string.StringParser;
 import com.phloc.json.IJSONPropertyValue;
@@ -33,7 +32,7 @@ import com.phloc.json.IJSONPropertyValue;
  */
 public class JSONPropertyValueBigDecimal extends AbstractJSONPropertyValueNumeric <BigDecimal>
 {
-  public JSONPropertyValueBigDecimal (@Nullable final BigDecimal aData)
+  public JSONPropertyValueBigDecimal (@Nonnull final BigDecimal aData)
   {
     super (aData);
   }

@@ -43,7 +43,7 @@ public class JSONPropertyValueJSONObject extends AbstractJSONPropertyValue <IJSO
     super (aData.getClone ());
   }
 
-  public void appendJSONString (final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
+  public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     getData ().appendJSONString (aResult, bAlignAndIndent, nLevel + 1);
   }

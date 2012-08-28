@@ -17,10 +17,9 @@
  */
 package com.phloc.json.impl.value;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 import com.phloc.commons.annotations.OverrideOnDemand;
-import com.phloc.commons.annotations.ReturnsMutableObject;
 import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.string.ToStringGenerator;
@@ -36,22 +35,33 @@ public abstract class AbstractJSONPropertyValue <DATATYPE> extends AbstractJSON 
 {
   private DATATYPE m_aData;
 
-  protected AbstractJSONPropertyValue (@Nullable final DATATYPE aData)
+  protected AbstractJSONPropertyValue ()
   {
+    m_aData = null;
+  }
+
+  protected AbstractJSONPropertyValue (@Nonnull final DATATYPE aData)
+  {
+    if (aData == null)
+      throw new NullPointerException ("data");
     m_aData = aData;
   }
 
-  @Nullable
-  @ReturnsMutableObject (reason = "Design")
+  @Nonnull
   @OverrideOnDemand
   public DATATYPE getData ()
   {
+    if (m_aData == null)
+      throw new IllegalStateException ("getData must be overwritten!");
     return m_aData;
   }
 
-  public final void setData (@Nullable final DATATYPE aValue)
+  @Deprecated
+  public final void setData (@Nonnull final DATATYPE aData)
   {
-    m_aData = aValue;
+    if (aData == null)
+      throw new NullPointerException ("data");
+    m_aData = aData;
   }
 
   @Override

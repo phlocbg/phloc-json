@@ -33,6 +33,7 @@ public interface IJSON extends ICloneable <IJSON>, Serializable
   /**
    * @return the JSON String representation of the object
    */
+  @Nonnull
   String getJSONString ();
 
   /**
@@ -47,6 +48,7 @@ public interface IJSON extends ICloneable <IJSON>, Serializable
    *        (pretty printed)
    * @return the resulting JSON String
    */
+  @Nonnull
   String getJSONString (boolean bAlignAndIndent);
 
   /**
