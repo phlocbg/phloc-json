@@ -22,7 +22,6 @@ import javax.annotation.Nullable;
 
 import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
-import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json.IJSONProperty;
 import com.phloc.json.IJSONPropertyValue;
@@ -74,15 +73,13 @@ public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSON
     m_aValue = aValue.getClone ();
   }
 
-  public void appendJSONString (final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
+  public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     indent (aResult, nLevel, bAlignAndIndent);
-    final String sEscaped = JSONHelper.jsonEscape (m_sName);
-    if (false && m_sName.equals (sEscaped) && Character.isJavaIdentifierStart (StringHelper.getFirstChar (m_sName)))
-      aResult.append (m_sName);
-    else
-      aResult.append (CJSONConstants.DOUBLEQUOTE).append (sEscaped).append (CJSONConstants.DOUBLEQUOTE);
-    aResult.append (CJSONConstants.VALUE_ASSIGNMENT);
+    aResult.append (CJSONConstants.DOUBLEQUOTE)
+           .append (JSONHelper.jsonEscape (m_sName))
+           .append (CJSONConstants.DOUBLEQUOTE)
+           .append (CJSONConstants.VALUE_ASSIGNMENT);
     m_aValue.appendJSONString (aResult, bAlignAndIndent, nLevel);
   }
 
@@ -116,7 +113,8 @@ public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSON
   }
 
   @Nonnull
-  public static <DATATYPE> JSONProperty <DATATYPE> create (@Nullable final String sName, @Nonnull final IJSONPropertyValue <DATATYPE> aValue)
+  public static <DATATYPE> JSONProperty <DATATYPE> create (@Nullable final String sName,
+                                                           @Nonnull final IJSONPropertyValue <DATATYPE> aValue)
   {
     return new JSONProperty <DATATYPE> (sName, aValue);
   }
