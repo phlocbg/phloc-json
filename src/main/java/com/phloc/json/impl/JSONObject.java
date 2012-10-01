@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -522,6 +523,17 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
         return true;
     }
     return false;
+  }
+
+  public boolean isEmpty ()
+  {
+    return m_aProperties.isEmpty ();
+  }
+
+  @Nonnegative
+  public int getPropertyCount ()
+  {
+    return m_aProperties.size ();
   }
 
   @Nonnull

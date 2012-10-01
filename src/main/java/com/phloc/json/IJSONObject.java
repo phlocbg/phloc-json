@@ -22,6 +22,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -426,6 +427,17 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    *         values
    */
   boolean containsNotParsableProperty ();
+
+  /**
+   * @return <code>true</code> if no property is contained
+   */
+  boolean isEmpty ();
+
+  /**
+   * @return The number of contained properties. Alway &ge; 0.
+   */
+  @Nonnegative
+  int getPropertyCount ();
 
   /**
    * {@inheritDoc}
