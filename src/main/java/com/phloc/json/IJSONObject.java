@@ -215,8 +215,14 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @param aParams
    *        The function parameter names
    * @return this
+   * @deprecated Will be removed as functions are not allowed in JSON and cannot
+   *             be parsed by any JSON parsers (also not on the client side).
+   *             Therefore, there is no point to support this. If you need to
+   *             transport functions, wrap them in a string and evaluate them on
+   *             the client side.
    */
   @Nonnull
+  @Deprecated
   IJSONObject setFunctionProperty (@Nonnull String sName, @Nonnull String sBody, @Nullable String... aParams);
 
   /**
@@ -235,8 +241,14 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @param sFunctionCode
    *        The function JS code
    * @return this
+   * @deprecated Will be removed as functions are not allowed in JSON and cannot
+   *             be parsed by any JSON parsers (also not on the client side).
+   *             Therefore, there is no point to support this. If you need to
+   *             transport functions, wrap them in a string and evaluate them on
+   *             the client side.
    */
   @Nonnull
+  @Deprecated
   IJSONObject setFunctionPrebuildProperty (@Nonnull String sName, @Nonnull String sFunctionCode);
 
   /**
