@@ -468,9 +468,21 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return setProperty (JSONProperty.create (sName, aList));
   }
 
+  /**
+   * @deprecated Use {@link #setListOfStringListProperty(String,Iterable)}
+   *             instead
+   */
+  @Deprecated
   @Nonnull
   public JSONObject setListOfListProperty (@Nonnull final String sName,
                                            @Nonnull final Iterable <? extends Iterable <String>> aListOfList)
+  {
+    return setListOfStringListProperty (sName, aListOfList);
+  }
+
+  @Nonnull
+  public JSONObject setListOfStringListProperty (@Nonnull final String sName,
+                                                 @Nonnull final Iterable <? extends Iterable <String>> aListOfList)
   {
     final JSONPropertyValueList <IJSONPropertyValueList <JSONPropertyValueString>> aList = new JSONPropertyValueList <IJSONPropertyValueList <JSONPropertyValueString>> ();
     for (final Iterable <String> aRow : aListOfList)
