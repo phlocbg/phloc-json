@@ -366,9 +366,24 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @param sName
    * @param aListOfList
    * @return this
+   * @deprecated Use {@link #setListOfStringListProperty(String,Iterable)}
+   *             instead
    */
+  @Deprecated
   @Nonnull
   IJSONObject setListOfListProperty (@Nonnull String sName, @Nonnull Iterable <? extends Iterable <String>> aListOfList);
+
+  /**
+   * An easy way to set a new nested list (array of string arrays) property in a
+   * JSON object. Existing properties with the same name will be replaced!
+   * 
+   * @param sName
+   * @param aListOfList
+   * @return this
+   */
+  @Nonnull
+  IJSONObject setListOfStringListProperty (@Nonnull String sName,
+                                           @Nonnull Iterable <? extends Iterable <String>> aListOfList);
 
   /**
    * An easy way to set a new string list type property in a JSON object.
@@ -441,7 +456,8 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   boolean containsNotParsableProperty ();
 
   /**
-   * @return <code>true</code> if no property is contained
+   * @return <code>true</code> if no property is contained, <code>false</code>
+   *         it at least one property is contained.
    */
   boolean isEmpty ();
 
