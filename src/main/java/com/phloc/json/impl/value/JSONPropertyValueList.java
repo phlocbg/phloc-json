@@ -38,9 +38,7 @@ import com.phloc.json.impl.CJSONConstants;
  * @param <DATATYPE>
  *        The inner data type
  */
-public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> extends
-                                                                             AbstractJSONPropertyValue <List <DATATYPE>> implements
-                                                                                                                        IJSONPropertyValueList <DATATYPE>
+public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> extends AbstractJSONPropertyValue <List <DATATYPE>> implements IJSONPropertyValueList <DATATYPE>
 {
   /**
    * Default ctor
@@ -52,6 +50,9 @@ public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> ext
 
   /**
    * Ctor
+   * 
+   * @param aList
+   *        List to use as the basis
    */
   public JSONPropertyValueList (@Nullable final Iterable <? extends DATATYPE> aList)
   {

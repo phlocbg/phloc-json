@@ -96,6 +96,8 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   /**
    * Override since otherwise JSONObjects might return null for certain
    * constructors
+   * 
+   * @return this
    */
   @Override
   @Nonnull
@@ -468,10 +470,6 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return setProperty (JSONProperty.create (sName, aList));
   }
 
-  /**
-   * @deprecated Use {@link #setListOfStringListProperty(String,Iterable)}
-   *             instead
-   */
   @Deprecated
   @Nonnull
   public JSONObject setListOfListProperty (@Nonnull final String sName,

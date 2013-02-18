@@ -85,6 +85,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    *        Property name
    * @param bDataValue
    *        property value
+   * @return this
    */
   @Nonnull
   IJSONObject setBooleanProperty (@Nonnull String sName, boolean bDataValue);
