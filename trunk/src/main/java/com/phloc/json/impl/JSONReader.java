@@ -201,7 +201,7 @@ public final class JSONReader
    *        the JSON string to convert, must be a valid JSON object
    *        representation!
    * @return the resulting object
-   * @throws IllegalArgumentException
+   * @throws JSONParsingException
    *         in case parsing fails
    */
   @Nonnull
@@ -221,7 +221,7 @@ public final class JSONReader
    *        representation!
    * @return the resulting list. The inner list type will be decided depending
    *         on the type of the first item in the array
-   * @throws IllegalArgumentException
+   * @throws JSONParsingException
    *         in case parsing fails
    */
   @Nonnull

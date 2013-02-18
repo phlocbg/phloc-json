@@ -67,6 +67,8 @@ public final class JacksonHelper
    * @param sJSON
    *        the JSON string to convert, can be any valid JSON mark-up
    * @return the resulting JSON node structure
+   * @throws JSONParsingException
+   *         in case parsing failed
    */
   @Nonnull
   public static JsonNode parseToNode (@Nonnull final String sJSON) throws JSONParsingException
@@ -88,6 +90,8 @@ public final class JacksonHelper
    * @param aIS
    *        the JSON input stream to convert, can be any valid JSON mark-up
    * @return the resulting JSON node structure
+   * @throws JSONParsingException
+   *         in case parsing failed
    */
   @Nonnull
   public static JsonNode parseToNode (@Nonnull final InputStream aIS) throws JSONParsingException
@@ -111,6 +115,8 @@ public final class JacksonHelper
    * @param aReader
    *        the JSON Reader to convert, can be any valid JSON mark-up
    * @return the resulting JSON node structure
+   * @throws JSONParsingException
+   *         in case parsing failed
    */
   @Nonnull
   public static JsonNode parseToNode (@Nonnull final Reader aReader) throws JSONParsingException
