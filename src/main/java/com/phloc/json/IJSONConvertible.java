@@ -17,6 +17,8 @@
  */
 package com.phloc.json;
 
+import javax.annotation.Nonnull;
+
 /**
  * An interface for non JSON objects which implement a conversion to a JSON
  * object ( {@link IJSONObject})
@@ -28,5 +30,6 @@ public interface IJSONConvertible
   /**
    * @return a JSON object representing this object
    */
+  @Nonnull
   IJSONObject getAsJSON ();
 }
