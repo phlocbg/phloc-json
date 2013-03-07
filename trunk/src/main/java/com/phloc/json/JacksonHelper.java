@@ -27,6 +27,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.phloc.commons.io.streams.NonBlockingStringReader;
 import com.phloc.json.impl.JSONParsingException;
 
 /**
@@ -57,6 +59,9 @@ public final class JacksonHelper
     }
     // Always use BigDecimal
     aObjectMapper.enable (DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+    // As of 2.1.4 BigDecimals are compacted by default - with this method
+    // everything stays as it was
+    aObjectMapper.setNodeFactory (JsonNodeFactory.withExactBigDecimals (true));
     return aObjectMapper;
   }
 
@@ -75,7 +80,7 @@ public final class JacksonHelper
   {
     try
     {
-      return createObjectMapper ().readTree (sJSON);
+      return createObjectMapper ().readTree (new NonBlockingStringReader (sJSON));
     }
     catch (final Throwable t)
     {
