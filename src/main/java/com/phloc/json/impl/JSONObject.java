@@ -312,6 +312,14 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueString (sDataValue)));
   }
 
+  @Nonnull
+  public IJSONObject setStringProperties (@Nonnull final Map <String, String> aMap)
+  {
+    for (final Map.Entry <String, String> aEntry : aMap.entrySet ())
+      setStringProperty (aEntry.getKey (), aEntry.getValue ());
+    return this;
+  }
+
   @Nullable
   public BigInteger getBigIntegerProperty (@Nullable final String sName)
   {

@@ -20,6 +20,7 @@ package com.phloc.json;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnegative;
@@ -33,6 +34,7 @@ import com.phloc.json.impl.JSONReader;
  * A basic JSON object
  * 
  * @author Boris Gregorcic
+ * @author philip
  */
 public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
 {
@@ -321,6 +323,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    */
   @Nonnull
   IJSONObject setStringProperty (@Nonnull String sName, @Nonnull String sDataValue);
+
+  @Nonnull
+  IJSONObject setStringProperties (@Nonnull Map <String, String> aMap);
 
   @Nullable
   BigInteger getBigIntegerProperty (@Nullable String sName);
