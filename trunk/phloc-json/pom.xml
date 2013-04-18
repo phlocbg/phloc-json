@@ -23,8 +23,8 @@
   
   <scm>
     <url>http://code.google.com/p/phloc-json/source/browse/</url>
-    <connection>scm:svn:http://phloc-json.googlecode.com/svn/trunk</connection>
-    <developerConnection>scm:svn:https://phloc-json.googlecode.com/svn/trunk</developerConnection>
+    <connection>scm:svn:http://phloc-json.googlecode.com/svn/trunk/phloc-json</connection>
+    <developerConnection>scm:svn:https://phloc-json.googlecode.com/svn/trunk/phloc-json</developerConnection>
   </scm>
 
   <organization>
