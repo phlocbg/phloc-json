@@ -25,7 +25,7 @@ import com.phloc.json.IJSONPropertyValue;
  * Implementation of {@link IJSONPropertyValue} with a numeric internal data
  * type
  * 
- * @author philip
+ * @author Philip Helger
  */
 public abstract class AbstractJSONPropertyValueNumeric <DATATYPE extends Number> extends
                                                                                  AbstractJSONPropertyValue <DATATYPE>

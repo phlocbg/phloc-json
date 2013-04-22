@@ -28,7 +28,7 @@ import com.phloc.json.IJSONPropertyValue;
  * Implementation of {@link IJSONPropertyValue} with the internal data type
  * {@link BigDecimal}
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class JSONPropertyValueBigDecimal extends AbstractJSONPropertyValueNumeric <BigDecimal>
 {

@@ -34,7 +34,7 @@ import com.phloc.json.impl.JSONParsingException;
 /**
  * Utility class around the Jackson JSON implementation
  * 
- * @author philip
+ * @author Philip Helger
  */
 @Immutable
 public final class JacksonHelper

@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * Test class for class {@link JSONObject}
  * 
- * @author philip
+ * @author Philip Helger
  */
 public final class JSONObjectTest
 {

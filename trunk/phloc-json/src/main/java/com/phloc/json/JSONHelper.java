@@ -26,7 +26,7 @@ import com.phloc.commons.string.StringHelper;
 /**
  * Some utility methods for JSON
  * 
- * @author philip
+ * @author Philip Helger
  */
 @Immutable
 public final class JSONHelper
