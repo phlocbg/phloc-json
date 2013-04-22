@@ -28,7 +28,7 @@ import com.phloc.json.IJSONPropertyValue;
  * Implementation of {@link IJSONPropertyValue} with the internal data type
  * {@link BigInteger}
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class JSONPropertyValueBigInteger extends AbstractJSONPropertyValueNumeric <BigInteger>
 {

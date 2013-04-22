@@ -31,7 +31,7 @@ import com.phloc.json.impl.JSONReader;
  * {@link com.fasterxml.jackson.databind.ObjectMapper} which is not capable to
  * handle functions.
  * 
- * @author philip
+ * @author Philip Helger
  */
 public class JSONPropertyValueFunctionPrebuild extends AbstractJSONPropertyValue <String> implements
                                                                                          IJSONPropertyValueNotParsable <String>

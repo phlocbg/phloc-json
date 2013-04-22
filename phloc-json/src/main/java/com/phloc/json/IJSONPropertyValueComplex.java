@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Base interface for complex property value
  * 
- * @author philip
+ * @author Philip Helger
  * @param <DATATYPE>
  *        the internal data type of the value
  */

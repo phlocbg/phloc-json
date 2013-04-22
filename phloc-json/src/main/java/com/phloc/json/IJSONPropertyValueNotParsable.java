@@ -21,7 +21,7 @@ package com.phloc.json;
  * Interface for a JSON property value that cannot be parsed again, as the
  * implementation is only valid for JavaScript output!
  * 
- * @author philip
+ * @author Philip Helger
  * @param <DATATYPE>
  *        the internal data type of the value
  */

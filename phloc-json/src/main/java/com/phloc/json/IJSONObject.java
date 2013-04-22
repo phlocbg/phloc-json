@@ -34,7 +34,7 @@ import com.phloc.json.impl.JSONReader;
  * A basic JSON object
  * 
  * @author Boris Gregorcic
- * @author philip
+ * @author Philip Helger
  */
 public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
 {
