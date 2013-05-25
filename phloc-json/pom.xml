@@ -83,14 +83,14 @@
   </distributionManagement>
   
   <properties>
-    <jackson.version>2.2.0</jackson.version>
+    <jackson.version>2.2.1</jackson.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.phloc</groupId>
       <artifactId>phloc-commons</artifactId>
-      <version>4.0.6</version>
+      <version>4.0.7</version>
     </dependency>
 
     <dependency>
