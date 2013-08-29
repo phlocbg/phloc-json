@@ -83,7 +83,7 @@
   </distributionManagement>
   
   <properties>
-    <jackson.version>2.2.2</jackson.version>
+    <jackson.version>2.2.3</jackson.version>
   </properties>
 
   <dependencies>
