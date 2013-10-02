@@ -20,15 +20,15 @@ package com.phloc.json2.convert;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
 import com.phloc.commons.annotations.PresentForCodeCoverage;
 import com.phloc.commons.collections.ArrayHelper;
 import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.commons.typeconvert.TypeConverterException;
 import com.phloc.json2.IJson;
-import com.phloc.json2.config.JsonConfig;
 import com.phloc.json2.impl.JsonArray;
 import com.phloc.json2.impl.JsonObject;
 import com.phloc.json2.impl.JsonValue;
@@ -38,7 +38,7 @@ import com.phloc.json2.impl.JsonValue;
  * 
  * @author Philip Helger
  */
-@ThreadSafe
+@Immutable
 public final class JsonConverter
 {
   @SuppressWarnings ("unused")
@@ -48,7 +48,7 @@ public final class JsonConverter
   private JsonConverter ()
   {}
 
-  @Nullable
+  @Nonnull
   public static IJson convertToJson (@Nullable final Object aObject) throws TypeConverterException
   {
     if (aObject == null)
@@ -77,7 +77,7 @@ public final class JsonConverter
         final char [] aArray = (char []) aObject;
         final JsonArray aJsonArray = new JsonArray (aArray.length);
         for (final char cValue : aArray)
-          aJsonArray.add (cValue);
+          aJsonArray.add (Character.toString (cValue));
         return aJsonArray;
       }
       if (aObject instanceof double [])
@@ -161,6 +161,6 @@ public final class JsonConverter
     }
 
     // If no converter was found, assume it is a JsonValue
-    return JsonValue.create (aObject, JsonConfig.getDefaultValueSerializer ());
+    return JsonValue.create (aObject);
   }
 }

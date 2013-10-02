@@ -20,12 +20,17 @@ package com.phloc.json2.config;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+import com.phloc.commons.annotations.PresentForCodeCoverage;
 import com.phloc.json2.IJsonValueSerializer;
 import com.phloc.json2.serialize.JsonValueSerializerToString;
 
 @Immutable
 public final class JsonConfig
 {
+  @SuppressWarnings ("unused")
+  @PresentForCodeCoverage
+  private static final JsonConfig s_aInstance = new JsonConfig ();
+
   private JsonConfig ()
   {}
 

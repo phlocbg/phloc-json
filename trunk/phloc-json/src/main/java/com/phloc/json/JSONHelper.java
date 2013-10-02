@@ -17,10 +17,12 @@
  */
 package com.phloc.json;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import com.phloc.commons.annotations.PresentForCodeCoverage;
+import com.phloc.commons.io.streams.NonBlockingStringWriter;
 import com.phloc.commons.string.StringHelper;
 
 /**
@@ -92,5 +94,56 @@ public final class JSONHelper
     }
 
     return new String (ret, 0, nIndex);
+  }
+
+  public static void jsonEscape (@Nullable final String sInput, @Nonnull final NonBlockingStringWriter aWriter)
+  {
+    if (StringHelper.hasNoText (sInput))
+      return;
+
+    final char [] aInput = sInput.toCharArray ();
+    if (!StringHelper.containsAny (aInput, CHARS_TO_MASK))
+    {
+      aWriter.write (sInput);
+      return;
+    }
+
+    for (final char cCurrent : aInput)
+    {
+      switch (cCurrent)
+      {
+        case '"':
+          // single quotes must NOT be escaped in valid JSON (See
+          // http://www.json.org/)
+          // #case '\'':
+        case '\\':
+          aWriter.write (MASK_CHAR);
+          aWriter.write (cCurrent);
+          break;
+        case '\b':
+          aWriter.write (MASK_CHAR);
+          aWriter.write ('b');
+          break;
+        case '\t':
+          aWriter.write (MASK_CHAR);
+          aWriter.write ('t');
+          break;
+        case '\n':
+          aWriter.write (MASK_CHAR);
+          aWriter.write ('n');
+          break;
+        case '\r':
+          aWriter.write (MASK_CHAR);
+          aWriter.write ('r');
+          break;
+        case '\f':
+          aWriter.write (MASK_CHAR);
+          aWriter.write ('f');
+          break;
+        default:
+          aWriter.write (cCurrent);
+          break;
+      }
+    }
   }
 }

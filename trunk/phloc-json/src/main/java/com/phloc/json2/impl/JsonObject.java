@@ -121,6 +121,24 @@ public class JsonObject implements IJsonObject
   }
 
   @Nonnull
+  public JsonObject add (@Nonnull @Nonempty final String sName, final char cValue)
+  {
+    return add (sName, JsonValue.create (cValue));
+  }
+
+  @Nonnull
+  public JsonObject add (@Nonnull @Nonempty final String sName, final double dValue)
+  {
+    return add (sName, JsonValue.create (dValue));
+  }
+
+  @Nonnull
+  public JsonObject add (@Nonnull @Nonempty final String sName, final float fValue)
+  {
+    return add (sName, JsonValue.create (fValue));
+  }
+
+  @Nonnull
   public JsonObject add (@Nonnull @Nonempty final String sName, final int nValue)
   {
     return add (sName, JsonValue.create (nValue));
@@ -136,18 +154,6 @@ public class JsonObject implements IJsonObject
   public JsonObject add (@Nonnull @Nonempty final String sName, final short nValue)
   {
     return add (sName, JsonValue.create (nValue));
-  }
-
-  @Nonnull
-  public JsonObject add (@Nonnull @Nonempty final String sName, final float fValue)
-  {
-    return add (sName, JsonValue.create (fValue));
-  }
-
-  @Nonnull
-  public JsonObject add (@Nonnull @Nonempty final String sName, final double dValue)
-  {
-    return add (sName, JsonValue.create (dValue));
   }
 
   @Nonnull

@@ -25,6 +25,7 @@ import com.phloc.json2.IJsonValue;
 import com.phloc.json2.IJsonValueSerializer;
 import com.phloc.json2.config.JsonConfig;
 import com.phloc.json2.serialize.JsonValueSerializerConstant;
+import com.phloc.json2.serialize.JsonValueSerializerEscaped;
 
 /**
  * Default implementation of {@link IJsonValue}.
@@ -48,16 +49,11 @@ public class JsonValue implements IJsonValue
   static
   {
     for (int i = INT_CACHE_MIN; i <= INT_CACHE_MAX; ++i)
-      NUMERIC[i - INT_CACHE_MIN] = new JsonValue (Integer.valueOf (i));
+      NUMERIC[i - INT_CACHE_MIN] = new JsonValue (Integer.valueOf (i), JsonConfig.getDefaultValueSerializer ());
   }
 
   private final Object m_aValue;
   private final IJsonValueSerializer m_aSerializer;
-
-  private JsonValue (@Nullable final Object aValue)
-  {
-    this (aValue, JsonConfig.getDefaultValueSerializer ());
-  }
 
   private JsonValue (@Nullable final Object aValue, @Nonnull final IJsonValueSerializer aSerializer)
   {
@@ -124,23 +120,41 @@ public class JsonValue implements IJsonValue
   }
 
   @Nonnull
+  public static IJsonValue create (final char cValue)
+  {
+    return create (Character.toString (cValue));
+  }
+
+  @Nonnull
+  public static IJsonValue create (final double dValue)
+  {
+    return create (Double.valueOf (dValue));
+  }
+
+  @Nonnull
+  public static IJsonValue create (final float fValue)
+  {
+    return create (Float.valueOf (fValue));
+  }
+
+  @Nonnull
   public static IJsonValue create (final int nValue)
   {
     // Use cached value
-    if (nValue >= 0 && nValue < NUMERIC.length)
-      return NUMERIC[nValue];
+    if (nValue >= INT_CACHE_MIN && nValue < INT_CACHE_MAX)
+      return NUMERIC[nValue - INT_CACHE_MIN];
 
-    return new JsonValue (Integer.valueOf (nValue));
+    return create (Integer.valueOf (nValue));
   }
 
   @Nonnull
   public static IJsonValue create (final long nValue)
   {
     // Use cached value
-    if (nValue >= 0 && nValue < NUMERIC.length)
-      return NUMERIC[(int) nValue];
+    if (nValue >= INT_CACHE_MIN && nValue < INT_CACHE_MAX)
+      return NUMERIC[(int) nValue - INT_CACHE_MIN];
 
-    return new JsonValue (Long.valueOf (nValue));
+    return create (Long.valueOf (nValue));
   }
 
   @Nonnull
@@ -150,20 +164,11 @@ public class JsonValue implements IJsonValue
   }
 
   @Nonnull
-  public static IJsonValue create (final float fValue)
-  {
-    return new JsonValue (Float.valueOf (fValue));
-  }
-
-  @Nonnull
-  public static IJsonValue create (final double dValue)
-  {
-    return new JsonValue (Double.valueOf (dValue));
-  }
-
-  @Nonnull
   public static IJsonValue create (@Nullable final Object aValue)
   {
+    if (aValue instanceof CharSequence)
+      return create (aValue, JsonValueSerializerEscaped.getInstance ());
+
     return create (aValue, JsonConfig.getDefaultValueSerializer ());
   }
 
