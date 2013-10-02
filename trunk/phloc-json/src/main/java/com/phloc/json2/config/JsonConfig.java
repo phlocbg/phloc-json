@@ -15,26 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.phloc.json2.convert;
+package com.phloc.json2.config;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
-import com.phloc.json2.IJson;
+import com.phloc.json2.IJsonValueSerializer;
+import com.phloc.json2.serialize.JsonValueSerializerToString;
 
-/**
- * Single converter from and to {@link IJson}.
- * 
- * @author Philip Helger
- */
-public interface IJsonConverter <DATATYPE>
+@Immutable
+public final class JsonConfig
 {
-  /**
-   * Convert the passed value to JSON
-   * 
-   * @param aValue
-   *        The non-<code>null</code> object to be converted to a JSON object
-   * @return Never <code>null</code>.
-   */
+  private JsonConfig ()
+  {}
+
   @Nonnull
-  IJson convertToJson (@Nonnull DATATYPE aValue);
+  public static IJsonValueSerializer getDefaultValueSerializer ()
+  {
+    return JsonValueSerializerToString.getInstance ();
+  }
 }
