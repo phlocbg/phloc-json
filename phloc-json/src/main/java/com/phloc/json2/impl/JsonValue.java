@@ -15,12 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.phloc.json2;
+package com.phloc.json2.impl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.phloc.commons.string.ToStringGenerator;
+import com.phloc.json2.IJsonValue;
+import com.phloc.json2.IJsonValueSerializer;
+import com.phloc.json2.config.JsonConfig;
+import com.phloc.json2.serialize.JsonValueSerializerConstant;
 
 /**
  * Default implementation of {@link IJsonValue}.
@@ -30,11 +34,11 @@ import com.phloc.commons.string.ToStringGenerator;
 public class JsonValue implements IJsonValue
 {
   /** Special value for "true" */
-  public static final IJsonValue TRUE = new JsonValue (Boolean.TRUE);
+  public static final IJsonValue TRUE = new JsonValue (Boolean.TRUE, new JsonValueSerializerConstant ("true"));
   /** Special value for "false" */
-  public static final IJsonValue FALSE = new JsonValue (Boolean.FALSE);
+  public static final IJsonValue FALSE = new JsonValue (Boolean.FALSE, new JsonValueSerializerConstant ("false"));
   /** Special value for "null" */
-  public static final IJsonValue NULL = new JsonValue (null);
+  public static final IJsonValue NULL = new JsonValue (null, new JsonValueSerializerConstant ("null"));
 
   /** Cache for regular used numeric JSON values */
   private static final int INT_CACHE_MIN = -128;
@@ -48,10 +52,19 @@ public class JsonValue implements IJsonValue
   }
 
   private final Object m_aValue;
+  private final IJsonValueSerializer m_aSerializer;
 
   private JsonValue (@Nullable final Object aValue)
   {
+    this (aValue, JsonConfig.getDefaultValueSerializer ());
+  }
+
+  private JsonValue (@Nullable final Object aValue, @Nonnull final IJsonValueSerializer aSerializer)
+  {
+    if (aSerializer == null)
+      throw new NullPointerException ("Serializer");
     m_aValue = aValue;
+    m_aSerializer = aSerializer;
   }
 
   public boolean isArray ()
@@ -86,10 +99,16 @@ public class JsonValue implements IJsonValue
     return m_aValue == null;
   }
 
+  @Nonnull
+  public IJsonValueSerializer getValueSerializer ()
+  {
+    return m_aSerializer;
+  }
+
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("value", m_aValue).toString ();
+    return new ToStringGenerator (this).append ("value", m_aValue).append ("serializer", m_aSerializer).toString ();
   }
 
   @Nonnull
@@ -145,11 +164,17 @@ public class JsonValue implements IJsonValue
   @Nonnull
   public static IJsonValue create (@Nullable final Object aValue)
   {
+    return create (aValue, JsonConfig.getDefaultValueSerializer ());
+  }
+
+  @Nonnull
+  public static IJsonValue create (@Nullable final Object aValue, @Nonnull final IJsonValueSerializer aValueSerializer)
+  {
     // Special null constant
     if (aValue == null)
       return NULL;
 
     // New object
-    return new JsonValue (aValue);
+    return new JsonValue (aValue, aValueSerializer);
   }
 }

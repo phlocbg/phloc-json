@@ -18,18 +18,10 @@
 package com.phloc.json2;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Test;
 
-import com.phloc.commons.typeconvert.TypeConverterException;
-import com.phloc.json2.convert.JsonConverter;
+import com.phloc.json2.impl.JsonValue;
 
 /**
  * Test class for class {@link JsonValue}.
@@ -47,35 +39,5 @@ public final class JsonValueTest
       assertNotNull (JsonValue.create (i));
     for (long i = -200; i < 200; ++i)
       assertNotNull (JsonValue.create (i));
-  }
-
-  @Test
-  public void testDefaultSPI ()
-  {
-    assertNotNull (JsonConverter.convertToJson (Boolean.TRUE));
-    assertNotNull (JsonConverter.convertToJson (Byte.valueOf ((byte) 0)));
-    assertNotNull (JsonConverter.convertToJson (Character.valueOf ('\0')));
-    assertNotNull (JsonConverter.convertToJson (Double.valueOf (3.1415D)));
-    assertNotNull (JsonConverter.convertToJson (Float.valueOf (3.1415F)));
-    assertNotNull (JsonConverter.convertToJson (Integer.valueOf (15)));
-    assertNotNull (JsonConverter.convertToJson (Long.valueOf (15L)));
-    assertNotNull (JsonConverter.convertToJson (Short.valueOf ((short) 15)));
-    assertNotNull (JsonConverter.convertToJson ("a string"));
-    assertNotNull (JsonConverter.convertToJson (new StringBuilder ().append ("sb")));
-    assertNotNull (JsonConverter.convertToJson (new StringBuffer ().append ("sb")));
-    assertNotNull (JsonConverter.convertToJson (BigDecimal.ONE));
-    assertNotNull (JsonConverter.convertToJson (BigInteger.ONE));
-    assertNotNull (JsonConverter.convertToJson (new AtomicBoolean (true)));
-    assertNotNull (JsonConverter.convertToJson (new AtomicInteger (15)));
-    assertNotNull (JsonConverter.convertToJson (new AtomicLong (15L)));
-
-    try
-    {
-      // No converter registered!
-      JsonConverter.convertToJson (new JsonValueTest ());
-      fail ();
-    }
-    catch (final TypeConverterException ex)
-    {}
   }
 }

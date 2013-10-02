@@ -15,40 +15,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.phloc.json2;
+package com.phloc.json2.serialize;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * Base interface for a single JSON value
- * 
- * @author Philip Helger
- */
-public interface IJsonValue extends IJson
+import com.phloc.commons.annotations.Nonempty;
+import com.phloc.commons.string.ToStringGenerator;
+import com.phloc.json2.IJsonValueSerializer;
+
+public class JsonValueSerializerToString implements IJsonValueSerializer
 {
-  /**
-   * @return The object value. May be <code>null</code>.
-   */
-  @Nullable
-  Object getValue ();
+  private static final JsonValueSerializerToString s_aInstance = new JsonValueSerializerToString ();
 
-  /**
-   * @return The class of the value or <code>null</code> if no value is
-   *         contained.
-   */
-  @Nullable
-  Class <?> getValueClass ();
+  private JsonValueSerializerToString ()
+  {}
 
-  /**
-   * @return <code>true</code> if the value is <code>null</code>. Same as
-   *         <code>getValue()==null</code>.
-   */
-  boolean isNullValue ();
-
-  /**
-   * @return The serializer to be used.
-   */
   @Nonnull
-  IJsonValueSerializer getValueSerializer ();
+  public static JsonValueSerializerToString getInstance ()
+  {
+    return s_aInstance;
+  }
+
+  @Nonnull
+  @Nonempty
+  public String getAsJsonString (@Nullable final Object aValue)
+  {
+    return String.valueOf (aValue);
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).toString ();
+  }
 }

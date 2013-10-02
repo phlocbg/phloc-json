@@ -15,30 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.phloc.json2.convert;
+package com.phloc.json2;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import com.phloc.commons.state.EContinue;
+import com.phloc.commons.annotations.Nonempty;
 
-/**
- * A callback interface that is used in several places of the JSON type
- * conversion engine.
- * 
- * @author Philip Helger
- */
-public interface IJsonConverterCallback
+public interface IJsonValueSerializer
 {
   /**
-   * Invoked for each converter.
+   * Get the textual representation of the passed value.
    * 
-   * @param aClass
-   *        The class for which the converter was registered.
-   * @param aConverter
-   *        The main converter object. Never <code>null</code>.
-   * @return {@link EContinue#CONTINUE} to continue iteration,
-   *         {@link EContinue#BREAK} to stop iteration.
+   * @param aValue
+   *        The value to use.
+   * @return The String representation. May neither be <code>null</code> nor
+   *         empty.
    */
   @Nonnull
-  EContinue call (@Nonnull Class <?> aClass, @Nonnull IJsonConverter <?> aConverter);
+  @Nonempty
+  String getAsJsonString (@Nullable Object aValue);
 }

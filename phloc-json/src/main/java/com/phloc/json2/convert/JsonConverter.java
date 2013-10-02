@@ -17,18 +17,24 @@
  */
 package com.phloc.json2.convert;
 
+import java.util.Collection;
+import java.util.Map;
+
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import com.phloc.commons.annotations.PresentForCodeCoverage;
+import com.phloc.commons.collections.ArrayHelper;
+import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.commons.typeconvert.TypeConverterException;
-import com.phloc.commons.typeconvert.TypeConverterException.EReason;
 import com.phloc.json2.IJson;
-import com.phloc.json2.JsonValue;
+import com.phloc.json2.config.JsonConfig;
+import com.phloc.json2.impl.JsonArray;
+import com.phloc.json2.impl.JsonObject;
+import com.phloc.json2.impl.JsonValue;
 
 /**
- * A utility class for converting objects from and to {@link IJson}.<br>
- * All converters are registered in the {@link JsonConverterRegistry}.
+ * A utility class for converting objects from and to {@link IJson}.
  * 
  * @author Philip Helger
  */
@@ -48,17 +54,113 @@ public final class JsonConverter
     if (aObject == null)
       return JsonValue.NULL;
 
-    // Lookup converter
-    final Class <?> aSrcClass = aObject.getClass ();
-    final IJsonConverter <?> aConverter = JsonConverterRegistry.getConverterToJson (aSrcClass);
-    if (aConverter == null)
-      throw new TypeConverterException (aSrcClass, IJson.class, EReason.NO_CONVERTER_FOUND);
+    if (ArrayHelper.isArray (aObject))
+    {
+      if (aObject instanceof boolean [])
+      {
+        final boolean [] aArray = (boolean []) aObject;
+        final JsonArray aJsonArray = new JsonArray (aArray.length);
+        for (final boolean bValue : aArray)
+          aJsonArray.add (bValue);
+        return aJsonArray;
+      }
+      if (aObject instanceof byte [])
+      {
+        final byte [] aArray = (byte []) aObject;
+        final JsonArray aJsonArray = new JsonArray (aArray.length);
+        for (final byte nValue : aArray)
+          aJsonArray.add (nValue);
+        return aJsonArray;
+      }
+      if (aObject instanceof char [])
+      {
+        final char [] aArray = (char []) aObject;
+        final JsonArray aJsonArray = new JsonArray (aArray.length);
+        for (final char cValue : aArray)
+          aJsonArray.add (cValue);
+        return aJsonArray;
+      }
+      if (aObject instanceof double [])
+      {
+        final double [] aArray = (double []) aObject;
+        final JsonArray aJsonArray = new JsonArray (aArray.length);
+        for (final double dValue : aArray)
+          aJsonArray.add (dValue);
+        return aJsonArray;
+      }
+      if (aObject instanceof float [])
+      {
+        final float [] aArray = (float []) aObject;
+        final JsonArray aJsonArray = new JsonArray (aArray.length);
+        for (final float fValue : aArray)
+          aJsonArray.add (fValue);
+        return aJsonArray;
+      }
+      if (aObject instanceof int [])
+      {
+        final int [] aArray = (int []) aObject;
+        final JsonArray aJsonArray = new JsonArray (aArray.length);
+        for (final int nValue : aArray)
+          aJsonArray.add (nValue);
+        return aJsonArray;
+      }
+      if (aObject instanceof long [])
+      {
+        final long [] aArray = (long []) aObject;
+        final JsonArray aJsonArray = new JsonArray (aArray.length);
+        for (final long nValue : aArray)
+          aJsonArray.add (nValue);
+        return aJsonArray;
+      }
+      if (aObject instanceof short [])
+      {
+        final short [] aArray = (short []) aObject;
+        final JsonArray aJsonArray = new JsonArray (aArray.length);
+        for (final short nValue : aArray)
+          aJsonArray.add (nValue);
+        return aJsonArray;
+      }
+      if (aObject instanceof Object [])
+      {
+        final Object [] aArray = (Object []) aObject;
+        final JsonArray aJsonArray = new JsonArray (aArray.length);
+        for (final Object aValue : aArray)
+        {
+          // Recursive conversion
+          aJsonArray.add (convertToJson (aValue));
+        }
+        return aJsonArray;
+      }
+      throw new IllegalStateException ("Expected an array but got none. Object=" + aObject);
+    }
 
-    // Perform conversion
-    @SuppressWarnings ("unchecked")
-    final IJson ret = ((IJsonConverter <Object>) aConverter).convertToJson (aObject);
-    if (ret == null)
-      throw new TypeConverterException (aSrcClass, IJson.class, EReason.CONVERSION_FAILED);
-    return ret;
+    if (aObject instanceof Collection <?>)
+    {
+      final Collection <?> aCollection = (Collection <?>) aObject;
+      final JsonArray aJsonArray = new JsonArray (aCollection.size ());
+      for (final Object aValue : aCollection)
+      {
+        // Recursive conversion
+        aJsonArray.add (convertToJson (aValue));
+      }
+      return aJsonArray;
+    }
+
+    if (aObject instanceof Map <?, ?>)
+    {
+      final Map <?, ?> aMap = (Map <?, ?>) aObject;
+      final JsonObject aJsonObject = new JsonObject (aMap.size ());
+      for (final Map.Entry <?, ?> aEntry : aMap.entrySet ())
+      {
+        final String sKey = TypeConverter.convertIfNecessary (aEntry.getKey (), String.class);
+        // Recursive conversion
+        final IJson aValue = convertToJson (aEntry.getValue ());
+        aJsonObject.add (sKey, aValue);
+      }
+      return aJsonObject;
+    }
+
+    // If no converter was found, assume it is a JsonValue
+    return JsonValue.create (aObject, JsonConfig.getDefaultValueSerializer ());
   }
 }

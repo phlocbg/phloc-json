@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.phloc.json2;
+package com.phloc.json2.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,6 +29,8 @@ import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.state.EChange;
 import com.phloc.commons.string.ToStringGenerator;
+import com.phloc.json2.IJson;
+import com.phloc.json2.IJsonArray;
 import com.phloc.json2.convert.JsonConverter;
 
 /**
@@ -38,10 +40,17 @@ import com.phloc.json2.convert.JsonConverter;
  */
 public class JsonArray implements IJsonArray
 {
-  private final List <IJson> m_aValues = new ArrayList <IJson> ();
+  private final List <IJson> m_aValues;
 
   public JsonArray ()
-  {}
+  {
+    this (10);
+  }
+
+  public JsonArray (@Nonnegative final int nInitialCapacity)
+  {
+    m_aValues = new ArrayList <IJson> (nInitialCapacity);
+  }
 
   public boolean isArray ()
   {
