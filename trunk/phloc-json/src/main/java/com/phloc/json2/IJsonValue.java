@@ -17,6 +17,9 @@
  */
 package com.phloc.json2;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -47,8 +50,21 @@ public interface IJsonValue extends IJson
   boolean isNullValue ();
 
   /**
-   * @return The serializer to be used.
+   * @return The serializer to be used. Never <code>null</code>.
    */
   @Nonnull
   IJsonValueSerializer getValueSerializer ();
+
+  /**
+   * Append this value in JSON notation to the passed {@link Writer}. This is a
+   * shortcut for
+   * <code>getValueSerializer ().appendAsJsonString (getValue (), aWriter);</code>
+   * 
+   * @param aWriter
+   *        The destination. May not be <code>null</code>.
+   */
+  void appendAsJsonString (@Nonnull Writer aWriter) throws IOException;
+
+  @Nonnull
+  IJsonValue getClone ();
 }

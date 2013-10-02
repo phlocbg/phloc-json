@@ -24,7 +24,6 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.phloc.commons.IHasSize;
 import com.phloc.commons.annotations.Nonempty;
 import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.state.EChange;
@@ -34,7 +33,7 @@ import com.phloc.commons.state.EChange;
  * 
  * @author Philip Helger
  */
-public interface IJsonObject extends IJson, IHasSize, Iterable <Map.Entry <String, IJson>>
+public interface IJsonObject extends IJsonCollection, Iterable <Map.Entry <String, IJson>>
 {
   @Nonnull
   IJsonObject add (@Nonnull @Nonempty String sName, @Nonnull IJson aValue);
@@ -95,4 +94,7 @@ public interface IJsonObject extends IJson, IHasSize, Iterable <Map.Entry <Strin
   @Nonnull
   @ReturnsMutableCopy
   Map <String, IJson> getAll ();
+
+  @Nonnull
+  IJsonObject getClone ();
 }

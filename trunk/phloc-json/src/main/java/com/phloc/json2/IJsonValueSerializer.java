@@ -17,22 +17,29 @@
  */
 package com.phloc.json2;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.phloc.commons.annotations.Nonempty;
-
+/**
+ * Interface for handling the serialization of simple {@link IJsonValue}
+ * objects.
+ * 
+ * @author Philip Helger
+ */
 public interface IJsonValueSerializer
 {
   /**
-   * Get the textual representation of the passed value.
+   * Append the textual representation of the passed value to the passed
+   * {@link Writer}.
    * 
    * @param aValue
-   *        The value to use.
-   * @return The String representation. May neither be <code>null</code> nor
-   *         empty.
+   *        The value to use. May be <code>null</code>.
+   * @param aWriter
+   *        the {@link Writer} to append the string representation to. Never
+   *        <code>null</code>.
    */
-  @Nonnull
-  @Nonempty
-  String getAsJsonString (@Nullable Object aValue);
+  void appendAsJsonString (@Nullable Object aValue, @Nonnull Writer aWriter) throws IOException;
 }

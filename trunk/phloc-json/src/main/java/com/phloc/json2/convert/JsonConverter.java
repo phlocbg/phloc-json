@@ -76,7 +76,7 @@ public final class JsonConverter
         final char [] aArray = (char []) aObject;
         final JsonArray aJsonArray = new JsonArray (aArray.length);
         for (final char cValue : aArray)
-          aJsonArray.add (Character.toString (cValue));
+          aJsonArray.add (cValue);
         return aJsonArray;
       }
       if (aObject instanceof double [])

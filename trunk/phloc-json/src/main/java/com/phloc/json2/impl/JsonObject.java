@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import com.phloc.commons.annotations.Nonempty;
 import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.collections.ContainerHelper;
+import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.state.EChange;
 import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.string.ToStringGenerator;
@@ -186,6 +187,32 @@ public class JsonObject implements IJsonObject
   public Map <String, IJson> getAll ()
   {
     return ContainerHelper.newMap (m_aValues);
+  }
+
+  @Nonnull
+  public JsonObject getClone ()
+  {
+    final JsonObject ret = new JsonObject (m_aValues.size ());
+    for (final Map.Entry <String, IJson> aEntry : m_aValues.entrySet ())
+      ret.add (aEntry.getKey (), aEntry.getValue ().getClone ());
+    return ret;
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final JsonObject rhs = (JsonObject) o;
+    return m_aValues.equals (rhs.m_aValues);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_aValues).getHashCode ();
   }
 
   @Override

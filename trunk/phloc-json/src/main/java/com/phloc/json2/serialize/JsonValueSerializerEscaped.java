@@ -17,16 +17,17 @@
  */
 package com.phloc.json2.serialize;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.phloc.commons.annotations.Nonempty;
-import com.phloc.commons.io.streams.NonBlockingStringWriter;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json.JSONHelper;
 import com.phloc.json2.IJsonValueSerializer;
 
-public class JsonValueSerializerEscaped implements IJsonValueSerializer
+public final class JsonValueSerializerEscaped implements IJsonValueSerializer
 {
   private static final JsonValueSerializerEscaped s_aInstance = new JsonValueSerializerEscaped ();
 
@@ -39,22 +40,16 @@ public class JsonValueSerializerEscaped implements IJsonValueSerializer
     return s_aInstance;
   }
 
-  @Nonnull
-  @Nonempty
-  public static String getEscapedJsonString (@Nonnull final String sValue)
+  public static void appendEscapedJsonString (@Nonnull final String sValue, @Nonnull final Writer aWriter) throws IOException
   {
-    final NonBlockingStringWriter aWriter = new NonBlockingStringWriter (sValue.length () * 2);
     aWriter.append ('"');
     JSONHelper.jsonEscape (sValue, aWriter);
     aWriter.append ('"');
-    return aWriter.getAsString ();
   }
 
-  @Nonnull
-  @Nonempty
-  public String getAsJsonString (@Nullable final Object aValue)
+  public void appendAsJsonString (@Nullable final Object aValue, @Nonnull final Writer aWriter) throws IOException
   {
-    return getEscapedJsonString (String.valueOf (aValue));
+    appendEscapedJsonString (String.valueOf (aValue), aWriter);
   }
 
   @Override

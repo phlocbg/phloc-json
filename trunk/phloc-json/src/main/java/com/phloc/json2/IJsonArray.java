@@ -23,7 +23,6 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.phloc.commons.IHasSize;
 import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.state.EChange;
 
@@ -32,7 +31,7 @@ import com.phloc.commons.state.EChange;
  * 
  * @author Philip Helger
  */
-public interface IJsonArray extends IJson, IHasSize, Iterable <IJson>
+public interface IJsonArray extends IJsonCollection, Iterable <IJson>
 {
   @Nonnull
   IJsonArray add (@Nonnull IJson aValue);
@@ -120,4 +119,7 @@ public interface IJsonArray extends IJson, IHasSize, Iterable <IJson>
   @Nonnull
   @ReturnsMutableCopy
   List <IJson> getAll ();
+
+  @Nonnull
+  IJsonArray getClone ();
 }
