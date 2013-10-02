@@ -17,7 +17,6 @@
  */
 package com.phloc.json2.convert;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -60,28 +59,6 @@ public final class JsonConverter
     final IJson ret = ((IJsonConverter <Object>) aConverter).convertToJson (aObject);
     if (ret == null)
       throw new TypeConverterException (aSrcClass, IJson.class, EReason.CONVERSION_FAILED);
-    return ret;
-  }
-
-  @Nullable
-  public static <DSTTYPE> DSTTYPE convertToNative (@Nullable final IJson aElement,
-                                                   @Nonnull final Class <DSTTYPE> aDstClass) throws TypeConverterException
-  {
-    if (aDstClass == null)
-      throw new NullPointerException ("destinationClass");
-
-    if (aElement == null)
-      return null;
-
-    // Lookup converter
-    final IJsonConverter <?> aConverter = JsonConverterRegistry.getConverterToNative (aDstClass);
-    if (aConverter == null)
-      throw new TypeConverterException (IJson.class, aDstClass, EReason.NO_CONVERTER_FOUND);
-
-    // Perform conversion
-    final DSTTYPE ret = aDstClass.cast (aConverter.convertToNative (aElement));
-    if (ret == null)
-      throw new TypeConverterException (IJson.class, aDstClass, EReason.CONVERSION_FAILED);
     return ret;
   }
 }

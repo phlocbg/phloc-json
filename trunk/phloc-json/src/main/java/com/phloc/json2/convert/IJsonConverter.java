@@ -18,7 +18,6 @@
 package com.phloc.json2.convert;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.phloc.json2.IJson;
 
@@ -38,14 +37,4 @@ public interface IJsonConverter <DATATYPE>
    */
   @Nonnull
   IJson convertToJson (@Nonnull DATATYPE aValue);
-
-  /**
-   * Convert the passed object to a native element.
-   * 
-   * @param aJson
-   *        The JSON object to be converted.
-   * @return <code>null</code> if conversion to a native object failed.
-   */
-  @Nullable
-  DATATYPE convertToNative (@Nonnull IJson aJson);
 }
