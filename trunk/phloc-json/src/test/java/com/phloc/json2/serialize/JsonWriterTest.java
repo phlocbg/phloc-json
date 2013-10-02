@@ -21,8 +21,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,6 +35,7 @@ import org.junit.Test;
 
 import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.json2.convert.JsonConverter;
+import com.phloc.json2.impl.JsonObject;
 
 /**
  * Test class for class {@link JsonWriter}.
@@ -99,5 +102,20 @@ public final class JsonWriterTest
     aLinkedMap.put ("foo", "bar");
     aLinkedMap.put ("foo2", Integer.valueOf (5));
     assertEquals ("{\"foo\":\"bar\",\"foo2\":5}", JsonWriter.getAsString (JsonConverter.convertToJson (aLinkedMap)));
+  }
+
+  @Test
+  public void testComplex ()
+  {
+    final List <JsonObject> aObjs = new ArrayList <JsonObject> ();
+    for (final Map <String, String> aRow : ContainerHelper.newList (ContainerHelper.newMap ("key", "value")))
+    {
+      final JsonObject aObj = new JsonObject ();
+      for (final Map.Entry <String, String> aEntry : aRow.entrySet ())
+        aObj.add (aEntry.getKey (), aEntry.getValue ());
+      aObjs.add (aObj);
+    }
+    assertEquals ("{\"aa\":[{\"key\":\"value\"}]}",
+                  JsonWriter.getAsString (JsonConverter.convertToJson (new JsonObject ().add ("aa", aObjs))));
   }
 }

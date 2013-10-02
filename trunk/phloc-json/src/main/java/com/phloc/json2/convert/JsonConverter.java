@@ -53,6 +53,9 @@ public final class JsonConverter
     if (aObject == null)
       return JsonValue.NULL;
 
+    if (aObject instanceof IJson)
+      return (IJson) aObject;
+
     if (ArrayHelper.isArray (aObject))
     {
       if (aObject instanceof boolean [])
