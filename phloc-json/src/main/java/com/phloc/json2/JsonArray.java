@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.state.EChange;
+import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json2.convert.JsonConverter;
 
 /**
@@ -37,6 +38,9 @@ import com.phloc.json2.convert.JsonConverter;
 public class JsonArray implements IJsonArray
 {
   private final List <IJson> m_aValues = new ArrayList <IJson> ();
+
+  public JsonArray ()
+  {}
 
   public boolean isArray ()
   {
@@ -191,5 +195,11 @@ public class JsonArray implements IJsonArray
   public List <IJson> getAll ()
   {
     return ContainerHelper.newList (m_aValues);
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("values", m_aValues).toString ();
   }
 }

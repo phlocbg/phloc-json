@@ -51,12 +51,13 @@ public final class JsonConverter
 
     // Lookup converter
     final Class <?> aSrcClass = aObject.getClass ();
-    final IJsonConverter aConverter = JsonConverterRegistry.getConverterToJson (aSrcClass);
+    final IJsonConverter <?> aConverter = JsonConverterRegistry.getConverterToJson (aSrcClass);
     if (aConverter == null)
       throw new TypeConverterException (aSrcClass, IJson.class, EReason.NO_CONVERTER_FOUND);
 
     // Perform conversion
-    final IJson ret = aConverter.convertToJson (aObject);
+    @SuppressWarnings ("unchecked")
+    final IJson ret = ((IJsonConverter <Object>) aConverter).convertToJson (aObject);
     if (ret == null)
       throw new TypeConverterException (aSrcClass, IJson.class, EReason.CONVERSION_FAILED);
     return ret;
@@ -73,7 +74,7 @@ public final class JsonConverter
       return null;
 
     // Lookup converter
-    final IJsonConverter aConverter = JsonConverterRegistry.getConverterToNative (aDstClass);
+    final IJsonConverter <?> aConverter = JsonConverterRegistry.getConverterToNative (aDstClass);
     if (aConverter == null)
       throw new TypeConverterException (IJson.class, aDstClass, EReason.NO_CONVERTER_FOUND);
 

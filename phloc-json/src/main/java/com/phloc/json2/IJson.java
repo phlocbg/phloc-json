@@ -17,14 +17,13 @@
  */
 package com.phloc.json2;
 
-import java.io.Serializable;
 
 /**
  * Base interface for all JSON object types: list, object and key-value-pair
  * 
  * @author Philip Helger
  */
-public interface IJson extends Serializable
+public interface IJson
 {
   /**
    * @return <code>true</code> if it is an array and can be case to

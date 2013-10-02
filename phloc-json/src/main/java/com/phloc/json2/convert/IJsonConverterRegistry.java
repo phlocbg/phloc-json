@@ -36,5 +36,6 @@ public interface IJsonConverterRegistry
    * @param aConverter
    *        The converter to be registered. May not be <code>null</code>.
    */
-  void registerJsonTypeConverter (@Nonnull Class <?> aClass, @Nonnull IJsonConverter aConverter);
+  <DATATYPE> void registerJsonTypeConverter (@Nonnull Class <DATATYPE> aClass,
+                                             @Nonnull IJsonConverter <DATATYPE> aConverter);
 }

@@ -17,8 +17,6 @@
  */
 package com.phloc.json2;
 
-import java.io.Serializable;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -49,9 +47,9 @@ public class JsonValue implements IJsonValue
       NUMERIC[i - INT_CACHE_MIN] = new JsonValue (Integer.valueOf (i));
   }
 
-  private final Serializable m_aValue;
+  private final Object m_aValue;
 
-  private JsonValue (@Nullable final Serializable aValue)
+  private JsonValue (@Nullable final Object aValue)
   {
     m_aValue = aValue;
   }
@@ -72,7 +70,7 @@ public class JsonValue implements IJsonValue
   }
 
   @Nullable
-  public Serializable getValue ()
+  public Object getValue ()
   {
     return m_aValue;
   }
@@ -145,7 +143,7 @@ public class JsonValue implements IJsonValue
   }
 
   @Nonnull
-  public static IJsonValue create (@Nullable final Serializable aValue)
+  public static IJsonValue create (@Nullable final Object aValue)
   {
     // Special null constant
     if (aValue == null)

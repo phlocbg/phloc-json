@@ -52,7 +52,7 @@ public final class JsonConverterRegistry implements IJsonConverterRegistry
   private static final ReadWriteLock s_aRWLock = new ReentrantReadWriteLock ();
 
   // WeakHashMap because key is a class
-  private static final Map <Class <?>, IJsonConverter> s_aMap = new WeakHashMap <Class <?>, IJsonConverter> ();
+  private static final Map <Class <?>, IJsonConverter <?>> s_aMap = new WeakHashMap <Class <?>, IJsonConverter <?>> ();
 
   static
   {
@@ -74,7 +74,8 @@ public final class JsonConverterRegistry implements IJsonConverterRegistry
     return s_aInstance;
   }
 
-  public void registerJsonTypeConverter (@Nonnull final Class <?> aClass, @Nonnull final IJsonConverter aConverter)
+  public <DATATYPE> void registerJsonTypeConverter (@Nonnull final Class <DATATYPE> aClass,
+                                                    @Nonnull final IJsonConverter <DATATYPE> aConverter)
   {
     _registerJsonTypeConverter (aClass, aConverter);
   }
@@ -90,7 +91,7 @@ public final class JsonConverterRegistry implements IJsonConverterRegistry
    *        The type converter from and to XML
    */
   private static void _registerJsonTypeConverter (@Nonnull final Class <?> aClass,
-                                                  @Nonnull final IJsonConverter aConverter)
+                                                  @Nonnull final IJsonConverter <?> aConverter)
   {
     if (aClass == null)
       throw new NullPointerException ("class");
@@ -120,7 +121,7 @@ public final class JsonConverterRegistry implements IJsonConverterRegistry
   }
 
   @Nullable
-  public static IJsonConverter getConverterToJson (@Nullable final Class <?> aSrcClass)
+  public static IJsonConverter <?> getConverterToJson (@Nullable final Class <?> aSrcClass)
   {
     s_aRWLock.readLock ().lock ();
     try
@@ -134,7 +135,7 @@ public final class JsonConverterRegistry implements IJsonConverterRegistry
   }
 
   @Nullable
-  public static IJsonConverter getConverterToNative (@Nonnull final Class <?> aDstClass)
+  public static IJsonConverter <?> getConverterToNative (@Nonnull final Class <?> aDstClass)
   {
     if (aDstClass == null)
       throw new NullPointerException ("dstClass");
@@ -143,7 +144,7 @@ public final class JsonConverterRegistry implements IJsonConverterRegistry
     try
     {
       // Check for an exact match first
-      IJsonConverter ret = s_aMap.get (aDstClass);
+      IJsonConverter <?> ret = s_aMap.get (aDstClass);
       if (ret == null)
       {
         // No exact match found - try fuzzy
@@ -185,7 +186,7 @@ public final class JsonConverterRegistry implements IJsonConverterRegistry
   public static void iterateAllRegisteredJsonConverters (@Nonnull final IJsonConverterCallback aCallback)
   {
     // Create a copy of the map
-    Map <Class <?>, IJsonConverter> aCopy;
+    Map <Class <?>, IJsonConverter <?>> aCopy;
     s_aRWLock.readLock ().lock ();
     try
     {
@@ -197,7 +198,7 @@ public final class JsonConverterRegistry implements IJsonConverterRegistry
     }
 
     // And iterate the copy
-    for (final Map.Entry <Class <?>, IJsonConverter> aEntry : aCopy.entrySet ())
+    for (final Map.Entry <Class <?>, IJsonConverter <?>> aEntry : aCopy.entrySet ())
       if (aCallback.call (aEntry.getKey (), aEntry.getValue ()).isBreak ())
         break;
   }
