@@ -32,7 +32,7 @@ import com.phloc.commons.state.EChange;
  * 
  * @author Philip Helger
  */
-public interface IJsonArray extends IJson, IHasSize
+public interface IJsonArray extends IJson, IHasSize, Iterable <IJson>
 {
   @Nonnull
   IJsonArray add (@Nonnull IJson aValue);

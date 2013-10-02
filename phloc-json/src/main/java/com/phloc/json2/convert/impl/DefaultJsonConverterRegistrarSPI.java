@@ -17,7 +17,6 @@
  */
 package com.phloc.json2.convert.impl;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,7 +27,6 @@ import javax.annotation.Nonnull;
 
 import com.phloc.commons.annotations.IsSPIImplementation;
 import com.phloc.json2.IJson;
-import com.phloc.json2.IJsonValue;
 import com.phloc.json2.JsonValue;
 import com.phloc.json2.convert.IJsonConverter;
 import com.phloc.json2.convert.IJsonConverterRegistrarSPI;
@@ -42,14 +40,8 @@ import com.phloc.json2.convert.IJsonConverterRegistry;
 @IsSPIImplementation
 public class DefaultJsonConverterRegistrarSPI implements IJsonConverterRegistrarSPI
 {
-  private static class JsonValueConverter <DATATYPE extends Serializable> implements IJsonConverter <DATATYPE>
+  private static class JsonValueConverter <DATATYPE> implements IJsonConverter <DATATYPE>
   {
-    @SuppressWarnings ("unchecked")
-    public DATATYPE convertToNative (final IJson aJson)
-    {
-      return (DATATYPE) ((IJsonValue) aJson).getValue ();
-    }
-
     public IJson convertToJson (final DATATYPE aValue)
     {
       return JsonValue.create (aValue);

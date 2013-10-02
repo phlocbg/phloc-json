@@ -18,6 +18,7 @@
 package com.phloc.json2;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Nonnegative;
@@ -66,6 +67,12 @@ public class JsonArray implements IJsonArray
   public boolean isEmpty ()
   {
     return m_aValues.isEmpty ();
+  }
+
+  @Nonnull
+  public Iterator <IJson> iterator ()
+  {
+    return m_aValues.iterator ();
   }
 
   @Nonnull

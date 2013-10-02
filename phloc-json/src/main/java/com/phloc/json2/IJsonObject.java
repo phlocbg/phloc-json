@@ -17,7 +17,79 @@
  */
 package com.phloc.json2;
 
-public interface IJsonObject extends IJson
-{
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.phloc.commons.IHasSize;
+import com.phloc.commons.annotations.Nonempty;
+import com.phloc.commons.annotations.ReturnsMutableCopy;
+import com.phloc.commons.state.EChange;
+
+/**
+ * Base interface for a JSON object that is a map from String to IJson
+ * 
+ * @author Philip Helger
+ */
+public interface IJsonObject extends IJson, IHasSize, Iterable <Map.Entry <String, IJson>>
+{
+  @Nonnull
+  IJsonObject add (@Nonnull @Nonempty String sName, @Nonnull IJson aValue);
+
+  /**
+   * Add at the specified index using the JSON converter
+   * 
+   * @param sName
+   *        The name of the item. May neither be <code>null</code> nor empty.
+   * @param aValue
+   *        The value to be added. May be <code>null</code>.
+   * @return this
+   */
+  @Nonnull
+  IJsonObject add (@Nonnull @Nonempty String sName, @Nullable Object aValue);
+
+  @Nonnull
+  IJsonObject add (@Nonnull @Nonempty String sName, boolean bValue);
+
+  @Nonnull
+  IJsonObject add (@Nonnull @Nonempty String sName, byte nValue);
+
+  @Nonnull
+  IJsonObject add (@Nonnull @Nonempty String sName, int nValue);
+
+  @Nonnull
+  IJsonObject add (@Nonnull @Nonempty String sName, long nValue);
+
+  @Nonnull
+  IJsonObject add (@Nonnull @Nonempty String sName, short nValue);
+
+  @Nonnull
+  IJsonObject add (@Nonnull @Nonempty String sName, float fValue);
+
+  @Nonnull
+  IJsonObject add (@Nonnull @Nonempty String sName, double dValue);
+
+  @Nonnull
+  EChange removeKey (@Nullable String sName);
+
+  boolean containsKey (@Nullable String sName);
+
+  @Nonnull
+  @ReturnsMutableCopy
+  Set <String> keySet ();
+
+  @Nonnull
+  @ReturnsMutableCopy
+  Collection <IJson> values ();
+
+  /**
+   * @return A copy of all contained items. Never <code>null</code> but maybe
+   *         empty.
+   */
+  @Nonnull
+  @ReturnsMutableCopy
+  Map <String, IJson> getAll ();
 }
