@@ -8,7 +8,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>phloc-json</artifactId>
-  <version>2.4.0</version>
+  <version>2.4.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>phloc-json</name>
   <url>http://repo.phloc.com/apidocs/phloc-json/${project.version}</url>
@@ -22,9 +22,9 @@
   </licenses>
   
   <scm>
-    <url>http://code.google.com/p/phloc-json/source/browse/tags/phloc-json-2.4.0</url>
-    <connection>scm:svn:http://phloc-json.googlecode.com/svn/tags/phloc-json-2.4.0</connection>
-    <developerConnection>scm:svn:https://phloc-json.googlecode.com/svn/tags/phloc-json-2.4.0</developerConnection>
+    <url>http://code.google.com/p/phloc-json/source/browse/</url>
+    <connection>scm:svn:http://phloc-json.googlecode.com/svn/trunk/phloc-json</connection>
+    <developerConnection>scm:svn:https://phloc-json.googlecode.com/svn/trunk/phloc-json</developerConnection>
   </scm>
 
   <organization>
