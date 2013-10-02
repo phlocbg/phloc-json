@@ -35,16 +35,16 @@ import com.phloc.json2.serialize.JsonValueSerializerEscaped;
 public class JsonValue implements IJsonValue
 {
   /** Special value for "true" */
-  public static final IJsonValue TRUE = new JsonValue (Boolean.TRUE, new JsonValueSerializerConstant ("true"));
+  public static final JsonValue TRUE = new JsonValue (Boolean.TRUE, new JsonValueSerializerConstant ("true"));
   /** Special value for "false" */
-  public static final IJsonValue FALSE = new JsonValue (Boolean.FALSE, new JsonValueSerializerConstant ("false"));
+  public static final JsonValue FALSE = new JsonValue (Boolean.FALSE, new JsonValueSerializerConstant ("false"));
   /** Special value for "null" */
-  public static final IJsonValue NULL = new JsonValue (null, new JsonValueSerializerConstant ("null"));
+  public static final JsonValue NULL = new JsonValue (null, new JsonValueSerializerConstant ("null"));
 
   /** Cache for regular used numeric JSON values */
   private static final int INT_CACHE_MIN = -128;
   private static final int INT_CACHE_MAX = 127;
-  private static final IJsonValue [] NUMERIC = new IJsonValue [INT_CACHE_MAX - INT_CACHE_MIN + 1];
+  private static final JsonValue [] NUMERIC = new JsonValue [INT_CACHE_MAX - INT_CACHE_MIN + 1];
 
   static
   {
@@ -108,37 +108,37 @@ public class JsonValue implements IJsonValue
   }
 
   @Nonnull
-  public static IJsonValue create (final boolean bValue)
+  public static JsonValue create (final boolean bValue)
   {
     return bValue ? TRUE : FALSE;
   }
 
   @Nonnull
-  public static IJsonValue create (final byte nValue)
+  public static JsonValue create (final byte nValue)
   {
     return create ((int) nValue);
   }
 
   @Nonnull
-  public static IJsonValue create (final char cValue)
+  public static JsonValue create (final char cValue)
   {
     return create (Character.toString (cValue));
   }
 
   @Nonnull
-  public static IJsonValue create (final double dValue)
+  public static JsonValue create (final double dValue)
   {
     return create (Double.valueOf (dValue));
   }
 
   @Nonnull
-  public static IJsonValue create (final float fValue)
+  public static JsonValue create (final float fValue)
   {
     return create (Float.valueOf (fValue));
   }
 
   @Nonnull
-  public static IJsonValue create (final int nValue)
+  public static JsonValue create (final int nValue)
   {
     // Use cached value
     if (nValue >= INT_CACHE_MIN && nValue < INT_CACHE_MAX)
@@ -148,7 +148,7 @@ public class JsonValue implements IJsonValue
   }
 
   @Nonnull
-  public static IJsonValue create (final long nValue)
+  public static JsonValue create (final long nValue)
   {
     // Use cached value
     if (nValue >= INT_CACHE_MIN && nValue < INT_CACHE_MAX)
@@ -158,13 +158,13 @@ public class JsonValue implements IJsonValue
   }
 
   @Nonnull
-  public static IJsonValue create (final short nValue)
+  public static JsonValue create (final short nValue)
   {
     return create ((int) nValue);
   }
 
   @Nonnull
-  public static IJsonValue create (@Nullable final Object aValue)
+  public static JsonValue create (@Nullable final Object aValue)
   {
     if (aValue instanceof CharSequence)
       return create (aValue, JsonValueSerializerEscaped.getInstance ());
@@ -173,7 +173,7 @@ public class JsonValue implements IJsonValue
   }
 
   @Nonnull
-  public static IJsonValue create (@Nullable final Object aValue, @Nonnull final IJsonValueSerializer aValueSerializer)
+  public static JsonValue create (@Nullable final Object aValue, @Nonnull final IJsonValueSerializer aValueSerializer)
   {
     // Special null constant
     if (aValue == null)

@@ -27,7 +27,6 @@ import javax.annotation.concurrent.Immutable;
 import com.phloc.commons.annotations.PresentForCodeCoverage;
 import com.phloc.commons.collections.ArrayHelper;
 import com.phloc.commons.typeconvert.TypeConverter;
-import com.phloc.commons.typeconvert.TypeConverterException;
 import com.phloc.json2.IJson;
 import com.phloc.json2.impl.JsonArray;
 import com.phloc.json2.impl.JsonObject;
@@ -49,7 +48,7 @@ public final class JsonConverter
   {}
 
   @Nonnull
-  public static IJson convertToJson (@Nullable final Object aObject) throws TypeConverterException
+  public static IJson convertToJson (@Nullable final Object aObject)
   {
     if (aObject == null)
       return JsonValue.NULL;

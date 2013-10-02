@@ -240,22 +240,6 @@ public final class JSONReader
    * @param aValues
    *        the {@link ArrayNode} to convert
    * @return the resulting {@link JSONPropertyValueList}
-   * @deprecated Use {@link #convertBooleanList(ArrayNode)} instead
-   */
-  @Deprecated
-  @Nonnull
-  public static JSONPropertyValueList <JSONPropertyValueBoolean> getBooleanList (final ArrayNode aValues)
-  {
-    return convertBooleanList (aValues);
-  }
-
-  /**
-   * Utility method handling arrays with inner array member type {@link Boolean}
-   * .
-   * 
-   * @param aValues
-   *        the {@link ArrayNode} to convert
-   * @return the resulting {@link JSONPropertyValueList}
    */
   @Nonnull
   public static JSONPropertyValueList <JSONPropertyValueBoolean> convertBooleanList (final ArrayNode aValues)
@@ -264,22 +248,6 @@ public final class JSONReader
     for (final JsonNode aValue : aValues)
       aList.addValue (new JSONPropertyValueBoolean (aValue.booleanValue ()));
     return aList;
-  }
-
-  /**
-   * Utility method handling arrays with inner array member type {@link Integer}
-   * .
-   * 
-   * @param aValues
-   *        the {@link ArrayNode} to convert
-   * @return the resulting {@link JSONPropertyValueList}
-   * @deprecated Use {@link #convertIntegerList(ArrayNode)} instead
-   */
-  @Deprecated
-  @Nonnull
-  public static JSONPropertyValueList <JSONPropertyValueInteger> getIntegerList (final ArrayNode aValues)
-  {
-    return convertIntegerList (aValues);
   }
 
   /**
@@ -305,21 +273,6 @@ public final class JSONReader
    * @param aValues
    *        the {@link ArrayNode} to convert
    * @return the resulting {@link JSONPropertyValueList}
-   * @deprecated Use {@link #convertStringList(ArrayNode)} instead
-   */
-  @Deprecated
-  @Nonnull
-  public static JSONPropertyValueList <JSONPropertyValueString> getStringList (final ArrayNode aValues)
-  {
-    return convertStringList (aValues);
-  }
-
-  /**
-   * Utility method handling arrays with inner array member type {@link String}.
-   * 
-   * @param aValues
-   *        the {@link ArrayNode} to convert
-   * @return the resulting {@link JSONPropertyValueList}
    */
   @Nonnull
   public static JSONPropertyValueList <JSONPropertyValueString> convertStringList (final ArrayNode aValues)
@@ -328,22 +281,6 @@ public final class JSONReader
     for (final JsonNode aValue : aValues)
       aList.addValue (new JSONPropertyValueString (aValue.textValue ()));
     return aList;
-  }
-
-  /**
-   * Utility method handling arrays with inner array member type
-   * {@link IJSONObject}.
-   * 
-   * @param aValues
-   *        the {@link ArrayNode} to convert
-   * @return the resulting {@link JSONPropertyValueList}
-   * @deprecated Use {@link #convertObjectList(ArrayNode)} instead
-   */
-  @Deprecated
-  @Nonnull
-  public static JSONPropertyValueList <IJSONObject> getObjectList (final ArrayNode aValues)
-  {
-    return convertObjectList (aValues);
   }
 
   /**
