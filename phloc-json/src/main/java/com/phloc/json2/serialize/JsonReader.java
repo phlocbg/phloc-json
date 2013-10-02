@@ -27,6 +27,7 @@ import javax.annotation.concurrent.Immutable;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.phloc.commons.annotations.PresentForCodeCoverage;
 import com.phloc.commons.collections.iterate.IterableIterator;
 import com.phloc.commons.io.IInputStreamProvider;
 import com.phloc.commons.io.IReaderProvider;
@@ -45,6 +46,10 @@ import com.phloc.json2.impl.JsonValue;
 @Immutable
 public final class JsonReader
 {
+  @SuppressWarnings ("unused")
+  @PresentForCodeCoverage
+  private static final JsonReader s_aInstance = new JsonReader ();
+
   private JsonReader ()
   {}
 

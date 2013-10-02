@@ -17,30 +17,15 @@
  */
 package com.phloc.json2;
 
-import com.phloc.commons.ICloneable;
+import com.phloc.commons.IHasSize;
 
 /**
- * Base interface for all JSON object types: list, object and key-value-pair
+ * Base interface for all JSON arrays and objects. So the base interface for
+ * JSON objects having other JSON child objects.
  * 
  * @author Philip Helger
  */
-public interface IJson extends ICloneable <IJson>
+public interface IJsonCollection extends IJson, IHasSize
 {
-  /**
-   * @return <code>true</code> if it is an array and can be case to
-   *         {@link IJsonArray}, <code>false</code> otherwise.
-   */
-  boolean isArray ();
-
-  /**
-   * @return <code>true</code> if it is an array and can be case to
-   *         {@link IJsonObject}, <code>false</code> otherwise.
-   */
-  boolean isObject ();
-
-  /**
-   * @return <code>true</code> if it is an array and can be case to
-   *         {@link IJsonValue}, <code>false</code> otherwise.
-   */
-  boolean isValue ();
+  /* empty */
 }

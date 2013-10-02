@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.phloc.json2;
+package com.phloc.json2.impl;
 
 import static org.junit.Assert.assertNotNull;
 

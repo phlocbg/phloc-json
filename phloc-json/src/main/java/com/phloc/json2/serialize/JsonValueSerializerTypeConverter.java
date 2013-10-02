@@ -17,15 +17,23 @@
  */
 package com.phloc.json2.serialize;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.phloc.commons.annotations.Nonempty;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.json2.IJsonValueSerializer;
 
-public class JsonValueSerializerTypeConverter implements IJsonValueSerializer
+/**
+ * A {@link IJsonValueSerializer} implementation that uses {@link TypeConverter}
+ * to convert the value to a {@link String}.
+ * 
+ * @author Philip Helger
+ */
+public final class JsonValueSerializerTypeConverter implements IJsonValueSerializer
 {
   private static final JsonValueSerializerTypeConverter s_aInstance = new JsonValueSerializerTypeConverter ();
 
@@ -38,11 +46,9 @@ public class JsonValueSerializerTypeConverter implements IJsonValueSerializer
     return s_aInstance;
   }
 
-  @Nonnull
-  @Nonempty
-  public String getAsJsonString (@Nullable final Object aValue)
+  public void appendAsJsonString (@Nullable final Object aValue, @Nonnull final Writer aWriter) throws IOException
   {
-    return TypeConverter.convertIfNecessary (aValue, String.class);
+    aWriter.write (TypeConverter.convertIfNecessary (aValue, String.class));
   }
 
   @Override

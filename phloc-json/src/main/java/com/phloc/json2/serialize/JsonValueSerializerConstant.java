@@ -17,15 +17,25 @@
  */
 package com.phloc.json2.serialize;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.phloc.commons.annotations.Nonempty;
+import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json2.IJsonValueSerializer;
 
-public class JsonValueSerializerConstant implements IJsonValueSerializer
+/**
+ * A {@link IJsonValueSerializer} implementation that uses a constant value.
+ * Required for true, false and null.
+ * 
+ * @author Philip Helger
+ */
+public final class JsonValueSerializerConstant implements IJsonValueSerializer
 {
   private final String m_sValue;
 
@@ -43,11 +53,26 @@ public class JsonValueSerializerConstant implements IJsonValueSerializer
     return m_sValue;
   }
 
-  @Nonnull
-  @Nonempty
-  public String getAsJsonString (@Nullable final Object aValue)
+  public void appendAsJsonString (@Nullable final Object aValue, @Nonnull final Writer aWriter) throws IOException
   {
-    return m_sValue;
+    aWriter.write (m_sValue);
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (!(o instanceof JsonValueSerializerConstant))
+      return false;
+    final JsonValueSerializerConstant rhs = (JsonValueSerializerConstant) o;
+    return m_sValue.equals (rhs.m_sValue);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_sValue).getHashCode ();
   }
 
   @Override

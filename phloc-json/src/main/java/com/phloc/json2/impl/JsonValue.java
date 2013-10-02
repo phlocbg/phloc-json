@@ -17,9 +17,16 @@
  */
 package com.phloc.json2.impl;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.math.BigDecimal;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
+import com.phloc.commons.equals.EqualsUtils;
+import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json2.IJsonValue;
 import com.phloc.json2.IJsonValueSerializer;
@@ -32,6 +39,7 @@ import com.phloc.json2.serialize.JsonValueSerializerEscaped;
  * 
  * @author Philip Helger
  */
+@Immutable
 public class JsonValue implements IJsonValue
 {
   /** Special value for "true" */
@@ -53,14 +61,14 @@ public class JsonValue implements IJsonValue
   }
 
   private final Object m_aValue;
-  private final IJsonValueSerializer m_aSerializer;
+  private final IJsonValueSerializer m_aValueSerializer;
 
-  private JsonValue (@Nullable final Object aValue, @Nonnull final IJsonValueSerializer aSerializer)
+  private JsonValue (@Nullable final Object aValue, @Nonnull final IJsonValueSerializer aValueSerializer)
   {
-    if (aSerializer == null)
-      throw new NullPointerException ("Serializer");
+    if (aValueSerializer == null)
+      throw new NullPointerException ("ValueSerializer");
     m_aValue = aValue;
-    m_aSerializer = aSerializer;
+    m_aValueSerializer = aValueSerializer;
   }
 
   public boolean isArray ()
@@ -98,13 +106,44 @@ public class JsonValue implements IJsonValue
   @Nonnull
   public IJsonValueSerializer getValueSerializer ()
   {
-    return m_aSerializer;
+    return m_aValueSerializer;
+  }
+
+  public void appendAsJsonString (@Nonnull final Writer aWriter) throws IOException
+  {
+    m_aValueSerializer.appendAsJsonString (m_aValue, aWriter);
+  }
+
+  @Nonnull
+  public JsonValue getClone ()
+  {
+    // No need to clone, as this object is immutable!
+    return this;
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final JsonValue rhs = (JsonValue) o;
+    return EqualsUtils.equals (m_aValue, rhs.m_aValue) && m_aValueSerializer.equals (rhs.m_aValueSerializer);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_aValue).append (m_aValueSerializer).getHashCode ();
   }
 
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("value", m_aValue).append ("serializer", m_aSerializer).toString ();
+    return new ToStringGenerator (this).append ("value", m_aValue)
+                                       .append ("valueSerializer", m_aValueSerializer)
+                                       .toString ();
   }
 
   @Nonnull
@@ -128,13 +167,13 @@ public class JsonValue implements IJsonValue
   @Nonnull
   public static JsonValue create (final double dValue)
   {
-    return create (Double.valueOf (dValue));
+    return create (BigDecimal.valueOf (dValue));
   }
 
   @Nonnull
   public static JsonValue create (final float fValue)
   {
-    return create (Float.valueOf (fValue));
+    return create (BigDecimal.valueOf (fValue));
   }
 
   @Nonnull
@@ -178,6 +217,11 @@ public class JsonValue implements IJsonValue
     // Special null constant
     if (aValue == null)
       return NULL;
+    // Special true/false
+    if (aValue == Boolean.TRUE)
+      return TRUE;
+    if (aValue == Boolean.FALSE)
+      return FALSE;
 
     // New object
     return new JsonValue (aValue, aValueSerializer);

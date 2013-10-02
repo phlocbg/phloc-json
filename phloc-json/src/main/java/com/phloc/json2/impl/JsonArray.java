@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 
 import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.collections.ContainerHelper;
+import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.state.EChange;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json2.IJson;
@@ -223,6 +224,32 @@ public class JsonArray implements IJsonArray
   public List <IJson> getAll ()
   {
     return ContainerHelper.newList (m_aValues);
+  }
+
+  @Nonnull
+  public JsonArray getClone ()
+  {
+    final JsonArray ret = new JsonArray (m_aValues.size ());
+    for (final IJson aValue : m_aValues)
+      ret.add (aValue.getClone ());
+    return ret;
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final JsonArray rhs = (JsonArray) o;
+    return m_aValues.equals (rhs.m_aValues);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_aValues).getHashCode ();
   }
 
   @Override

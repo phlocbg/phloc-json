@@ -17,12 +17,14 @@
  */
 package com.phloc.json;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import com.phloc.commons.annotations.PresentForCodeCoverage;
-import com.phloc.commons.io.streams.NonBlockingStringWriter;
 import com.phloc.commons.string.StringHelper;
 
 /**
@@ -43,17 +45,8 @@ public final class JSONHelper
   private JSONHelper ()
   {}
 
-  @Nullable
-  public static String jsonEscape (@Nullable final String sInput)
+  private static void _escape (@Nonnull final char [] aInput, @Nonnull final StringBuilder aSB)
   {
-    if (StringHelper.hasNoText (sInput))
-      return sInput;
-
-    final char [] aInput = sInput.toCharArray ();
-    if (!StringHelper.containsAny (aInput, CHARS_TO_MASK))
-      return sInput;
-
-    final StringBuilder aSB = new StringBuilder (aInput.length * 2);
     for (final char cCurrent : aInput)
     {
       switch (cCurrent)
@@ -88,27 +81,43 @@ public final class JSONHelper
           break;
       }
     }
-    return aSB.toString ();
   }
 
-  public static void jsonEscape (@Nullable final String sInput, @Nonnull final NonBlockingStringWriter aWriter)
+  @Nullable
+  public static String jsonEscape (@Nullable final String sInput)
   {
     if (StringHelper.hasNoText (sInput))
-      return;
+      return sInput;
 
     final char [] aInput = sInput.toCharArray ();
     if (!StringHelper.containsAny (aInput, CHARS_TO_MASK))
-    {
-      aWriter.write (sInput);
-      return;
-    }
+      return sInput;
 
+    final StringBuilder aSB = new StringBuilder (aInput.length * 2);
+    _escape (aInput, aSB);
+    return aSB.toString ();
+  }
+
+  public static void jsonEscape (@Nullable final String sInput, @Nonnull final StringBuilder aSB)
+  {
+    if (StringHelper.hasText (sInput))
+    {
+      final char [] aInput = sInput.toCharArray ();
+      if (!StringHelper.containsAny (aInput, CHARS_TO_MASK))
+        aSB.append (sInput);
+      else
+        _escape (aInput, aSB);
+    }
+  }
+
+  private static void _escape (@Nonnull final char [] aInput, @Nonnull final Writer aWriter) throws IOException
+  {
     for (final char cCurrent : aInput)
     {
       switch (cCurrent)
       {
         case '\0':
-          aWriter.write (MASK_CHAR);
+          aWriter.append (MASK_CHAR);
           aWriter.write ("u0000");
           break;
         case '"':
@@ -116,33 +125,45 @@ public final class JSONHelper
           // http://www.json.org/)
           // #case '\'':
         case '\\':
-          aWriter.write (MASK_CHAR);
-          aWriter.write (cCurrent);
+          aWriter.append (MASK_CHAR);
+          aWriter.append (cCurrent);
           break;
         case '\b':
-          aWriter.write (MASK_CHAR);
-          aWriter.write ('b');
+          aWriter.append (MASK_CHAR);
+          aWriter.append ('b');
           break;
         case '\t':
-          aWriter.write (MASK_CHAR);
-          aWriter.write ('t');
+          aWriter.append (MASK_CHAR);
+          aWriter.append ('t');
           break;
         case '\n':
-          aWriter.write (MASK_CHAR);
-          aWriter.write ('n');
+          aWriter.append (MASK_CHAR);
+          aWriter.append ('n');
           break;
         case '\r':
-          aWriter.write (MASK_CHAR);
-          aWriter.write ('r');
+          aWriter.append (MASK_CHAR);
+          aWriter.append ('r');
           break;
         case '\f':
-          aWriter.write (MASK_CHAR);
-          aWriter.write ('f');
+          aWriter.append (MASK_CHAR);
+          aWriter.append ('f');
           break;
         default:
-          aWriter.write (cCurrent);
+          aWriter.append (cCurrent);
           break;
       }
+    }
+  }
+
+  public static void jsonEscape (@Nullable final String sInput, @Nonnull final Writer aWriter) throws IOException
+  {
+    if (StringHelper.hasText (sInput))
+    {
+      final char [] aInput = sInput.toCharArray ();
+      if (!StringHelper.containsAny (aInput, CHARS_TO_MASK))
+        aWriter.write (sInput);
+      else
+        _escape (aInput, aWriter);
     }
   }
 }
