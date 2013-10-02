@@ -33,7 +33,7 @@ import com.phloc.commons.string.StringHelper;
 @Immutable
 public final class JSONHelper
 {
-  private static final char [] CHARS_TO_MASK = new char [] { '"', '\\', '\b', '\t', '\r', '\n', '\f' };
+  private static final char [] CHARS_TO_MASK = new char [] { '\0', '"', '\\', '\b', '\t', '\r', '\n', '\f' };
   private static final char MASK_CHAR = '\\';
 
   @PresentForCodeCoverage
@@ -53,47 +53,42 @@ public final class JSONHelper
     if (!StringHelper.containsAny (aInput, CHARS_TO_MASK))
       return sInput;
 
-    final char [] ret = new char [aInput.length * 2];
-    int nIndex = 0;
+    final StringBuilder aSB = new StringBuilder (aInput.length * 2);
     for (final char cCurrent : aInput)
     {
       switch (cCurrent)
       {
+        case '\0':
+          aSB.append (MASK_CHAR).append ("u0000");
+          break;
         case '"':
           // single quotes must NOT be escaped in valid JSON (See
           // http://www.json.org/)
           // #case '\'':
         case '\\':
-          ret[nIndex++] = MASK_CHAR;
-          ret[nIndex++] = cCurrent;
+          aSB.append (MASK_CHAR).append (cCurrent);
           break;
         case '\b':
-          ret[nIndex++] = MASK_CHAR;
-          ret[nIndex++] = 'b';
+          aSB.append (MASK_CHAR).append ('b');
           break;
         case '\t':
-          ret[nIndex++] = MASK_CHAR;
-          ret[nIndex++] = 't';
+          aSB.append (MASK_CHAR).append ('t');
           break;
         case '\n':
-          ret[nIndex++] = MASK_CHAR;
-          ret[nIndex++] = 'n';
+          aSB.append (MASK_CHAR).append ('n');
           break;
         case '\r':
-          ret[nIndex++] = MASK_CHAR;
-          ret[nIndex++] = 'r';
+          aSB.append (MASK_CHAR).append ('r');
           break;
         case '\f':
-          ret[nIndex++] = MASK_CHAR;
-          ret[nIndex++] = 'f';
+          aSB.append (MASK_CHAR).append ('f');
           break;
         default:
-          ret[nIndex++] = cCurrent;
+          aSB.append (cCurrent);
           break;
       }
     }
-
-    return new String (ret, 0, nIndex);
+    return aSB.toString ();
   }
 
   public static void jsonEscape (@Nullable final String sInput, @Nonnull final NonBlockingStringWriter aWriter)
@@ -112,6 +107,10 @@ public final class JSONHelper
     {
       switch (cCurrent)
       {
+        case '\0':
+          aWriter.write (MASK_CHAR);
+          aWriter.write ("u0000");
+          break;
         case '"':
           // single quotes must NOT be escaped in valid JSON (See
           // http://www.json.org/)

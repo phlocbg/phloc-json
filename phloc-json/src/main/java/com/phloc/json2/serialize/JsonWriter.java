@@ -9,7 +9,7 @@ import com.phloc.json2.IJsonArray;
 import com.phloc.json2.IJsonObject;
 import com.phloc.json2.IJsonValue;
 
-public class JsonSerializer
+public class JsonWriter
 {
   public static String getAsString (@Nonnull final IJson aJson)
   {
