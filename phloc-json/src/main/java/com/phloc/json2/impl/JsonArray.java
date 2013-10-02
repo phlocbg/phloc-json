@@ -113,6 +113,24 @@ public class JsonArray implements IJsonArray
   }
 
   @Nonnull
+  public JsonArray add (final char cValue)
+  {
+    return add (JsonValue.create (cValue));
+  }
+
+  @Nonnull
+  public JsonArray add (final double dValue)
+  {
+    return add (JsonValue.create (dValue));
+  }
+
+  @Nonnull
+  public JsonArray add (final float fValue)
+  {
+    return add (JsonValue.create (fValue));
+  }
+
+  @Nonnull
   public JsonArray add (final int nValue)
   {
     return add (JsonValue.create (nValue));
@@ -128,18 +146,6 @@ public class JsonArray implements IJsonArray
   public JsonArray add (final short nValue)
   {
     return add (JsonValue.create (nValue));
-  }
-
-  @Nonnull
-  public JsonArray add (final float fValue)
-  {
-    return add (JsonValue.create (fValue));
-  }
-
-  @Nonnull
-  public JsonArray add (final double dValue)
-  {
-    return add (JsonValue.create (dValue));
   }
 
   @Nonnull
@@ -171,6 +177,24 @@ public class JsonArray implements IJsonArray
   }
 
   @Nonnull
+  public JsonArray add (@Nonnegative final int nIndex, final char cValue)
+  {
+    return add (nIndex, JsonValue.create (cValue));
+  }
+
+  @Nonnull
+  public JsonArray add (@Nonnegative final int nIndex, final double dValue)
+  {
+    return add (nIndex, JsonValue.create (dValue));
+  }
+
+  @Nonnull
+  public JsonArray add (@Nonnegative final int nIndex, final float fValue)
+  {
+    return add (nIndex, JsonValue.create (fValue));
+  }
+
+  @Nonnull
   public JsonArray add (@Nonnegative final int nIndex, final int nValue)
   {
     return add (nIndex, JsonValue.create (nValue));
@@ -186,18 +210,6 @@ public class JsonArray implements IJsonArray
   public JsonArray add (@Nonnegative final int nIndex, final short nValue)
   {
     return add (nIndex, JsonValue.create (nValue));
-  }
-
-  @Nonnull
-  public JsonArray add (@Nonnegative final int nIndex, final float fValue)
-  {
-    return add (nIndex, JsonValue.create (fValue));
-  }
-
-  @Nonnull
-  public JsonArray add (@Nonnegative final int nIndex, final double dValue)
-  {
-    return add (nIndex, JsonValue.create (dValue));
   }
 
   @Nonnull

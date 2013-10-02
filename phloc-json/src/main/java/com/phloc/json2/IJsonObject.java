@@ -58,6 +58,15 @@ public interface IJsonObject extends IJson, IHasSize, Iterable <Map.Entry <Strin
   IJsonObject add (@Nonnull @Nonempty String sName, byte nValue);
 
   @Nonnull
+  IJsonObject add (@Nonnull @Nonempty String sName, char cValue);
+
+  @Nonnull
+  IJsonObject add (@Nonnull @Nonempty String sName, double dValue);
+
+  @Nonnull
+  IJsonObject add (@Nonnull @Nonempty String sName, float fValue);
+
+  @Nonnull
   IJsonObject add (@Nonnull @Nonempty String sName, int nValue);
 
   @Nonnull
@@ -65,12 +74,6 @@ public interface IJsonObject extends IJson, IHasSize, Iterable <Map.Entry <Strin
 
   @Nonnull
   IJsonObject add (@Nonnull @Nonempty String sName, short nValue);
-
-  @Nonnull
-  IJsonObject add (@Nonnull @Nonempty String sName, float fValue);
-
-  @Nonnull
-  IJsonObject add (@Nonnull @Nonempty String sName, double dValue);
 
   @Nonnull
   EChange removeKey (@Nullable String sName);

@@ -54,6 +54,15 @@ public interface IJsonArray extends IJson, IHasSize, Iterable <IJson>
   IJsonArray add (byte nValue);
 
   @Nonnull
+  IJsonArray add (char cValue);
+
+  @Nonnull
+  IJsonArray add (double dValue);
+
+  @Nonnull
+  IJsonArray add (float fValue);
+
+  @Nonnull
   IJsonArray add (int nValue);
 
   @Nonnull
@@ -61,12 +70,6 @@ public interface IJsonArray extends IJson, IHasSize, Iterable <IJson>
 
   @Nonnull
   IJsonArray add (short nValue);
-
-  @Nonnull
-  IJsonArray add (float fValue);
-
-  @Nonnull
-  IJsonArray add (double dValue);
 
   @Nonnull
   IJsonArray add (@Nonnegative int nIndex, @Nonnull IJson aValue);
@@ -90,6 +93,15 @@ public interface IJsonArray extends IJson, IHasSize, Iterable <IJson>
   IJsonArray add (@Nonnegative int nIndex, byte nValue);
 
   @Nonnull
+  IJsonArray add (@Nonnegative int nIndex, char fValue);
+
+  @Nonnull
+  IJsonArray add (@Nonnegative int nIndex, double dValue);
+
+  @Nonnull
+  IJsonArray add (@Nonnegative int nIndex, float fValue);
+
+  @Nonnull
   IJsonArray add (@Nonnegative int nIndex, int nValue);
 
   @Nonnull
@@ -97,12 +109,6 @@ public interface IJsonArray extends IJson, IHasSize, Iterable <IJson>
 
   @Nonnull
   IJsonArray add (@Nonnegative int nIndex, short nValue);
-
-  @Nonnull
-  IJsonArray add (@Nonnegative int nIndex, float fValue);
-
-  @Nonnull
-  IJsonArray add (@Nonnegative int nIndex, double dValue);
 
   @Nonnull
   EChange removeAtIndex (@Nonnegative int nIndex);
