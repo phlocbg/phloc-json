@@ -17,7 +17,12 @@
  */
 package com.phloc.json2.convert.impl;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Nonnull;
 
@@ -37,22 +42,39 @@ import com.phloc.json2.convert.IJsonConverterRegistry;
 @IsSPIImplementation
 public class DefaultJsonConverterRegistrarSPI implements IJsonConverterRegistrarSPI
 {
-  private static abstract class AbstractJsonValueConverter implements IJsonConverter
+  private static class JsonValueConverter <DATATYPE extends Serializable> implements IJsonConverter <DATATYPE>
   {
-    public Object convertToNative (final IJson aJson)
+    @SuppressWarnings ("unchecked")
+    public DATATYPE convertToNative (final IJson aJson)
     {
-      return ((IJsonValue) aJson).getValue ();
+      return (DATATYPE) ((IJsonValue) aJson).getValue ();
+    }
+
+    public IJson convertToJson (final DATATYPE aValue)
+    {
+      return JsonValue.create (aValue);
     }
   }
 
   public void registerJsonConverter (@Nonnull final IJsonConverterRegistry aRegistry)
   {
-    aRegistry.registerJsonTypeConverter (BigDecimal.class, new AbstractJsonValueConverter ()
-    {
-      public IJson convertToJson (final Object aValue)
-      {
-        return JsonValue.create ((BigDecimal) aValue);
-      }
-    });
+    aRegistry.registerJsonTypeConverter (Boolean.class, new JsonValueConverter <Boolean> ());
+    aRegistry.registerJsonTypeConverter (Byte.class, new JsonValueConverter <Byte> ());
+    aRegistry.registerJsonTypeConverter (Character.class, new JsonValueConverter <Character> ());
+    aRegistry.registerJsonTypeConverter (Double.class, new JsonValueConverter <Double> ());
+    aRegistry.registerJsonTypeConverter (Float.class, new JsonValueConverter <Float> ());
+    aRegistry.registerJsonTypeConverter (Integer.class, new JsonValueConverter <Integer> ());
+    aRegistry.registerJsonTypeConverter (Long.class, new JsonValueConverter <Long> ());
+    aRegistry.registerJsonTypeConverter (Short.class, new JsonValueConverter <Short> ());
+
+    aRegistry.registerJsonTypeConverter (String.class, new JsonValueConverter <String> ());
+    aRegistry.registerJsonTypeConverter (StringBuilder.class, new JsonValueConverter <StringBuilder> ());
+    aRegistry.registerJsonTypeConverter (StringBuffer.class, new JsonValueConverter <StringBuffer> ());
+
+    aRegistry.registerJsonTypeConverter (BigDecimal.class, new JsonValueConverter <BigDecimal> ());
+    aRegistry.registerJsonTypeConverter (BigInteger.class, new JsonValueConverter <BigInteger> ());
+    aRegistry.registerJsonTypeConverter (AtomicBoolean.class, new JsonValueConverter <AtomicBoolean> ());
+    aRegistry.registerJsonTypeConverter (AtomicInteger.class, new JsonValueConverter <AtomicInteger> ());
+    aRegistry.registerJsonTypeConverter (AtomicLong.class, new JsonValueConverter <AtomicLong> ());
   }
 }

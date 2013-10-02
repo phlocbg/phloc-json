@@ -27,7 +27,7 @@ import com.phloc.json2.IJson;
  * 
  * @author Philip Helger
  */
-public interface IJsonConverter
+public interface IJsonConverter <DATATYPE>
 {
   /**
    * Convert the passed value to JSON
@@ -37,7 +37,7 @@ public interface IJsonConverter
    * @return Never <code>null</code>.
    */
   @Nonnull
-  IJson convertToJson (@Nonnull Object aValue);
+  IJson convertToJson (@Nonnull DATATYPE aValue);
 
   /**
    * Convert the passed object to a native element.
@@ -47,5 +47,5 @@ public interface IJsonConverter
    * @return <code>null</code> if conversion to a native object failed.
    */
   @Nullable
-  Object convertToNative (@Nonnull IJson aJson);
+  DATATYPE convertToNative (@Nonnull IJson aJson);
 }

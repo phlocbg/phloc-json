@@ -40,5 +40,5 @@ public interface IJsonConverterCallback
    *         {@link EContinue#BREAK} to stop iteration.
    */
   @Nonnull
-  EContinue call (@Nonnull Class <?> aClass, @Nonnull IJsonConverter aConverter);
+  EContinue call (@Nonnull Class <?> aClass, @Nonnull IJsonConverter <?> aConverter);
 }

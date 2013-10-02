@@ -17,8 +17,6 @@
  */
 package com.phloc.json2;
 
-import java.io.Serializable;
-
 import javax.annotation.Nullable;
 
 public interface IJsonValue extends IJson
@@ -27,7 +25,7 @@ public interface IJsonValue extends IJson
    * @return The object value. May be <code>null</code>.
    */
   @Nullable
-  Serializable getValue ();
+  Object getValue ();
 
   /**
    * @return The class of the value or <code>null</code> if no value is
