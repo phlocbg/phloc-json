@@ -88,6 +88,52 @@ public interface IJsonObject extends IJsonCollection, Iterable <Map.Entry <Strin
   Collection <IJson> values ();
 
   /**
+   * Get the element with the specified key.
+   * 
+   * @param sName
+   *        The name of the value to retrieve. May be <code>null</code>.
+   * @return <code>null</code> if no value for the name exists.
+   */
+  @Nullable
+  IJson get (@Nullable String sName);
+
+  /**
+   * Get the element with the specified key. This is the {@link IJsonValue}
+   * specific version of {@link #get(String)}.
+   * 
+   * @param sName
+   *        The name of the value to retrieve. May be <code>null</code>.
+   * @return <code>null</code> if no value for the name exists or if the value
+   *         is not a {@link IJsonValue}.
+   */
+  @Nullable
+  IJsonValue getValue (@Nullable String sName);
+
+  /**
+   * Get the element with the specified key. This is the {@link IJsonArray}
+   * specific version of {@link #get(String)}.
+   * 
+   * @param sName
+   *        The name of the value to retrieve. May be <code>null</code>.
+   * @return <code>null</code> if no value for the name exists or if the value
+   *         is not a {@link IJsonArray}.
+   */
+  @Nullable
+  IJsonArray getArray (@Nullable String sName);
+
+  /**
+   * Get the element with the specified key. This is the {@link IJsonObject}
+   * specific version of {@link #get(String)}.
+   * 
+   * @param sName
+   *        The name of the value to retrieve. May be <code>null</code>.
+   * @return <code>null</code> if no value for the name exists or if the value
+   *         is not a {@link IJsonObject}.
+   */
+  @Nullable
+  IJsonObject getObject (@Nullable String sName);
+
+  /**
    * @return A copy of all contained items. Never <code>null</code> but maybe
    *         empty.
    */

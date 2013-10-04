@@ -27,6 +27,7 @@ import java.util.Set;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import com.phloc.commons.annotations.Nonempty;
 import com.phloc.commons.annotations.ReturnsMutableCopy;
@@ -36,7 +37,9 @@ import com.phloc.commons.state.EChange;
 import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json2.IJson;
+import com.phloc.json2.IJsonArray;
 import com.phloc.json2.IJsonObject;
+import com.phloc.json2.IJsonValue;
 import com.phloc.json2.convert.JsonConverter;
 
 /**
@@ -44,6 +47,7 @@ import com.phloc.json2.convert.JsonConverter;
  * 
  * @author Philip Helger
  */
+@NotThreadSafe
 public class JsonObject implements IJsonObject
 {
   private final Map <String, IJson> m_aValues;
@@ -180,6 +184,33 @@ public class JsonObject implements IJsonObject
   public Collection <IJson> values ()
   {
     return ContainerHelper.newList (m_aValues.values ());
+  }
+
+  @Nullable
+  public IJson get (@Nullable final String sName)
+  {
+    return m_aValues.get (sName);
+  }
+
+  @Nullable
+  public IJsonValue getValue (@Nullable final String sName)
+  {
+    final IJson aJson = get (sName);
+    return aJson != null && aJson.isValue () ? (IJsonValue) aJson : null;
+  }
+
+  @Nullable
+  public IJsonArray getArray (@Nullable final String sName)
+  {
+    final IJson aJson = get (sName);
+    return aJson != null && aJson.isArray () ? (IJsonArray) aJson : null;
+  }
+
+  @Nullable
+  public IJsonObject getObject (@Nullable final String sName)
+  {
+    final IJson aJson = get (sName);
+    return aJson != null && aJson.isObject () ? (IJsonObject) aJson : null;
   }
 
   @Nonnull

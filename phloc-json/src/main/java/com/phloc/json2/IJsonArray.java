@@ -113,6 +113,52 @@ public interface IJsonArray extends IJsonCollection, Iterable <IJson>
   EChange removeAtIndex (@Nonnegative int nIndex);
 
   /**
+   * Get the element at the specified index.
+   * 
+   * @param nIndex
+   *        The index to retrieve.
+   * @return <code>null</code> if the index is invalid.
+   */
+  @Nullable
+  IJson getAtIndex (@Nonnegative int nIndex);
+
+  /**
+   * Get the element at the specified index. This is the {@link IJsonValue}
+   * specific version of {@link #getAtIndex(int)}.
+   * 
+   * @param nIndex
+   *        The index to retrieve.
+   * @return <code>null</code> if the index is invalid or if the value is not a
+   *         {@link IJsonValue}.
+   */
+  @Nullable
+  IJsonValue getValueAtIndex (@Nonnegative int nIndex);
+
+  /**
+   * Get the element at the specified index. This is the {@link IJsonArray}
+   * specific version of {@link #getAtIndex(int)}.
+   * 
+   * @param nIndex
+   *        The index to retrieve.
+   * @return <code>null</code> if the index is invalid or if the value is not a
+   *         {@link IJsonArray}.
+   */
+  @Nullable
+  IJsonArray getArrayAtIndex (@Nonnegative int nIndex);
+
+  /**
+   * Get the element at the specified index. This is the {@link IJsonObject}
+   * specific version of {@link #getAtIndex(int)}.
+   * 
+   * @param nIndex
+   *        The index to retrieve.
+   * @return <code>null</code> if the index is invalid or if the value is not a
+   *         {@link IJsonObject}.
+   */
+  @Nullable
+  IJsonObject getObjectAtIndex (@Nonnegative int nIndex);
+
+  /**
    * @return A copy of all contained items. Never <code>null</code> but maybe
    *         empty.
    */
