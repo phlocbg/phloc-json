@@ -24,6 +24,7 @@ import java.util.List;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.collections.ContainerHelper;
@@ -32,6 +33,8 @@ import com.phloc.commons.state.EChange;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json2.IJson;
 import com.phloc.json2.IJsonArray;
+import com.phloc.json2.IJsonObject;
+import com.phloc.json2.IJsonValue;
 import com.phloc.json2.convert.JsonConverter;
 
 /**
@@ -39,6 +42,7 @@ import com.phloc.json2.convert.JsonConverter;
  * 
  * @author Philip Helger
  */
+@NotThreadSafe
 public class JsonArray implements IJsonArray
 {
   private final List <IJson> m_aValues;
@@ -217,6 +221,33 @@ public class JsonArray implements IJsonArray
   public EChange removeAtIndex (@Nonnegative final int nIndex)
   {
     return ContainerHelper.removeElementAtIndex (m_aValues, nIndex);
+  }
+
+  @Nullable
+  public IJson getAtIndex (@Nonnegative final int nIndex)
+  {
+    return ContainerHelper.getSafe (m_aValues, nIndex);
+  }
+
+  @Nullable
+  public IJsonValue getValueAtIndex (@Nonnegative final int nIndex)
+  {
+    final IJson aJson = getAtIndex (nIndex);
+    return aJson != null && aJson.isValue () ? (IJsonValue) aJson : null;
+  }
+
+  @Nullable
+  public IJsonArray getArrayAtIndex (@Nonnegative final int nIndex)
+  {
+    final IJson aJson = getAtIndex (nIndex);
+    return aJson != null && aJson.isArray () ? (IJsonArray) aJson : null;
+  }
+
+  @Nullable
+  public IJsonObject getObjectAtIndex (@Nonnegative final int nIndex)
+  {
+    final IJson aJson = getAtIndex (nIndex);
+    return aJson != null && aJson.isObject () ? (IJsonObject) aJson : null;
   }
 
   @Nonnull
