@@ -28,6 +28,7 @@ import javax.annotation.concurrent.Immutable;
 import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.string.ToStringGenerator;
+import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.json2.IJsonValue;
 import com.phloc.json2.IJsonValueSerializer;
 import com.phloc.json2.config.JsonConfig;
@@ -90,6 +91,22 @@ public class JsonValue implements IJsonValue
   public Object getValue ()
   {
     return m_aValue;
+  }
+
+  @Nullable
+  public <T> T getCastedValue (@Nonnull final Class <T> aClass)
+  {
+    if (aClass == null)
+      throw new NullPointerException ("class");
+    return aClass.cast (m_aValue);
+  }
+
+  @Nullable
+  public <T> T getConvertedValue (@Nonnull final Class <T> aClass)
+  {
+    if (aClass == null)
+      throw new NullPointerException ("class");
+    return TypeConverter.convertIfNecessary (m_aValue, aClass);
   }
 
   @Nullable
