@@ -23,6 +23,8 @@ import java.io.Writer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.phloc.commons.typeconvert.TypeConverterException;
+
 /**
  * Base interface for a single JSON value
  * 
@@ -35,6 +37,32 @@ public interface IJsonValue extends IJson
    */
   @Nullable
   Object getValue ();
+
+  /**
+   * Get the contained value casted to the specified class.
+   * 
+   * @param aClass
+   *        The class to cast to.
+   * @return The object value casted to the passed class. May be
+   *         <code>null</code> if the contained value is <code>null</code>.
+   * @throws ClassCastException
+   *         in case of an error
+   */
+  @Nullable
+  <T> T getCastedValue (@Nonnull Class <T> aClass);
+
+  /**
+   * Get the contained value converted using TypeConverter to the passed class.
+   * 
+   * @param aClass
+   *        The class to convert to.
+   * @return The object value casted to the passed class. May be
+   *         <code>null</code> if the contained value is <code>null</code>.
+   * @throws TypeConverterException
+   *         in case of an error
+   */
+  @Nullable
+  <T> T getConvertedValue (@Nonnull Class <T> aClass);
 
   /**
    * @return The class of the value or <code>null</code> if no value is
