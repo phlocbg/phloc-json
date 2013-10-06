@@ -28,9 +28,13 @@ import com.phloc.commons.annotations.PresentForCodeCoverage;
 import com.phloc.commons.collections.ArrayHelper;
 import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.json2.IJson;
+import com.phloc.json2.IJsonProvider;
+import com.phloc.json2.IJsonValueSerializer;
 import com.phloc.json2.impl.JsonArray;
 import com.phloc.json2.impl.JsonObject;
 import com.phloc.json2.impl.JsonValue;
+import com.phloc.json2.serialize.JsonValueSerializerEscaped;
+import com.phloc.json2.serialize.JsonValueSerializerToString;
 
 /**
  * A utility class for converting objects from and to {@link IJson}.
@@ -55,6 +59,9 @@ public final class JsonConverter
 
     if (aObject instanceof IJson)
       return (IJson) aObject;
+
+    if (aObject instanceof IJsonProvider)
+      return ((IJsonProvider) aObject).getAsJson ();
 
     if (ArrayHelper.isArray (aObject))
     {
@@ -163,6 +170,12 @@ public final class JsonConverter
     }
 
     // If no converter was found, assume it is a JsonValue
-    return JsonValue.create (aObject);
+    IJsonValueSerializer aValueSerializer;
+    if (aObject instanceof CharSequence)
+      aValueSerializer = JsonValueSerializerEscaped.getInstance ();
+    else
+      aValueSerializer = JsonValueSerializerToString.getInstance ();
+
+    return JsonValue.create (aObject, aValueSerializer);
   }
 }
