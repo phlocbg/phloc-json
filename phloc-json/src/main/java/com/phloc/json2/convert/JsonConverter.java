@@ -33,7 +33,7 @@ import com.phloc.json2.IJsonValueSerializer;
 import com.phloc.json2.impl.JsonArray;
 import com.phloc.json2.impl.JsonObject;
 import com.phloc.json2.impl.JsonValue;
-import com.phloc.json2.serialize.JsonValueSerializerEscaped;
+import com.phloc.json2.serialize.JsonValueSerializerRegistry;
 import com.phloc.json2.serialize.JsonValueSerializerToString;
 
 /**
@@ -170,11 +170,12 @@ public final class JsonConverter
     }
 
     // If no converter was found, assume it is a JsonValue
-    IJsonValueSerializer aValueSerializer;
-    if (aObject instanceof CharSequence)
-      aValueSerializer = JsonValueSerializerEscaped.getInstance ();
-    else
+    IJsonValueSerializer aValueSerializer = JsonValueSerializerRegistry.getJsonValueSerializer (aObject.getClass ());
+    if (aValueSerializer == null)
+    {
+      // Default: toString
       aValueSerializer = JsonValueSerializerToString.getInstance ();
+    }
 
     return JsonValue.create (aObject, aValueSerializer);
   }
