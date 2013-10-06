@@ -74,18 +74,18 @@ public final class JsonReader
       return JsonValue.create (aNode.longValue ());
 
     if (aNode.isBigInteger ())
-      return JsonValue.create (aNode.bigIntegerValue ());
+      return JsonValue.create (aNode.bigIntegerValue (), JsonValueSerializerToString.getInstance ());
 
     // floating points
     if (aNode.isDouble ())
       return JsonValue.create (aNode.doubleValue ());
 
     if (aNode.isBigDecimal ())
-      return JsonValue.create (aNode.decimalValue ());
+      return JsonValue.create (aNode.decimalValue (), JsonValueSerializerToString.getInstance ());
 
     // Text
     if (aNode.isTextual ())
-      return JsonValue.create (aNode.textValue ());
+      return JsonValue.create (aNode.textValue (), JsonValueSerializerEscaped.getInstance ());
 
     if (aNode.isNull ())
       return JsonValue.NULL;

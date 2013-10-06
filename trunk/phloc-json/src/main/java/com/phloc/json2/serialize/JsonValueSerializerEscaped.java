@@ -27,6 +27,11 @@ import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json.JSONHelper;
 import com.phloc.json2.IJsonValueSerializer;
 
+/**
+ * A special {@link IJsonValueSerializer} that writes an escaped string.
+ * 
+ * @author Philip Helger
+ */
 public final class JsonValueSerializerEscaped implements IJsonValueSerializer
 {
   private static final JsonValueSerializerEscaped s_aInstance = new JsonValueSerializerEscaped ();

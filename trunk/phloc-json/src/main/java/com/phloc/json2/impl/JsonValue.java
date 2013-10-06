@@ -31,9 +31,9 @@ import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.json2.IJsonValue;
 import com.phloc.json2.IJsonValueSerializer;
-import com.phloc.json2.config.JsonConfig;
 import com.phloc.json2.serialize.JsonValueSerializerConstant;
 import com.phloc.json2.serialize.JsonValueSerializerEscaped;
+import com.phloc.json2.serialize.JsonValueSerializerToString;
 
 /**
  * Default implementation of {@link IJsonValue}.
@@ -58,7 +58,7 @@ public class JsonValue implements IJsonValue
   static
   {
     for (int i = INT_CACHE_MIN; i <= INT_CACHE_MAX; ++i)
-      NUMERIC[i - INT_CACHE_MIN] = new JsonValue (Integer.valueOf (i), JsonConfig.getDefaultValueSerializer ());
+      NUMERIC[i - INT_CACHE_MIN] = new JsonValue (Integer.valueOf (i), JsonValueSerializerToString.getInstance ());
   }
 
   private final Object m_aValue;
@@ -178,19 +178,19 @@ public class JsonValue implements IJsonValue
   @Nonnull
   public static JsonValue create (final char cValue)
   {
-    return create (Character.toString (cValue));
+    return create (Character.toString (cValue), JsonValueSerializerEscaped.getInstance ());
   }
 
   @Nonnull
   public static JsonValue create (final double dValue)
   {
-    return create (BigDecimal.valueOf (dValue));
+    return create (BigDecimal.valueOf (dValue), JsonValueSerializerToString.getInstance ());
   }
 
   @Nonnull
   public static JsonValue create (final float fValue)
   {
-    return create (BigDecimal.valueOf (fValue));
+    return create (BigDecimal.valueOf (fValue), JsonValueSerializerToString.getInstance ());
   }
 
   @Nonnull
@@ -200,7 +200,7 @@ public class JsonValue implements IJsonValue
     if (nValue >= INT_CACHE_MIN && nValue < INT_CACHE_MAX)
       return NUMERIC[nValue - INT_CACHE_MIN];
 
-    return create (Integer.valueOf (nValue));
+    return create (Integer.valueOf (nValue), JsonValueSerializerToString.getInstance ());
   }
 
   @Nonnull
@@ -210,22 +210,13 @@ public class JsonValue implements IJsonValue
     if (nValue >= INT_CACHE_MIN && nValue < INT_CACHE_MAX)
       return NUMERIC[(int) nValue - INT_CACHE_MIN];
 
-    return create (Long.valueOf (nValue));
+    return create (Long.valueOf (nValue), JsonValueSerializerToString.getInstance ());
   }
 
   @Nonnull
   public static JsonValue create (final short nValue)
   {
     return create ((int) nValue);
-  }
-
-  @Nonnull
-  public static JsonValue create (@Nullable final Object aValue)
-  {
-    if (aValue instanceof CharSequence)
-      return create (aValue, JsonValueSerializerEscaped.getInstance ());
-
-    return create (aValue, JsonConfig.getDefaultValueSerializer ());
   }
 
   @Nonnull
