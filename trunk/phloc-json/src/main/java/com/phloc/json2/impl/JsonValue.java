@@ -35,6 +35,8 @@ import com.phloc.json2.serialize.JsonValueSerializerConstant;
 import com.phloc.json2.serialize.JsonValueSerializerEscaped;
 import com.phloc.json2.serialize.JsonValueSerializerToString;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Default implementation of {@link IJsonValue}.
  * 
@@ -220,6 +222,7 @@ public class JsonValue implements IJsonValue
   }
 
   @Nonnull
+  @SuppressFBWarnings ("RC_REF_COMPARISON_BAD_PRACTICE_BOOLEAN")
   public static JsonValue create (@Nullable final Object aValue, @Nonnull final IJsonValueSerializer aValueSerializer)
   {
     // Special null constant
