@@ -18,6 +18,8 @@
 package com.phloc.json2.impl;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Writer;
 import java.math.BigDecimal;
 
@@ -27,10 +29,13 @@ import javax.annotation.concurrent.Immutable;
 
 import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
+import com.phloc.commons.io.streams.NonBlockingStringWriter;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.commons.typeconvert.TypeConverter;
+import com.phloc.json.impl.JSONParsingException;
 import com.phloc.json2.IJsonValue;
 import com.phloc.json2.IJsonValueSerializer;
+import com.phloc.json2.serialize.JsonReader;
 import com.phloc.json2.serialize.JsonValueSerializerConstant;
 import com.phloc.json2.serialize.JsonValueSerializerEscaped;
 import com.phloc.json2.serialize.JsonValueSerializerToString;
@@ -63,8 +68,8 @@ public class JsonValue implements IJsonValue
       NUMERIC[i - INT_CACHE_MIN] = new JsonValue (Integer.valueOf (i), JsonValueSerializerToString.getInstance ());
   }
 
-  private final Object m_aValue;
-  private final IJsonValueSerializer m_aValueSerializer;
+  private Object m_aValue;
+  private IJsonValueSerializer m_aValueSerializer;
 
   private JsonValue (@Nullable final Object aValue, @Nonnull final IJsonValueSerializer aValueSerializer)
   {
@@ -72,6 +77,28 @@ public class JsonValue implements IJsonValue
       throw new NullPointerException ("ValueSerializer");
     m_aValue = aValue;
     m_aValueSerializer = aValueSerializer;
+  }
+
+  private void writeObject (@Nonnull final ObjectOutputStream aOOS) throws IOException
+  {
+    final NonBlockingStringWriter aWriter = new NonBlockingStringWriter ();
+    m_aValueSerializer.appendAsJsonString (m_aValue, aWriter);
+    aOOS.writeUTF (aWriter.getAsString ());
+  }
+
+  private void readObject (@Nonnull final ObjectInputStream aOIS) throws IOException
+  {
+    final String sJson = aOIS.readUTF ();
+    try
+    {
+      final JsonValue aValue = JsonReader.parseAsValue (sJson);
+      m_aValue = aValue.m_aValue;
+      m_aValueSerializer = aValue.m_aValueSerializer;
+    }
+    catch (final JSONParsingException ex)
+    {
+      throw new IOException ("Failed to deserialize Json string '" + sJson + "'", ex);
+    }
   }
 
   public boolean isArray ()
