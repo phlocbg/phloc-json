@@ -17,6 +17,9 @@
  */
 package com.phloc.json2.impl;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,11 +34,14 @@ import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.state.EChange;
 import com.phloc.commons.string.ToStringGenerator;
+import com.phloc.json.impl.JSONParsingException;
 import com.phloc.json2.IJson;
 import com.phloc.json2.IJsonArray;
 import com.phloc.json2.IJsonObject;
 import com.phloc.json2.IJsonValue;
 import com.phloc.json2.convert.JsonConverter;
+import com.phloc.json2.serialize.JsonReader;
+import com.phloc.json2.serialize.JsonWriter;
 
 /**
  * Default implementation of {@link IJsonArray}
@@ -45,7 +51,7 @@ import com.phloc.json2.convert.JsonConverter;
 @NotThreadSafe
 public class JsonArray implements IJsonArray
 {
-  private final List <IJson> m_aValues;
+  private List <IJson> m_aValues;
 
   public JsonArray ()
   {
@@ -55,6 +61,28 @@ public class JsonArray implements IJsonArray
   public JsonArray (@Nonnegative final int nInitialCapacity)
   {
     m_aValues = new ArrayList <IJson> (nInitialCapacity);
+  }
+
+  private void writeObject (@Nonnull final ObjectOutputStream aOOS) throws IOException
+  {
+    aOOS.writeInt (m_aValues.size ());
+    final String sJson = JsonWriter.getAsString (this);
+    aOOS.writeUTF (sJson);
+  }
+
+  private void readObject (@Nonnull final ObjectInputStream aOIS) throws IOException
+  {
+    final int nInitialSize = aOIS.readInt ();
+    m_aValues = new ArrayList <IJson> (nInitialSize);
+    final String sJson = aOIS.readUTF ();
+    try
+    {
+      JsonReader.parseAsArray (sJson, this);
+    }
+    catch (final JSONParsingException ex)
+    {
+      throw new IOException ("Failed to deserialize Json string '" + sJson + "'", ex);
+    }
   }
 
   public boolean isArray ()

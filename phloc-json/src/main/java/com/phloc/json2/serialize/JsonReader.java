@@ -54,7 +54,7 @@ public final class JsonReader
   {}
 
   @Nonnull
-  public static IJson convert (@Nonnull final JsonNode aNode)
+  public static IJson convert (@Nonnull final JsonNode aNode) throws JSONParsingException
   {
     if (aNode.isObject ())
       return convertObject ((ObjectNode) aNode);
@@ -90,31 +90,51 @@ public final class JsonReader
     if (aNode.isNull ())
       return JsonValue.NULL;
 
-    throw new IllegalArgumentException ("Having JSON Node with weird type: " + aNode);
+    throw new JSONParsingException ("Having JSON Node with weird type: " + aNode);
   }
 
   /**
    * Converts a passed {@link JsonNode} into a {@link JsonObject}
    * 
    * @param aObjectNode
-   *        Jackson object node
-   * @return the resulting object
+   *        Jackson object node. May not be <code>null</code>.
+   * @param aTarget
+   *        The target array to be filled. May not be <code>null</code>.
+   * @throws JSONParsingException
    */
-  @Nonnull
-  public static JsonObject convertObject (@Nonnull final ObjectNode aObjectNode)
+  private static void _convertObject (@Nonnull final ObjectNode aObjectNode, @Nonnull final JsonObject aTarget) throws JSONParsingException
   {
     if (aObjectNode == null)
-      throw new NullPointerException ("node");
+      throw new NullPointerException ("objectNode");
+    if (aTarget == null)
+      throw new NullPointerException ("target");
 
-    final JsonObject aObj = new JsonObject (aObjectNode.size ());
     for (final Map.Entry <String, JsonNode> aEntry : IterableIterator.create (aObjectNode.fields ()))
     {
       final String sFieldName = aEntry.getKey ();
       final JsonNode aChildNode = aEntry.getValue ();
       // Recursive convert
       final IJson aConvertedChildNode = convert (aChildNode);
-      aObj.add (sFieldName, aConvertedChildNode);
+      aTarget.add (sFieldName, aConvertedChildNode);
     }
+  }
+
+  /**
+   * Converts a passed {@link JsonNode} into a {@link JsonObject}
+   * 
+   * @param aObjectNode
+   *        Jackson object node. May not be <code>null</code>.
+   * @return the resulting object. Never <code>null</code>.
+   * @throws JSONParsingException
+   */
+  @Nonnull
+  public static JsonObject convertObject (@Nonnull final ObjectNode aObjectNode) throws JSONParsingException
+  {
+    if (aObjectNode == null)
+      throw new NullPointerException ("node");
+
+    final JsonObject aObj = new JsonObject (aObjectNode.size ());
+    _convertObject (aObjectNode, aObj);
     return aObj;
   }
 
@@ -122,19 +142,43 @@ public final class JsonReader
    * Converts the passed {@link ArrayNode} to a corresponding {@link JsonArray}
    * 
    * @param aArrayNode
-   *        JAckson array node
-   * @return a property list representing the passed array
+   *        Jackson array node. May not be <code>null</code>.
+   * @param aTarget
+   *        The target array to be filled. May not be <code>null</code>.
+   * @throws JSONParsingException
    */
-  @Nonnull
-  public static JsonArray convertArray (final ArrayNode aArrayNode)
+  private static void _convertArray (@Nonnull final ArrayNode aArrayNode, @Nonnull final JsonArray aTarget) throws JSONParsingException
   {
-    final JsonArray ret = new JsonArray (aArrayNode.size ());
+    if (aArrayNode == null)
+      throw new NullPointerException ("arrayNode");
+    if (aTarget == null)
+      throw new NullPointerException ("target");
+
     for (final JsonNode aChildNode : aArrayNode)
     {
       // Recursive convert
       final IJson aConvertedChildNode = convert (aChildNode);
-      ret.add (aConvertedChildNode);
+      aTarget.add (aConvertedChildNode);
     }
+  }
+
+  /**
+   * Converts the passed {@link ArrayNode} to a corresponding {@link JsonArray}
+   * 
+   * @param aArrayNode
+   *        Jackson array node. May not be <code>null</code>.
+   * @return a property list representing the passed array. Never
+   *         <code>null</code>.
+   * @throws JSONParsingException
+   */
+  @Nonnull
+  public static JsonArray convertArray (@Nonnull final ArrayNode aArrayNode) throws JSONParsingException
+  {
+    if (aArrayNode == null)
+      throw new NullPointerException ("arrayNode");
+
+    final JsonArray ret = new JsonArray (aArrayNode.size ());
+    _convertArray (aArrayNode, ret);
     return ret;
   }
 
@@ -144,13 +188,29 @@ public final class JsonReader
    * 
    * @param sJSON
    *        the JSON string to convert, must be a valid JSON string!
-   * @return the resulting IJson representation
+   * @return the resulting IJson representation. Never <code>null</code>.
    * @throws JSONParsingException
    */
   @Nonnull
   public static IJson parse (@Nonnull final String sJSON) throws JSONParsingException
   {
     return convert (JacksonHelper.parseToNode (sJSON));
+  }
+
+  public static void parseAsArray (@Nonnull final String sJSON, @Nonnull final JsonArray aArray) throws JSONParsingException
+  {
+    final JsonNode aNode = JacksonHelper.parseToNode (sJSON);
+    if (!aNode.isArray ())
+      throw new JSONParsingException ("Passed string is not a JSON array!");
+    _convertArray ((ArrayNode) aNode, aArray);
+  }
+
+  public static void parseAsObject (@Nonnull final String sJSON, @Nonnull final JsonObject aObject) throws JSONParsingException
+  {
+    final JsonNode aNode = JacksonHelper.parseToNode (sJSON);
+    if (!aNode.isObject ())
+      throw new JSONParsingException ("Passed string is not a JSON object!");
+    _convertObject ((ObjectNode) aNode, aObject);
   }
 
   @Nonnull

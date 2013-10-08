@@ -17,6 +17,8 @@
  */
 package com.phloc.json2;
 
+import java.io.Serializable;
+
 import com.phloc.commons.ICloneable;
 
 /**
@@ -24,7 +26,7 @@ import com.phloc.commons.ICloneable;
  * 
  * @author Philip Helger
  */
-public interface IJson extends ICloneable <IJson>
+public interface IJson extends ICloneable <IJson>, Serializable
 {
   /**
    * @return <code>true</code> if it is an array and can be case to
