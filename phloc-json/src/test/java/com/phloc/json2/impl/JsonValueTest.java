@@ -21,7 +21,8 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import com.phloc.json2.impl.JsonValue;
+import com.phloc.commons.mock.PhlocTestUtils;
+import com.phloc.json2.serialize.JsonValueSerializerEscaped;
 
 /**
  * Test class for class {@link JsonValue}.
@@ -39,5 +40,22 @@ public final class JsonValueTest
       assertNotNull (JsonValue.create (i));
     for (long i = -200; i < 200; ++i)
       assertNotNull (JsonValue.create (i));
+  }
+
+  @Test
+  public void testSerialize ()
+  {
+    PhlocTestUtils.testDefaultSerialization (JsonValue.create (true));
+    PhlocTestUtils.testDefaultSerialization (JsonValue.create (false));
+    PhlocTestUtils.testDefaultSerialization (JsonValue.create ((byte) 5));
+    PhlocTestUtils.testDefaultSerialization (JsonValue.create ('x'));
+    PhlocTestUtils.testDefaultSerialization (JsonValue.create (3.14d));
+    PhlocTestUtils.testDefaultSerialization (JsonValue.create (3.14f));
+    PhlocTestUtils.testDefaultSerialization (JsonValue.create (47));
+    PhlocTestUtils.testDefaultSerialization (JsonValue.create (Long.MAX_VALUE));
+    PhlocTestUtils.testDefaultSerialization (JsonValue.create ((short) 815));
+    PhlocTestUtils.testDefaultSerialization (JsonValue.create ("Test", JsonValueSerializerEscaped.getInstance ()));
+    PhlocTestUtils.testDefaultSerialization (JsonValue.create ("bla foo fasel",
+                                                               JsonValueSerializerEscaped.getInstance ()));
   }
 }

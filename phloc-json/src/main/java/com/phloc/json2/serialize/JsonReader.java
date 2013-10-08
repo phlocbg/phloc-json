@@ -22,6 +22,7 @@ import java.io.Reader;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -53,15 +54,9 @@ public final class JsonReader
   private JsonReader ()
   {}
 
-  @Nonnull
-  public static IJson convert (@Nonnull final JsonNode aNode) throws JSONParsingException
+  @Nullable
+  private static JsonValue _convertValue (@Nonnull final JsonNode aNode)
   {
-    if (aNode.isObject ())
-      return convertObject ((ObjectNode) aNode);
-
-    if (aNode.isArray ())
-      return convertArray ((ArrayNode) aNode);
-
     // boolean
     if (aNode.isBoolean ())
       return JsonValue.create (aNode.booleanValue ());
@@ -90,7 +85,22 @@ public final class JsonReader
     if (aNode.isNull ())
       return JsonValue.NULL;
 
-    throw new JSONParsingException ("Having JSON Node with weird type: " + aNode);
+    return null;
+  }
+
+  @Nonnull
+  public static IJson convert (@Nonnull final JsonNode aNode) throws JSONParsingException
+  {
+    if (aNode.isObject ())
+      return convertObject ((ObjectNode) aNode);
+
+    if (aNode.isArray ())
+      return convertArray ((ArrayNode) aNode);
+
+    final IJson ret = _convertValue (aNode);
+    if (ret == null)
+      throw new JSONParsingException ("Having JSON Node with weird type: " + aNode);
+    return ret;
   }
 
   /**
@@ -211,6 +221,15 @@ public final class JsonReader
     if (!aNode.isObject ())
       throw new JSONParsingException ("Passed string is not a JSON object!");
     _convertObject ((ObjectNode) aNode, aObject);
+  }
+
+  @Nonnull
+  public static JsonValue parseAsValue (@Nonnull final String sJSON) throws JSONParsingException
+  {
+    final JsonNode aNode = JacksonHelper.parseToNode (sJSON);
+    if (aNode.isContainerNode ())
+      throw new JSONParsingException ("Passed string is not a JSON value!");
+    return _convertValue (aNode);
   }
 
   @Nonnull
