@@ -246,6 +246,26 @@ public class JsonArray implements IJsonArray
   }
 
   @Nonnull
+  public JsonArray addAll (@Nonnull final List <?> aValues)
+  {
+    for (final Object aValue : aValues)
+      add (aValue);
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final List <?> aValues)
+  {
+    int nRealIndex = nIndex;
+    for (final Object aValue : aValues)
+    {
+      add (nRealIndex, aValue);
+      nRealIndex++;
+    }
+    return this;
+  }
+
+  @Nonnull
   public EChange removeAtIndex (@Nonnegative final int nIndex)
   {
     return ContainerHelper.removeElementAtIndex (m_aValues, nIndex);
