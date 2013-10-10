@@ -248,6 +248,9 @@ public class JsonArray implements IJsonArray
   @Nonnull
   public JsonArray addAll (@Nonnull final List <?> aValues)
   {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
     for (final Object aValue : aValues)
       add (aValue);
     return this;
@@ -256,8 +259,37 @@ public class JsonArray implements IJsonArray
   @Nonnull
   public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final List <?> aValues)
   {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
     int nRealIndex = nIndex;
     for (final Object aValue : aValues)
+    {
+      add (nRealIndex, aValue);
+      nRealIndex++;
+    }
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnull final IJsonArray aArray)
+  {
+    if (aArray == null)
+      throw new NullPointerException ("array");
+
+    for (final IJson aValue : aArray)
+      add (aValue);
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final IJsonArray aArray)
+  {
+    if (aArray == null)
+      throw new NullPointerException ("array");
+
+    int nRealIndex = nIndex;
+    for (final IJson aValue : aArray)
     {
       add (nRealIndex, aValue);
       nRealIndex++;
