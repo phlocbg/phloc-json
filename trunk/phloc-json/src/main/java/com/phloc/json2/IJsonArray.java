@@ -116,6 +116,12 @@ public interface IJsonArray extends IJsonCollection, Iterable <IJson>
   IJsonArray addAll (@Nonnegative int nIndex, @Nonnull List <?> aValues);
 
   @Nonnull
+  IJsonArray addAll (@Nonnull IJsonArray aArray);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnegative int nIndex, @Nonnull IJsonArray aArray);
+
+  @Nonnull
   EChange removeAtIndex (@Nonnegative int nIndex);
 
   /**

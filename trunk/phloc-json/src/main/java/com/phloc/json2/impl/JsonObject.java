@@ -198,7 +198,21 @@ public class JsonObject implements IJsonObject
   @Nonnull
   public JsonObject addAll (@Nonnull final Map <String, ?> aMap)
   {
+    if (aMap == null)
+      throw new NullPointerException ("map");
+
     for (final Map.Entry <String, ?> aEntry : aMap.entrySet ())
+      add (aEntry.getKey (), aEntry.getValue ());
+    return this;
+  }
+
+  @Nonnull
+  public JsonObject addAll (@Nonnull final IJsonObject aObject)
+  {
+    if (aObject == null)
+      throw new NullPointerException ("object");
+
+    for (final Map.Entry <String, IJson> aEntry : aObject)
       add (aEntry.getKey (), aEntry.getValue ());
     return this;
   }
