@@ -51,6 +51,9 @@ public interface IJsonObject extends IJsonCollection, Iterable <Map.Entry <Strin
   IJsonObject add (@Nonnull @Nonempty String sName, @Nullable Object aValue);
 
   @Nonnull
+  IJsonObject add (@Nonnull Map.Entry <String, ?> aEntry);
+
+  @Nonnull
   IJsonObject add (@Nonnull @Nonempty String sName, boolean bValue);
 
   @Nonnull
@@ -73,6 +76,9 @@ public interface IJsonObject extends IJsonCollection, Iterable <Map.Entry <Strin
 
   @Nonnull
   IJsonObject add (@Nonnull @Nonempty String sName, short nValue);
+
+  @Nonnull
+  IJsonObject addAll (@Nonnull Map <String, ?> aMap);
 
   @Nonnull
   EChange removeKey (@Nullable String sName);
