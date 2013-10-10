@@ -142,6 +142,12 @@ public class JsonObject implements IJsonObject
   }
 
   @Nonnull
+  public JsonObject add (@Nonnull final Map.Entry <String, ?> aEntry)
+  {
+    return add (aEntry.getKey (), aEntry.getValue ());
+  }
+
+  @Nonnull
   public JsonObject add (@Nonnull @Nonempty final String sName, final boolean bValue)
   {
     return add (sName, JsonValue.create (bValue));
@@ -187,6 +193,14 @@ public class JsonObject implements IJsonObject
   public JsonObject add (@Nonnull @Nonempty final String sName, final short nValue)
   {
     return add (sName, JsonValue.create (nValue));
+  }
+
+  @Nonnull
+  public JsonObject addAll (@Nonnull final Map <String, ?> aMap)
+  {
+    for (final Map.Entry <String, ?> aEntry : aMap.entrySet ())
+      add (aEntry.getKey (), aEntry.getValue ());
+    return this;
   }
 
   @Nonnull
