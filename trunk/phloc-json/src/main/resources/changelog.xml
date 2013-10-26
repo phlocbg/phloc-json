@@ -20,6 +20,12 @@
 -->
 <changelog xmlns="http://www.phloc.com/ns/changelog/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-json">
+  <release date="2013-10-26" version="2.4.6" />
+  <entry date="2013-10-26" category="tech" action="fixed">
+    <change>
+      <text locale="en">Fixed error in JsonArray.getSubArray</text>
+    </change>
+  </entry>
   <release date="2013-10-26" version="2.4.5" />
   <entry date="2013-10-26" category="api" action="add">
     <change>

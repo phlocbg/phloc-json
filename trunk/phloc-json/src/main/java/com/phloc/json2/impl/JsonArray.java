@@ -576,7 +576,7 @@ public class JsonArray implements IJsonArray
   {
     if (nStartIndex < 0)
       throw new IllegalArgumentException ("StartIndex invalid: " + nStartIndex);
-    if (nEndIndex < nStartIndex || nEndIndex >= m_aValues.size ())
+    if (nEndIndex < nStartIndex || nEndIndex > m_aValues.size ())
       throw new IllegalArgumentException ("EndIndex invalid: " + nEndIndex);
 
     final int nLength = nEndIndex - nStartIndex;
