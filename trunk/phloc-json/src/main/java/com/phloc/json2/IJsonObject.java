@@ -83,6 +83,9 @@ public interface IJsonObject extends IJsonCollection, Iterable <Map.Entry <Strin
   @Nonnull
   IJsonObject addAll (@Nonnull IJsonObject aObject);
 
+  @Nullable
+  IJson removeKeyAndReturnValue (@Nullable String sName);
+
   @Nonnull
   EChange removeKey (@Nullable String sName);
 

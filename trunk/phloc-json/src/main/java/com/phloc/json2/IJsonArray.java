@@ -110,16 +110,73 @@ public interface IJsonArray extends IJsonCollection, Iterable <IJson>
   IJsonArray add (@Nonnegative int nIndex, short nValue);
 
   @Nonnull
-  IJsonArray addAll (@Nonnull List <?> aValues);
+  IJsonArray addAll (@Nonnull boolean... aValues);
 
   @Nonnull
-  IJsonArray addAll (@Nonnegative int nIndex, @Nonnull List <?> aValues);
+  IJsonArray addAll (@Nonnull byte... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnull char... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnull double... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnull float... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnull int... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnull long... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnull short... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnull Object... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnull List <?> aValues);
 
   @Nonnull
   IJsonArray addAll (@Nonnull IJsonArray aArray);
 
   @Nonnull
+  IJsonArray addAll (@Nonnegative int nIndex, @Nonnull boolean... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnegative int nIndex, @Nonnull byte... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnegative int nIndex, @Nonnull char... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnegative int nIndex, @Nonnull double... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnegative int nIndex, @Nonnull float... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnegative int nIndex, @Nonnull int... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnegative int nIndex, @Nonnull long... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnegative int nIndex, @Nonnull short... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnegative int nIndex, @Nonnull Object... aValues);
+
+  @Nonnull
+  IJsonArray addAll (@Nonnegative int nIndex, @Nonnull List <?> aValues);
+
+  @Nonnull
   IJsonArray addAll (@Nonnegative int nIndex, @Nonnull IJsonArray aArray);
+
+  @Nullable
+  IJson removeAndReturnAtIndex (@Nonnegative int nIndex);
 
   @Nonnull
   EChange removeAtIndex (@Nonnegative int nIndex);
