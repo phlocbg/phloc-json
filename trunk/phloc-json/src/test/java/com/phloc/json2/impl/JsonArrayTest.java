@@ -17,11 +17,15 @@
  */
 package com.phloc.json2.impl;
 
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigDecimal;
 
 import org.junit.Test;
 
 import com.phloc.commons.mock.PhlocTestUtils;
+import com.phloc.json2.IJsonArray;
+import com.phloc.json2.serialize.JsonWriter;
 
 /**
  * Test class for class {@link JsonArray}.
@@ -45,5 +49,21 @@ public final class JsonArrayTest
     PhlocTestUtils.testDefaultSerialization (aArray);
     aArray.add (new JsonObject ().add ("n1", "nested").add ("n2", 0).add ("n3", BigDecimal.valueOf (12.34)));
     PhlocTestUtils.testDefaultSerialization (aArray);
+  }
+
+  @Test
+  public void testGetSubArray ()
+  {
+    final JsonArray aArray = new JsonArray ();
+    for (int i = 1; i <= 10; ++i)
+      aArray.add (i);
+    assertEquals ("[1,2,3,4,5,6,7,8,9,10]", JsonWriter.getAsString (aArray));
+
+    final IJsonArray aSubArray = aArray.getSubArray (1, 5);
+    assertEquals ("[2,3,4,5]", JsonWriter.getAsString (aSubArray));
+
+    aArray.removeAtIndex (1);
+    assertEquals ("[1,3,4,5,6,7,8,9,10]", JsonWriter.getAsString (aArray));
+    assertEquals ("[2,3,4,5]", JsonWriter.getAsString (aSubArray));
   }
 }
