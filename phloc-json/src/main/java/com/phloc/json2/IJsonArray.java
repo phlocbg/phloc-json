@@ -228,6 +228,20 @@ public interface IJsonArray extends IJsonCollection, Iterable <IJson>
   IJsonObject getObjectAtIndex (@Nonnegative int nIndex);
 
   /**
+   * Get a sub array of this array from the specified start index (incl.) up to
+   * the specified end index (excl.).
+   * 
+   * @param nStartIndex
+   *        The start index. Must be &ge; 0.
+   * @param nEndIndex
+   *        The end index. Must be &ge; start index.
+   * @return A non-<code>null</code> JSON array.
+   */
+  @Nonnull
+  @ReturnsMutableCopy
+  IJsonArray getSubArray (@Nonnegative int nStartIndex, @Nonnegative int nEndIndex);
+
+  /**
    * @return A copy of all contained items. Never <code>null</code> but maybe
    *         empty.
    */

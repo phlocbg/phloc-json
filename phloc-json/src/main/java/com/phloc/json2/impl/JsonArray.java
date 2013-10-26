@@ -572,6 +572,21 @@ public class JsonArray implements IJsonArray
 
   @Nonnull
   @ReturnsMutableCopy
+  public JsonArray getSubArray (@Nonnegative final int nStartIndex, @Nonnegative final int nEndIndex)
+  {
+    if (nStartIndex < 0)
+      throw new IllegalArgumentException ("StartIndex invalid: " + nStartIndex);
+    if (nEndIndex < nStartIndex || nEndIndex >= m_aValues.size ())
+      throw new IllegalArgumentException ("EndIndex invalid: " + nEndIndex);
+
+    final int nLength = nEndIndex - nStartIndex;
+    final JsonArray ret = new JsonArray (nLength);
+    ret.addAll (m_aValues.subList (nStartIndex, nEndIndex));
+    return ret;
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
   public List <IJson> getAll ()
   {
     return ContainerHelper.newList (m_aValues);
