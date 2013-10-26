@@ -217,6 +217,12 @@ public class JsonObject implements IJsonObject
     return this;
   }
 
+  @Nullable
+  public IJson removeKeyAndReturnValue (@Nullable final String sName)
+  {
+    return m_aValues.remove (sName);
+  }
+
   @Nonnull
   public EChange removeKey (@Nullable final String sName)
   {

@@ -246,6 +246,105 @@ public class JsonArray implements IJsonArray
   }
 
   @Nonnull
+  public JsonArray addAll (@Nonnull final boolean... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    for (final boolean aValue : aValues)
+      add (aValue);
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnull final byte... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    for (final byte aValue : aValues)
+      add (aValue);
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnull final char... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    for (final char aValue : aValues)
+      add (aValue);
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnull final double... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    for (final double aValue : aValues)
+      add (aValue);
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnull final float... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    for (final float aValue : aValues)
+      add (aValue);
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnull final int... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    for (final int aValue : aValues)
+      add (aValue);
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnull final long... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    for (final long aValue : aValues)
+      add (aValue);
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnull final short... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    for (final short aValue : aValues)
+      add (aValue);
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnull final Object... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    for (final Object aValue : aValues)
+      add (aValue);
+    return this;
+  }
+
+  @Nonnull
   public JsonArray addAll (@Nonnull final List <?> aValues)
   {
     if (aValues == null)
@@ -253,6 +352,152 @@ public class JsonArray implements IJsonArray
 
     for (final Object aValue : aValues)
       add (aValue);
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnull final IJsonArray aArray)
+  {
+    if (aArray == null)
+      throw new NullPointerException ("array");
+
+    for (final IJson aValue : aArray)
+      add (aValue);
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final boolean... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    int nRealIndex = nIndex;
+    for (final boolean aValue : aValues)
+    {
+      add (nRealIndex, aValue);
+      nRealIndex++;
+    }
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final byte... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    int nRealIndex = nIndex;
+    for (final byte aValue : aValues)
+    {
+      add (nRealIndex, aValue);
+      nRealIndex++;
+    }
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final char... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    int nRealIndex = nIndex;
+    for (final char aValue : aValues)
+    {
+      add (nRealIndex, aValue);
+      nRealIndex++;
+    }
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final double... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    int nRealIndex = nIndex;
+    for (final double aValue : aValues)
+    {
+      add (nRealIndex, aValue);
+      nRealIndex++;
+    }
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final float... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    int nRealIndex = nIndex;
+    for (final float aValue : aValues)
+    {
+      add (nRealIndex, aValue);
+      nRealIndex++;
+    }
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final int... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    int nRealIndex = nIndex;
+    for (final int aValue : aValues)
+    {
+      add (nRealIndex, aValue);
+      nRealIndex++;
+    }
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final long... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    int nRealIndex = nIndex;
+    for (final long aValue : aValues)
+    {
+      add (nRealIndex, aValue);
+      nRealIndex++;
+    }
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final short... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    int nRealIndex = nIndex;
+    for (final short aValue : aValues)
+    {
+      add (nRealIndex, aValue);
+      nRealIndex++;
+    }
+    return this;
+  }
+
+  @Nonnull
+  public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final Object... aValues)
+  {
+    if (aValues == null)
+      throw new NullPointerException ("values");
+
+    int nRealIndex = nIndex;
+    for (final Object aValue : aValues)
+    {
+      add (nRealIndex, aValue);
+      nRealIndex++;
+    }
     return this;
   }
 
@@ -272,17 +517,6 @@ public class JsonArray implements IJsonArray
   }
 
   @Nonnull
-  public JsonArray addAll (@Nonnull final IJsonArray aArray)
-  {
-    if (aArray == null)
-      throw new NullPointerException ("array");
-
-    for (final IJson aValue : aArray)
-      add (aValue);
-    return this;
-  }
-
-  @Nonnull
   public JsonArray addAll (@Nonnegative final int nIndex, @Nonnull final IJsonArray aArray)
   {
     if (aArray == null)
@@ -295,6 +529,12 @@ public class JsonArray implements IJsonArray
       nRealIndex++;
     }
     return this;
+  }
+
+  @Nonnull
+  public IJson removeAndReturnAtIndex (@Nonnegative final int nIndex)
+  {
+    return ContainerHelper.removeAndReturnElementAtIndex (m_aValues, nIndex);
   }
 
   @Nonnull
