@@ -62,6 +62,9 @@ public final class JsonArrayTest
     final IJsonArray aSubArray = aArray.getSubArray (1, 5);
     assertEquals ("[2,3,4,5]", JsonWriter.getAsString (aSubArray));
 
+    assertEquals ("[10]", JsonWriter.getAsString (aArray.getSubArray (9, 10)));
+    assertEquals ("[]", JsonWriter.getAsString (aArray.getSubArray (0, 0)));
+
     aArray.removeAtIndex (1);
     assertEquals ("[1,3,4,5,6,7,8,9,10]", JsonWriter.getAsString (aArray));
     assertEquals ("[2,3,4,5]", JsonWriter.getAsString (aSubArray));
