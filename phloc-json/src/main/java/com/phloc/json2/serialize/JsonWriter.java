@@ -22,10 +22,13 @@ import java.io.Writer;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.WillClose;
+import javax.annotation.WillNotClose;
 import javax.annotation.concurrent.Immutable;
 
 import com.phloc.commons.annotations.PresentForCodeCoverage;
 import com.phloc.commons.io.streams.NonBlockingStringWriter;
+import com.phloc.commons.io.streams.StreamUtils;
 import com.phloc.json2.IJson;
 import com.phloc.json2.IJsonArray;
 import com.phloc.json2.IJsonObject;
@@ -59,7 +62,7 @@ public final class JsonWriter
   private JsonWriter ()
   {}
 
-  public static void writeNode (@Nonnull final IJson aJson, @Nonnull final Writer aWriter) throws IOException
+  public static void writeNode (@Nonnull final IJson aJson, @Nonnull @WillNotClose final Writer aWriter) throws IOException
   {
     if (aJson.isValue ())
     {
@@ -97,6 +100,18 @@ public final class JsonWriter
           throw new IllegalArgumentException ("Unsupported Json Object type: " + aJson);
   }
 
+  public static void writeNodeAndClose (@Nonnull final IJson aJson, @Nonnull @WillClose final Writer aWriter) throws IOException
+  {
+    try
+    {
+      writeNode (aJson, aWriter);
+    }
+    finally
+    {
+      StreamUtils.close (aWriter);
+    }
+  }
+
   @Nonnull
   public static String getAsString (@Nonnull final IJson aJson)
   {
@@ -106,7 +121,7 @@ public final class JsonWriter
     try
     {
       final NonBlockingStringWriter aWriter = new NonBlockingStringWriter (1024);
-      writeNode (aJson, aWriter);
+      writeNodeAndClose (aJson, aWriter);
       return aWriter.getAsString ();
     }
     catch (final IOException ex)
