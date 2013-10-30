@@ -21,15 +21,13 @@ import java.io.InputStream;
 import java.io.Reader;
 
 import javax.annotation.Nonnull;
+import javax.annotation.WillClose;
 import javax.annotation.concurrent.Immutable;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.phloc.commons.io.streams.NonBlockingStringReader;
 import com.phloc.json.impl.JSONParsingException;
+import com.phloc.json2.serialize.JsonReadException;
 
 /**
  * Utility class around the Jackson JSON implementation
@@ -45,24 +43,7 @@ public final class JacksonHelper
   @Nonnull
   public static ObjectMapper createObjectMapper ()
   {
-    final ObjectMapper aObjectMapper = new ObjectMapper ();
-    // Necessary configuration to allow control characters inside of JSON
-    // strings (CR#10516)
-    aObjectMapper.configure (JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
-    // Feature that determines whether parser will allow use of unquoted field
-    // names (which is allowed by Javascript, but not by JSON specification).
-    aObjectMapper.configure (JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-    if (false)
-    {
-      // Allow single quotes for strings?
-      aObjectMapper.configure (JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-    }
-    // Always use BigDecimal
-    aObjectMapper.enable (DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
-    // As of 2.1.4 BigDecimals are compacted by default - with this method
-    // everything stays as it was
-    aObjectMapper.setNodeFactory (JsonNodeFactory.withExactBigDecimals (true));
-    return aObjectMapper;
+    return com.phloc.json2.serialize.JacksonHelper.createObjectMapper ();
   }
 
   /**
@@ -80,11 +61,11 @@ public final class JacksonHelper
   {
     try
     {
-      return createObjectMapper ().readTree (new NonBlockingStringReader (sJSON));
+      return com.phloc.json2.serialize.JacksonHelper.parseToNode (sJSON);
     }
-    catch (final Throwable t)
+    catch (final JsonReadException ex)
     {
-      throw new JSONParsingException ("Error parsing as JSON tree: '" + sJSON + "'", t);
+      throw new JSONParsingException (ex.getMessage (), ex.getCause ());
     }
   }
 
@@ -99,17 +80,17 @@ public final class JacksonHelper
    *         in case parsing failed
    */
   @Nonnull
-  public static JsonNode parseToNode (@Nonnull final InputStream aIS) throws JSONParsingException
+  public static JsonNode parseToNode (@Nonnull @WillClose final InputStream aIS) throws JSONParsingException
   {
     if (aIS == null)
       throw new NullPointerException ("inputStream");
     try
     {
-      return createObjectMapper ().readTree (aIS);
+      return com.phloc.json2.serialize.JacksonHelper.parseToNode (aIS);
     }
-    catch (final Throwable t)
+    catch (final JsonReadException ex)
     {
-      throw new JSONParsingException ("Error parsing as JSON tree from InputStream", t);
+      throw new JSONParsingException (ex.getMessage (), ex.getCause ());
     }
   }
 
@@ -124,17 +105,17 @@ public final class JacksonHelper
    *         in case parsing failed
    */
   @Nonnull
-  public static JsonNode parseToNode (@Nonnull final Reader aReader) throws JSONParsingException
+  public static JsonNode parseToNode (@Nonnull @WillClose final Reader aReader) throws JSONParsingException
   {
     if (aReader == null)
       throw new NullPointerException ("reader");
     try
     {
-      return createObjectMapper ().readTree (aReader);
+      return com.phloc.json2.serialize.JacksonHelper.parseToNode (aReader);
     }
-    catch (final Throwable t)
+    catch (final JsonReadException ex)
     {
-      throw new JSONParsingException ("Error parsing as JSON tree from Reader", t);
+      throw new JSONParsingException (ex.getMessage (), ex.getCause ());
     }
   }
 }

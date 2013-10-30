@@ -26,6 +26,7 @@ import org.junit.Test;
  * 
  * @author Philip Helger
  */
+@Deprecated
 public final class JSONHelperTest
 {
   private static final String STRING_UNESCAPED = "this is a \"test\" containing \b \t \n \f \r \\ / <>\n##+{}()";

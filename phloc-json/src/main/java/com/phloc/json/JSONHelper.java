@@ -17,15 +17,11 @@
  */
 package com.phloc.json;
 
-import java.io.IOException;
-import java.io.Writer;
-
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import com.phloc.commons.annotations.PresentForCodeCoverage;
-import com.phloc.commons.string.StringHelper;
+import com.phloc.json2.serialize.JsonHelper;
 
 /**
  * Some utility methods for JSON
@@ -33,11 +29,9 @@ import com.phloc.commons.string.StringHelper;
  * @author Philip Helger
  */
 @Immutable
+@Deprecated
 public final class JSONHelper
 {
-  private static final char [] CHARS_TO_MASK = new char [] { '\0', '"', '\\', '\b', '\t', '\r', '\n', '\f' };
-  private static final char MASK_CHAR = '\\';
-
   @PresentForCodeCoverage
   @SuppressWarnings ("unused")
   private static final JSONHelper s_aInstance = new JSONHelper ();
@@ -45,125 +39,9 @@ public final class JSONHelper
   private JSONHelper ()
   {}
 
-  private static void _escape (@Nonnull final char [] aInput, @Nonnull final StringBuilder aSB)
-  {
-    for (final char cCurrent : aInput)
-    {
-      switch (cCurrent)
-      {
-        case '\0':
-          aSB.append (MASK_CHAR).append ("u0000");
-          break;
-        case '"':
-          // single quotes must NOT be escaped in valid JSON (See
-          // http://www.json.org/)
-          // #case '\'':
-        case '\\':
-          aSB.append (MASK_CHAR).append (cCurrent);
-          break;
-        case '\b':
-          aSB.append (MASK_CHAR).append ('b');
-          break;
-        case '\t':
-          aSB.append (MASK_CHAR).append ('t');
-          break;
-        case '\n':
-          aSB.append (MASK_CHAR).append ('n');
-          break;
-        case '\r':
-          aSB.append (MASK_CHAR).append ('r');
-          break;
-        case '\f':
-          aSB.append (MASK_CHAR).append ('f');
-          break;
-        default:
-          aSB.append (cCurrent);
-          break;
-      }
-    }
-  }
-
   @Nullable
   public static String jsonEscape (@Nullable final String sInput)
   {
-    if (StringHelper.hasNoText (sInput))
-      return sInput;
-
-    final char [] aInput = sInput.toCharArray ();
-    if (!StringHelper.containsAny (aInput, CHARS_TO_MASK))
-      return sInput;
-
-    final StringBuilder aSB = new StringBuilder (aInput.length * 2);
-    _escape (aInput, aSB);
-    return aSB.toString ();
-  }
-
-  public static void jsonEscape (@Nullable final String sInput, @Nonnull final StringBuilder aSB)
-  {
-    if (StringHelper.hasText (sInput))
-    {
-      final char [] aInput = sInput.toCharArray ();
-      if (!StringHelper.containsAny (aInput, CHARS_TO_MASK))
-        aSB.append (sInput);
-      else
-        _escape (aInput, aSB);
-    }
-  }
-
-  private static void _escape (@Nonnull final char [] aInput, @Nonnull final Writer aWriter) throws IOException
-  {
-    for (final char cCurrent : aInput)
-    {
-      switch (cCurrent)
-      {
-        case '\0':
-          aWriter.append (MASK_CHAR);
-          aWriter.write ("u0000");
-          break;
-        case '"':
-          // single quotes must NOT be escaped in valid JSON (See
-          // http://www.json.org/)
-          // #case '\'':
-        case '\\':
-          aWriter.append (MASK_CHAR);
-          aWriter.append (cCurrent);
-          break;
-        case '\b':
-          aWriter.append (MASK_CHAR);
-          aWriter.append ('b');
-          break;
-        case '\t':
-          aWriter.append (MASK_CHAR);
-          aWriter.append ('t');
-          break;
-        case '\n':
-          aWriter.append (MASK_CHAR);
-          aWriter.append ('n');
-          break;
-        case '\r':
-          aWriter.append (MASK_CHAR);
-          aWriter.append ('r');
-          break;
-        case '\f':
-          aWriter.append (MASK_CHAR);
-          aWriter.append ('f');
-          break;
-        default:
-          aWriter.append (cCurrent);
-          break;
-      }
-    }
-  }
-
-  public static void jsonEscape (@Nullable final String sInput, @Nonnull final Writer aWriter) throws IOException
-  {
-    if (StringHelper.hasText (sInput))
-    {
-      final char [] aInput = sInput.toCharArray ();
-      if (!StringHelper.containsAny (aInput, CHARS_TO_MASK))
-        aWriter.write (sInput);
-      else
-        _escape (aInput, aWriter);
-    }
+    return JsonHelper.jsonEscape (sInput);
   }
 }

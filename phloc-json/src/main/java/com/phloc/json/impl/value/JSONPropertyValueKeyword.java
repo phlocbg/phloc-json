@@ -21,8 +21,8 @@ import javax.annotation.Nonnull;
 
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.IJSONPropertyValueNotParsable;
-import com.phloc.json.JSONHelper;
 import com.phloc.json.impl.JSONReader;
+import com.phloc.json2.serialize.JsonHelper;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -35,8 +35,7 @@ import com.phloc.json.impl.JSONReader;
  * 
  * @author Boris Gregorcic
  */
-public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String> implements
-                                                                                IJSONPropertyValueNotParsable <String>
+public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String> implements IJSONPropertyValueNotParsable <String>
 {
   /**
    * Ctor
@@ -50,7 +49,7 @@ public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String>
 
   public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
-    aResult.append (JSONHelper.jsonEscape (getData ()));
+    aResult.append (JsonHelper.jsonEscape (getData ()));
   }
 
   @Nonnull
