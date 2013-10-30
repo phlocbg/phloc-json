@@ -291,6 +291,12 @@ public class JsonObject implements IJsonObject
     return ret;
   }
 
+  @Nonnull
+  public String getAsString ()
+  {
+    return JsonWriter.getAsString (this);
+  }
+
   @Override
   public boolean equals (final Object o)
   {

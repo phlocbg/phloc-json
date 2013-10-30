@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.Reader;
 
 import javax.annotation.Nonnull;
+import javax.annotation.WillClose;
 import javax.annotation.concurrent.Immutable;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -98,7 +99,7 @@ public final class JacksonHelper
    *         in case parsing failed
    */
   @Nonnull
-  public static JsonNode parseToNode (@Nonnull final InputStream aIS) throws JsonReadException
+  public static JsonNode parseToNode (@Nonnull @WillClose final InputStream aIS) throws JsonReadException
   {
     if (aIS == null)
       throw new NullPointerException ("inputStream");
@@ -123,7 +124,7 @@ public final class JacksonHelper
    *         in case parsing failed
    */
   @Nonnull
-  public static JsonNode parseToNode (@Nonnull final Reader aReader) throws JsonReadException
+  public static JsonNode parseToNode (@Nonnull @WillClose final Reader aReader) throws JsonReadException
   {
     if (aReader == null)
       throw new NullPointerException ("reader");
