@@ -39,6 +39,7 @@ import com.phloc.json2.serialize.JsonReader;
 import com.phloc.json2.serialize.JsonValueSerializerConstant;
 import com.phloc.json2.serialize.JsonValueSerializerEscaped;
 import com.phloc.json2.serialize.JsonValueSerializerToString;
+import com.phloc.json2.serialize.JsonWriter;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -165,6 +166,12 @@ public class JsonValue implements IJsonValue
   {
     // No need to clone, as this object is immutable!
     return this;
+  }
+
+  @Nonnull
+  public String getAsString ()
+  {
+    return JsonWriter.getAsString (this);
   }
 
   @Override

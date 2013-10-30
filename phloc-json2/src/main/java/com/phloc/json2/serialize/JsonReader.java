@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.WillClose;
 import javax.annotation.concurrent.Immutable;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -52,9 +53,19 @@ public final class JsonReader
   private JsonReader ()
   {}
 
+  /**
+   * Convert the passed Jackson value node to a phloc-json2 value node
+   * 
+   * @param aNode
+   *        The source Jackson node. May not be <code>null</code>.
+   * @return <code>null</code> if the passed node cannot be converted.
+   */
   @Nullable
-  private static JsonValue _convertValue (@Nonnull final JsonNode aNode)
+  public static JsonValue convertValue (@Nonnull final JsonNode aNode)
   {
+    if (aNode == null)
+      throw new NullPointerException ("node");
+
     // boolean
     if (aNode.isBoolean ())
       return JsonValue.create (aNode.booleanValue ());
@@ -86,18 +97,31 @@ public final class JsonReader
     return null;
   }
 
+  /**
+   * Convert the passed Jackson node to a phloc-json2 node. Supports object
+   * nodes, array nodes and value nodes.
+   * 
+   * @param aNode
+   *        The source Jackson node. May not be <code>null</code>.
+   * @return Never <code>null</code>.
+   * @throws JsonReadException
+   *         If the passed Jackson node cannot be converted
+   */
   @Nonnull
   public static IJson convert (@Nonnull final JsonNode aNode) throws JsonReadException
   {
+    if (aNode == null)
+      throw new NullPointerException ("node");
+
     if (aNode.isObject ())
       return convertObject ((ObjectNode) aNode);
 
     if (aNode.isArray ())
       return convertArray ((ArrayNode) aNode);
 
-    final IJson ret = _convertValue (aNode);
+    final IJson ret = convertValue (aNode);
     if (ret == null)
-      throw new JsonReadException ("Having JSON Node with weird type: " + aNode);
+      throw new JsonReadException ("Having JsonNode with unsupported type: " + aNode);
     return ret;
   }
 
@@ -190,21 +214,6 @@ public final class JsonReader
     return ret;
   }
 
-  /**
-   * Parse the passed JSON string into whatever resulting {@link IJson}
-   * representation
-   * 
-   * @param sJSON
-   *        the JSON string to convert, must be a valid JSON string!
-   * @return the resulting IJson representation. Never <code>null</code>.
-   * @throws JsonReadException
-   */
-  @Nonnull
-  public static IJson parse (@Nonnull final String sJSON) throws JsonReadException
-  {
-    return convert (JacksonHelper.parseToNode (sJSON));
-  }
-
   public static void parseAsArray (@Nonnull final String sJSON, @Nonnull final JsonArray aArray) throws JsonReadException
   {
     final JsonNode aNode = JacksonHelper.parseToNode (sJSON);
@@ -227,11 +236,26 @@ public final class JsonReader
     final JsonNode aNode = JacksonHelper.parseToNode (sJSON);
     if (aNode.isContainerNode ())
       throw new JsonReadException ("Passed string is not a JSON value!");
-    return _convertValue (aNode);
+    return convertValue (aNode);
+  }
+
+  /**
+   * Parse the passed JSON string into whatever resulting {@link IJson}
+   * representation
+   * 
+   * @param sJSON
+   *        the JSON string to convert, must be a valid JSON string!
+   * @return the resulting IJson representation. Never <code>null</code>.
+   * @throws JsonReadException
+   */
+  @Nonnull
+  public static IJson parse (@Nonnull final String sJSON) throws JsonReadException
+  {
+    return convert (JacksonHelper.parseToNode (sJSON));
   }
 
   @Nonnull
-  public static IJson parse (@Nonnull final InputStream aIS) throws JsonReadException
+  public static IJson parse (@Nonnull @WillClose final InputStream aIS) throws JsonReadException
   {
     return convert (JacksonHelper.parseToNode (aIS));
   }
@@ -239,11 +263,14 @@ public final class JsonReader
   @Nonnull
   public static IJson parse (@Nonnull final IInputStreamProvider aIIS) throws JsonReadException
   {
+    if (aIIS == null)
+      throw new NullPointerException ("InputStreamProvider");
+
     return convert (JacksonHelper.parseToNode (aIIS.getInputStream ()));
   }
 
   @Nonnull
-  public static IJson parse (@Nonnull final Reader aReader) throws JsonReadException
+  public static IJson parse (@Nonnull @WillClose final Reader aReader) throws JsonReadException
   {
     return convert (JacksonHelper.parseToNode (aReader));
   }
@@ -251,6 +278,9 @@ public final class JsonReader
   @Nonnull
   public static IJson parse (@Nonnull final IReaderProvider aReaderProvider) throws JsonReadException
   {
+    if (aReaderProvider == null)
+      throw new NullPointerException ("ReaderProvider");
+
     return convert (JacksonHelper.parseToNode (aReaderProvider.getReader ()));
   }
 }

@@ -22,6 +22,7 @@ import java.io.Writer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.WillNotClose;
 import javax.annotation.concurrent.Immutable;
 
 import com.phloc.commons.annotations.PresentForCodeCoverage;
@@ -35,8 +36,8 @@ import com.phloc.commons.string.StringHelper;
 @Immutable
 public final class JsonHelper
 {
+  public static final char MASK_CHAR = '\\';
   private static final char [] CHARS_TO_MASK = new char [] { '\0', '"', '\\', '\b', '\t', '\r', '\n', '\f' };
-  private static final char MASK_CHAR = '\\';
 
   @PresentForCodeCoverage
   @SuppressWarnings ("unused")
@@ -110,7 +111,7 @@ public final class JsonHelper
     }
   }
 
-  private static void _escape (@Nonnull final char [] aInput, @Nonnull final Writer aWriter) throws IOException
+  private static void _escape (@Nonnull final char [] aInput, @Nonnull @WillNotClose final Writer aWriter) throws IOException
   {
     for (final char cCurrent : aInput)
     {
@@ -155,7 +156,7 @@ public final class JsonHelper
     }
   }
 
-  public static void jsonEscape (@Nullable final String sInput, @Nonnull final Writer aWriter) throws IOException
+  public static void jsonEscape (@Nullable final String sInput, @Nonnull @WillNotClose final Writer aWriter) throws IOException
   {
     if (StringHelper.hasText (sInput))
     {

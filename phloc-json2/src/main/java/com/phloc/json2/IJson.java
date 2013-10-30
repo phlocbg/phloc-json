@@ -20,13 +20,14 @@ package com.phloc.json2;
 import java.io.Serializable;
 
 import com.phloc.commons.ICloneable;
+import com.phloc.commons.IHasStringRepresentation;
 
 /**
  * Base interface for all JSON object types: list, object and key-value-pair
  * 
  * @author Philip Helger
  */
-public interface IJson extends ICloneable <IJson>, Serializable
+public interface IJson extends ICloneable <IJson>, Serializable, IHasStringRepresentation
 {
   /**
    * @return <code>true</code> if it is an array and can be case to
