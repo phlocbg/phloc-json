@@ -33,8 +33,8 @@ import com.phloc.json2.IJsonValueSerializer;
 import com.phloc.json2.impl.JsonArray;
 import com.phloc.json2.impl.JsonObject;
 import com.phloc.json2.impl.JsonValue;
+import com.phloc.json2.serialize.JsonValueSerializerEscaped;
 import com.phloc.json2.serialize.JsonValueSerializerRegistry;
-import com.phloc.json2.serialize.JsonValueSerializerToString;
 
 /**
  * A utility class for converting objects from and to {@link IJson}.
@@ -173,8 +173,8 @@ public final class JsonConverter
     IJsonValueSerializer aValueSerializer = JsonValueSerializerRegistry.getJsonValueSerializer (aObject.getClass ());
     if (aValueSerializer == null)
     {
-      // Default: toString
-      aValueSerializer = JsonValueSerializerToString.getInstance ();
+      // Default: escaped
+      aValueSerializer = JsonValueSerializerEscaped.getInstance ();
     }
 
     return JsonValue.create (aObject, aValueSerializer);
