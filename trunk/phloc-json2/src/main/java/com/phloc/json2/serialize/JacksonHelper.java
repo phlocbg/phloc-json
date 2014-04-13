@@ -29,7 +29,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.phloc.commons.ValueEnforcer;
 import com.phloc.commons.io.streams.NonBlockingStringReader;
+import com.phloc.commons.io.streams.StreamUtils;
 
 /**
  * Utility class around the Jackson JSON implementation
@@ -101,8 +103,8 @@ public final class JacksonHelper
   @Nonnull
   public static JsonNode parseToNode (@Nonnull @WillClose final InputStream aIS) throws JsonReadException
   {
-    if (aIS == null)
-      throw new NullPointerException ("inputStream");
+    ValueEnforcer.notNull (aIS, "InputStream");
+
     try
     {
       return createObjectMapper ().readTree (aIS);
@@ -110,6 +112,10 @@ public final class JacksonHelper
     catch (final Throwable t)
     {
       throw new JsonReadException ("Error parsing as JSON tree from InputStream", t);
+    }
+    finally
+    {
+      StreamUtils.close (aIS);
     }
   }
 
@@ -126,8 +132,8 @@ public final class JacksonHelper
   @Nonnull
   public static JsonNode parseToNode (@Nonnull @WillClose final Reader aReader) throws JsonReadException
   {
-    if (aReader == null)
-      throw new NullPointerException ("reader");
+    ValueEnforcer.notNull (aReader, "Reader");
+
     try
     {
       return createObjectMapper ().readTree (aReader);
@@ -135,6 +141,10 @@ public final class JacksonHelper
     catch (final Throwable t)
     {
       throw new JsonReadException ("Error parsing as JSON tree from Reader", t);
+    }
+    finally
+    {
+      StreamUtils.close (aReader);
     }
   }
 }
