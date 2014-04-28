@@ -67,7 +67,7 @@ public class JsonValue implements IJsonValue
   static
   {
     for (int i = INT_CACHE_MIN; i <= INT_CACHE_MAX; ++i)
-      NUMERIC[i - INT_CACHE_MIN] = new JsonValue (Integer.valueOf (i), JsonValueSerializerToString.getInstance ());
+      NUMERIC[i - INT_CACHE_MIN] = new JsonValue (BigInteger.valueOf (i), JsonValueSerializerToString.getInstance ());
   }
 
   private Object m_aValue;
@@ -234,7 +234,7 @@ public class JsonValue implements IJsonValue
     if (nValue >= INT_CACHE_MIN && nValue < INT_CACHE_MAX)
       return NUMERIC[nValue - INT_CACHE_MIN];
 
-    return create (Integer.valueOf (nValue), JsonValueSerializerToString.getInstance ());
+    return create (BigInteger.valueOf (nValue), JsonValueSerializerToString.getInstance ());
   }
 
   @Nonnull
@@ -244,7 +244,7 @@ public class JsonValue implements IJsonValue
     if (nValue >= INT_CACHE_MIN && nValue < INT_CACHE_MAX)
       return NUMERIC[(int) nValue - INT_CACHE_MIN];
 
-    return create (Long.valueOf (nValue), JsonValueSerializerToString.getInstance ());
+    return create (BigInteger.valueOf (nValue), JsonValueSerializerToString.getInstance ());
   }
 
   @Nonnull

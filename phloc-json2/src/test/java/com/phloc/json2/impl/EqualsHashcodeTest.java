@@ -20,6 +20,7 @@ package com.phloc.json2.impl;
 import static org.junit.Assert.assertNotNull;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -57,8 +58,8 @@ public final class EqualsHashcodeTest
   @Test
   public void testSimpleValues ()
   {
-    _testEqualsHashcode (Integer.valueOf (15));
-    _testEqualsHashcode (Long.valueOf (Long.MAX_VALUE));
+    _testEqualsHashcode (BigInteger.valueOf (15));
+    _testEqualsHashcode (BigInteger.valueOf (Long.MAX_VALUE));
     _testEqualsHashcode ("a string");
     _testEqualsHashcode (BigDecimal.valueOf (3.1415));
   }
@@ -87,12 +88,12 @@ public final class EqualsHashcodeTest
 
     final Map <String, Object> aTreeMap = new TreeMap <String, Object> ();
     aTreeMap.put ("foo", "bar");
-    aTreeMap.put ("foo2", Integer.valueOf (5));
+    aTreeMap.put ("foo2", BigInteger.valueOf (5));
     _testEqualsHashcode (aTreeMap);
 
     final Map <String, Object> aLinkedMap = new LinkedHashMap <String, Object> ();
     aLinkedMap.put ("foo", "bar");
-    aLinkedMap.put ("foo2", Integer.valueOf (5));
+    aLinkedMap.put ("foo2", BigInteger.valueOf (5));
     _testEqualsHashcode (aLinkedMap);
   }
 }
