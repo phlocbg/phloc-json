@@ -388,8 +388,9 @@ public final class JsonCharStream implements CharStream
   /**
    * Method to adjust line and column numbers for the start of a token.
    */
-  public void adjustBeginLineColumn (int newLine, final int newCol)
+  public void adjustBeginLineColumn (final int pNewLine, final int newCol)
   {
+    int newLine = pNewLine;
     int start = m_nTokenBegin;
     int len;
 
