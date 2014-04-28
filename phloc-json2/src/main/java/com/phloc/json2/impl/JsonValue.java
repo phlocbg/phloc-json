@@ -22,6 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -220,13 +221,19 @@ public class JsonValue implements IJsonValue
   @Nonnull
   public static JsonValue create (final double dValue)
   {
-    return create (BigDecimal.valueOf (dValue), JsonValueSerializerToString.getInstance ());
+    return create (BigDecimal.valueOf (dValue));
   }
 
   @Nonnull
   public static JsonValue create (final float fValue)
   {
-    return create (BigDecimal.valueOf (fValue), JsonValueSerializerToString.getInstance ());
+    return create (BigDecimal.valueOf (fValue));
+  }
+
+  @Nonnull
+  public static JsonValue create (@Nonnull final BigDecimal aValue)
+  {
+    return create (aValue, JsonValueSerializerToString.getInstance ());
   }
 
   @Nonnull
@@ -253,6 +260,12 @@ public class JsonValue implements IJsonValue
   public static JsonValue create (final short nValue)
   {
     return create ((int) nValue);
+  }
+
+  @Nonnull
+  public static JsonValue create (@Nonnull final BigInteger aValue)
+  {
+    return create (aValue, JsonValueSerializerToString.getInstance ());
   }
 
   @Nonnull
