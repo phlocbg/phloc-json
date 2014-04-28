@@ -1,0 +1,218 @@
+/**
+ * Copyright (C) 2006-2014 phloc systems
+ * http://www.phloc.com
+ * office[at]phloc[dot]com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+options {
+// JavaCC options
+  // LOOKAHEAD = 2;
+  CHOICE_AMBIGUITY_CHECK = 5;
+  STATIC = false;  // to allow for multiple parser instances
+  // DEBUG_PARSER = true;
+  // DEBUG_LOOKAHEAD = true;
+  // DEBUG_TOKEN_MANAGER = true;
+  // ERROR_REPORTING = false;
+  JAVA_UNICODE_ESCAPE = true;
+  UNICODE_INPUT = true;
+  IGNORE_CASE = false;
+  // USER_TOKEN_MANAGER = true;
+  // SUPPORT_CLASS_VISIBILITY_PUBLIC = false;
+  // USER_CHAR_STREAM = true;
+  FORCE_LA_CHECK = true;
+
+// JJTree options
+  // MULTI = true;
+  // VISITOR = true;
+  // BUILD_NODE_FILES = false;
+  // NODE_DEFAULT_VOID = true;
+  NODE_CLASS = "com.phloc.json2.parser.JsonNode";
+  NODE_PREFIX = "";
+  // NODE_USES_PARSER = true;
+  TRACK_TOKENS = true;
+  // NODE_SCOPE_HOOK = true;
+}
+
+PARSER_BEGIN(ParserJson)
+package com.phloc.json2.parser;
+
+public class ParserJson
+{
+  private static final org.slf4j.Logger s_aLogger = org.slf4j.LoggerFactory.getLogger (ParserJson.class);
+  
+  private com.phloc.json2.parser.errorhandler.IJsonParseErrorHandler m_aCustomErrorHandler;
+  
+  public void setCustomErrorHandler (final com.phloc.json2.parser.errorhandler.IJsonParseErrorHandler aCustomErrorHandler)
+  {
+    m_aCustomErrorHandler = aCustomErrorHandler;
+  }
+  
+  // Used when NODE_SCOPE_HOOK is true - for debugging only
+  // Package scope to avoid warning when NODE_SCOPE_HOOK is false
+  void jjtreeOpenNodeScope (final Node aNode)
+  {
+    if (s_aLogger.isDebugEnabled ())
+      s_aLogger.debug ("Opening scope for " + aNode.toString ());
+  }
+  
+  void jjtreeCloseNodeScope (final Node aNode)
+  {
+    if (s_aLogger.isDebugEnabled ())
+      s_aLogger.debug ("Closing scope for " + aNode.toString ());
+  }
+}
+PARSER_END(ParserJson)
+
+TOKEN_MGR_DECLS :
+{
+  private static final org.slf4j.Logger s_aLogger = org.slf4j.LoggerFactory.getLogger (ParserJsonTokenManager.class);
+}
+
+<DEFAULT>
+TOKEN :
+{
+  < S: (" "|"\t"|"\r"|"\n"|"\f")+ >
+| < W: ( <S> )? >
+}
+
+<DEFAULT>
+MORE :
+{
+  < "/*" > : IN_COMMENT
+}
+
+<IN_COMMENT>
+MORE :
+{
+  < ~[] > : IN_COMMENT
+}
+
+<IN_COMMENT>
+SKIP :
+{
+  < "*/" > : DEFAULT
+}
+
+<DEFAULT>
+TOKEN :
+{
+// private reg ex come first (no actions possible!)
+  < #H: ["0"-"9","a"-"f"] >
+| < #ESCAPE_UNICODE: "\\u" <H><H><H><H> >   
+| < #ESCAPE_OTHER: "\\" ["\"","/","\\","b","f","n","r","t"] >
+| < #ESCAPE: <ESCAPE_UNICODE>
+           | <ESCAPE_OTHER> >
+| < STRING: "\"" ( ~["\"","/","\\","\b","\f","\n","\r","\t"]
+                 | <ESCAPE>
+                 )* "\"" >
+
+| < NUMBER: ( <MINUS> )? <NUMBER_START> ( <NUMBER_DECIMAL> )? ( <NUMBER_EXPONENT> )? >
+| < #MINUS: "-">
+| < #NUMBER_START: "0" | ["1"-"9"] ( ["0"-"9"] )* >
+| < #NUMBER_DECIMAL: "." ( ["0"-"9"] )+ > 
+| < #NUMBER_EXPONENT: ["e","E"] ( ["+","-"] )? ( ["0"-"9"] )+ > 
+
+| < LBRACE: <W> "{" <W> >
+| < RBRACE: <W> "}" <W> >
+| < COLON: <W> ":" <W> >
+| < COMMA: <W> "," <W> >
+| < LSQUARE: <W> "[" <W> >
+| < RSQUARE: <W> "]" <W> >
+| < TRUE: "true" >
+| < FALSE: "false" >
+| < NULL: "null" >
+}
+
+<*> TOKEN:
+{
+  < UNKNOWN: ~[] >
+  {
+    s_aLogger.error("Illegal character: " + image.toString());
+  }
+}
+
+//
+// whole json
+//
+JsonNode json() #Root : {}
+{
+  ( <S> )*
+  value()
+  <EOF>
+  { return jjtThis; }
+}
+
+void value () : {}
+{
+  jstring()
+| jnumber()
+| jobject()
+| jarray()
+| jtrue()
+| jfalse()
+| jnull()
+}
+
+void jstring () : {}
+{
+  <STRING> { jjtThis.setText (token.image); }
+}
+
+void jnumber () : {}
+{
+  <NUMBER>
+  { jjtThis.setText (token.image); }
+}
+
+void jobjectElement () : {}
+{
+  jstring()
+  <COLON>
+  value()
+}
+
+void jobject () : {}
+{
+  <LBRACE>
+  jobjectElement()
+  ( <COMMA>
+    jobjectElement()
+  )*  
+  <RBRACE>
+}
+
+void jarray () : {}
+{
+  <LSQUARE>
+  value()
+  ( <COMMA>
+    value()
+  )*  
+  <RSQUARE>
+}
+
+void jtrue () : {}
+{
+  <TRUE> { jjtThis.setText (token.image); }
+}
+
+void jfalse () : {}
+{
+  <FALSE> { jjtThis.setText (token.image); }
+}
+
+void jnull () : {}
+{
+  <NULL> { jjtThis.setText (token.image); }
+}
