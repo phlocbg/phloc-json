@@ -51,7 +51,7 @@ public final class JsonReaderTest
     assertNotNull ("Failed: " + aValue, aJson);
     final String sJson = JsonWriter.getAsString (aJson);
     assertNotNull (sJson);
-    final IJson aJsonRead = JsonReader.parse (sJson);
+    final IJson aJsonRead = com.phloc.json2.parser.JsonReader.readFromString (sJson);
     assertNotNull (aJsonRead);
     final String sJsonRead = JsonWriter.getAsString (aJsonRead);
     assertNotNull (sJsonRead);

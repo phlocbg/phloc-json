@@ -108,7 +108,7 @@ SKIP :
 TOKEN :
 {
 // private reg ex come first (no actions possible!)
-  < #H: ["0"-"9","a"-"f"] >
+  < #H: ["0"-"9","a"-"f","A"-"F"] >
 | < #ESCAPE_UNICODE: "\\u" <H><H><H><H> >   
 | < #ESCAPE_OTHER: "\\" ["\"","/","\\","b","f","n","r","t"] >
 | < #ESCAPE: <ESCAPE_UNICODE>
