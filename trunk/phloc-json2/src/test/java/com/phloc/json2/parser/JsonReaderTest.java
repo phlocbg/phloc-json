@@ -50,8 +50,17 @@ public class JsonReaderTest
                                              "-1.5E15",
                                              "-1.0E15",
                                              "-1.00000E15",
-                                             "\"abc\"",
-                                             "\"ab\\tc\"" })
+                                             "\"abc'def'hgi\"",
+                                             "\"ab\\\"ab\\/ab\\\\aa\\bab\\nab\\fab\\rab\\nab\\tab\"",
+                                             "\"ab\\u1234ab\"",
+                                             "[]",
+                                             "[3]",
+                                             "[3,4,5]",
+                                             "[3,\"abc\",4,[],5]",
+                                             "{}",
+                                             "{\"key\":56}",
+                                             "{\"key\":56, \"value2\": \"abc\"}",
+                                             "  {  \"key\"  :  -1.00000E15  ,  \"value2\"  :  \"abc\"  }  " })
     {
       final IJson aJson = JsonReader.readFromString (sJson);
       assertNotNull ("Failed to parse: " + sJson, aJson);

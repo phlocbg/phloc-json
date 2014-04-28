@@ -27,6 +27,8 @@ import com.phloc.commons.annotations.Nonempty;
 import com.phloc.commons.string.StringParser;
 import com.phloc.json2.IJson;
 import com.phloc.json2.convert.JsonConverter;
+import com.phloc.json2.impl.JsonArray;
+import com.phloc.json2.impl.JsonObject;
 import com.phloc.json2.impl.JsonValue;
 
 /**
@@ -79,9 +81,34 @@ final class JsonNodeToDomainObject
       case ParserJsonTreeConstants.JJTJNUMBER:
         return JsonValue.create (StringParser.parseBigDecimal (aChildNode.getText ()));
       case ParserJsonTreeConstants.JJTJOBJECT:
-        break;
+      {
+        final int nObjectChildCount = aChildNode.jjtGetNumChildren ();
+        final JsonObject aObject = new JsonObject (nObjectChildCount);
+        for (int i = 0; i < nObjectChildCount; ++i)
+        {
+          final JsonNode aObjectChildNode = aChildNode.jjtGetChild (i);
+          _expectNodeType (aObjectChildNode, ParserJsonTreeConstants.JJTJOBJECTELEMENT);
+
+          final JsonNode aKeyNode = aObjectChildNode.jjtGetChild (0);
+          _expectNodeType (aKeyNode, ParserJsonTreeConstants.JJTJSTRING);
+          final JsonNode aValueNode = aObjectChildNode.jjtGetChild (1);
+          _expectNodeType (aValueNode, ParserJsonTreeConstants.JJTVALUE);
+
+          aObject.add (aKeyNode.getText (), _createValue (aValueNode));
+        }
+        return aObject;
+      }
       case ParserJsonTreeConstants.JJTJARRAY:
-        break;
+      {
+        final int nArrayChildCount = aChildNode.jjtGetNumChildren ();
+        final JsonArray aArray = new JsonArray (nArrayChildCount);
+        for (int i = 0; i < nArrayChildCount; ++i)
+        {
+          final JsonNode aArrayChildNode = aChildNode.jjtGetChild (i);
+          aArray.add (_createValue (aArrayChildNode));
+        }
+        return aArray;
+      }
       case ParserJsonTreeConstants.JJTJTRUE:
         return JsonValue.TRUE;
       case ParserJsonTreeConstants.JJTJFALSE:
@@ -91,8 +118,6 @@ final class JsonNodeToDomainObject
       default:
         throw new JsonHandlingException (aNode, "Unexpected value child: " + aChildNode.getNodeType ());
     }
-
-    return null;
   }
 
   @Nonnull
