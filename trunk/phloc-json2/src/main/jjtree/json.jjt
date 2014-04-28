@@ -115,7 +115,7 @@ TOKEN :
            | <ESCAPE_OTHER> >
 | < STRING: "\"" ( ~["\"","/","\\","\b","\f","\n","\r","\t"]
                  | <ESCAPE>
-                 )* "\"" >
+                 )* "\"" > { matchedToken.image = ParseUtils.unescapeString(image); }
 
 | < NUMBER: ( <MINUS> )? <NUMBER_START> ( <NUMBER_DECIMAL> )? ( <NUMBER_EXPONENT> )? >
 | < #MINUS: "-">
