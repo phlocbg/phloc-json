@@ -185,20 +185,22 @@ void jobjectElement () : {}
 void jobject () : {}
 {
   <LBRACE>
-  jobjectElement()
-  ( <COMMA>
-    jobjectElement()
-  )*  
+  ( jobjectElement()
+    ( <COMMA>
+      jobjectElement()
+    )*
+  )?    
   <RBRACE>
 }
 
 void jarray () : {}
 {
   <LSQUARE>
-  value()
-  ( <COMMA>
-    value()
-  )*  
+  ( value()
+    ( <COMMA>
+      value()
+    )*
+  )?    
   <RSQUARE>
 }
 
