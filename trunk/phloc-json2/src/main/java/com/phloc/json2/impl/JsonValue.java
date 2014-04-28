@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
+import com.phloc.commons.ValueEnforcer;
 import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.io.streams.NonBlockingStringWriter;
@@ -35,8 +36,7 @@ import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.json2.IJsonValue;
 import com.phloc.json2.IJsonValueSerializer;
-import com.phloc.json2.serialize.JsonReadException;
-import com.phloc.json2.serialize.JsonReader;
+import com.phloc.json2.parser.JsonReader;
 import com.phloc.json2.serialize.JsonValueSerializerConstant;
 import com.phloc.json2.serialize.JsonValueSerializerEscaped;
 import com.phloc.json2.serialize.JsonValueSerializerToString;
@@ -75,10 +75,8 @@ public class JsonValue implements IJsonValue
 
   private JsonValue (@Nullable final Object aValue, @Nonnull final IJsonValueSerializer aValueSerializer)
   {
-    if (aValueSerializer == null)
-      throw new NullPointerException ("ValueSerializer");
     m_aValue = aValue;
-    m_aValueSerializer = aValueSerializer;
+    m_aValueSerializer = ValueEnforcer.notNull (aValueSerializer, "ValueSerializer");
   }
 
   private void writeObject (@Nonnull final ObjectOutputStream aOOS) throws IOException
@@ -91,16 +89,9 @@ public class JsonValue implements IJsonValue
   private void readObject (@Nonnull final ObjectInputStream aOIS) throws IOException
   {
     final String sJson = aOIS.readUTF ();
-    try
-    {
-      final JsonValue aValue = JsonReader.parseAsValue (sJson);
-      m_aValue = aValue.m_aValue;
-      m_aValueSerializer = aValue.m_aValueSerializer;
-    }
-    catch (final JsonReadException ex)
-    {
-      throw new IOException ("Failed to deserialize Json string '" + sJson + "'", ex);
-    }
+    final JsonValue aJson = (JsonValue) JsonReader.readFromString (sJson);
+    m_aValue = aJson.m_aValue;
+    m_aValueSerializer = aJson.m_aValueSerializer;
   }
 
   public boolean isArray ()

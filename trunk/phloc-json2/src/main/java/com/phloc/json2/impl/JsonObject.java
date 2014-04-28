@@ -44,8 +44,7 @@ import com.phloc.json2.IJsonArray;
 import com.phloc.json2.IJsonObject;
 import com.phloc.json2.IJsonValue;
 import com.phloc.json2.convert.JsonConverter;
-import com.phloc.json2.serialize.JsonReadException;
-import com.phloc.json2.serialize.JsonReader;
+import com.phloc.json2.parser.JsonReader;
 import com.phloc.json2.serialize.JsonWriter;
 
 /**
@@ -80,14 +79,8 @@ public class JsonObject implements IJsonObject
     final int nInitialSize = aOIS.readInt ();
     m_aValues = new LinkedHashMap <String, IJson> (nInitialSize);
     final String sJson = aOIS.readUTF ();
-    try
-    {
-      JsonReader.parseAsObject (sJson, this);
-    }
-    catch (final JsonReadException ex)
-    {
-      throw new IOException ("Failed to deserialize Json string '" + sJson + "'", ex);
-    }
+    final JsonObject aJson = (JsonObject) JsonReader.readFromString (sJson);
+    m_aValues.putAll (aJson.m_aValues);
   }
 
   public boolean isArray ()
