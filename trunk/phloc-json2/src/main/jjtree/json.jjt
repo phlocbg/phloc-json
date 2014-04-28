@@ -118,7 +118,7 @@ TOKEN :
                  )* "\"" > { matchedToken.image = ParseUtils.unescapeString(image); }
 
 | < NUMBER_DEC: ( <MINUS> )? <NUMBER_START> <NUMBER_DECIMAL> ( <NUMBER_EXPONENT> )? >
-| < NUMBER: ( <MINUS> )? <NUMBER_START> ( <NUMBER_EXPONENT> )? >
+| < NUMBER_INT: ( <MINUS> )? <NUMBER_START> ( <NUMBER_EXPONENT> )? >
 | < #MINUS: "-">
 | < #NUMBER_START: "0" | ["1"-"9"] ( ["0"-"9"] )* >
 | < #NUMBER_DECIMAL: "." ( ["0"-"9"] )+ > 
@@ -157,8 +157,8 @@ JsonNode json() #Root : {}
 void value () : {}
 {
   jstring()
-| jnumber()
-| jnumberDec()
+| jnumberInteger()
+| jnumberDecimal()
 | jobject()
 | jarray()
 | jtrue()
@@ -171,13 +171,13 @@ void jstring () : {}
   <STRING> { jjtThis.setText (token.image); }
 }
 
-void jnumber () : {}
+void jnumberInteger () : {}
 {
-  <NUMBER>
+  <NUMBER_INT>
   { jjtThis.setText (token.image); }
 }
 
-void jnumberDec () : {}
+void jnumberDecimal () : {}
 {
   <NUMBER_DEC>
   { jjtThis.setText (token.image); }

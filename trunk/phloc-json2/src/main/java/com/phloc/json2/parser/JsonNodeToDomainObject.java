@@ -78,9 +78,9 @@ final class JsonNodeToDomainObject
     {
       case ParserJsonTreeConstants.JJTJSTRING:
         return JsonConverter.convertToJson (aChildNode.getText ());
-      case ParserJsonTreeConstants.JJTJNUMBER:
+      case ParserJsonTreeConstants.JJTJNUMBERINTEGER:
         return JsonValue.create (StringParser.parseBigInteger (aChildNode.getText ()));
-      case ParserJsonTreeConstants.JJTJNUMBERDEC:
+      case ParserJsonTreeConstants.JJTJNUMBERDECIMAL:
         return JsonValue.create (StringParser.parseBigDecimal (aChildNode.getText ()));
       case ParserJsonTreeConstants.JJTJOBJECT:
       {
