@@ -33,8 +33,7 @@ import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.mock.PhlocTestUtils;
 import com.phloc.json2.IJson;
 import com.phloc.json2.convert.JsonConverter;
-import com.phloc.json2.serialize.JsonReadException;
-import com.phloc.json2.serialize.JsonReader;
+import com.phloc.json2.parser.JsonReader;
 import com.phloc.json2.serialize.JsonWriter;
 
 /**
@@ -44,19 +43,19 @@ import com.phloc.json2.serialize.JsonWriter;
  */
 public final class EqualsHashcodeTest
 {
-  private void _testEqualsHashcode (@Nullable final Object aValue) throws JsonReadException
+  private void _testEqualsHashcode (@Nullable final Object aValue)
   {
     final IJson aJson = JsonConverter.convertToJson (aValue);
     assertNotNull ("Failed: " + aValue, aJson);
     final String sJson = JsonWriter.getAsString (aJson);
     assertNotNull (sJson);
-    final IJson aJsonRead = JsonReader.parse (sJson);
+    final IJson aJsonRead = JsonReader.readFromString (sJson);
     assertNotNull (aJsonRead);
     PhlocTestUtils.testDefaultImplementationWithEqualContentObject (aJson, aJsonRead);
   }
 
   @Test
-  public void testSimpleValues () throws JsonReadException
+  public void testSimpleValues ()
   {
     _testEqualsHashcode (Integer.valueOf (15));
     _testEqualsHashcode (Long.valueOf (Long.MAX_VALUE));
@@ -65,7 +64,7 @@ public final class EqualsHashcodeTest
   }
 
   @Test
-  public void testArray () throws JsonReadException
+  public void testArray ()
   {
     _testEqualsHashcode (new boolean [] { true, false, true });
     _testEqualsHashcode (new byte [] { 0, 1, 2 });
@@ -80,7 +79,7 @@ public final class EqualsHashcodeTest
   }
 
   @Test
-  public void testMap () throws JsonReadException
+  public void testMap ()
   {
     final Map <String, Object> aMap = new HashMap <String, Object> ();
     aMap.put ("foo", "bar");

@@ -45,7 +45,7 @@ import com.phloc.json2.convert.JsonConverter;
  */
 public final class JsonReaderTest
 {
-  private void _testWriteAndRead (@Nullable final Object aValue) throws JsonReadException
+  private void _testWriteAndRead (@Nullable final Object aValue)
   {
     final IJson aJson = JsonConverter.convertToJson (aValue);
     assertNotNull ("Failed: " + aValue, aJson);
@@ -59,7 +59,7 @@ public final class JsonReaderTest
   }
 
   @Test
-  public void testSimpleValues () throws JsonReadException
+  public void testSimpleValues ()
   {
     _testWriteAndRead (null);
     _testWriteAndRead (Boolean.TRUE);
@@ -95,7 +95,7 @@ public final class JsonReaderTest
   }
 
   @Test
-  public void testArray () throws JsonReadException
+  public void testArray ()
   {
     _testWriteAndRead (new boolean [] { true, false, true });
     _testWriteAndRead (new byte [] { 0, 1, 2 });
@@ -110,7 +110,7 @@ public final class JsonReaderTest
   }
 
   @Test
-  public void testMap () throws JsonReadException
+  public void testMap ()
   {
     final Map <String, Object> aMap = new HashMap <String, Object> ();
     aMap.put ("foo", "bar");
