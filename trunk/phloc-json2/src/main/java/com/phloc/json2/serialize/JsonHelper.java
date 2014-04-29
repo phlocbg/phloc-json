@@ -162,7 +162,7 @@ public final class JsonHelper
     {
       final char [] aInput = sInput.toCharArray ();
       if (!StringHelper.containsAny (aInput, CHARS_TO_MASK))
-        aWriter.write (sInput);
+        aWriter.write (aInput, 0, aInput.length);
       else
         _escape (aInput, aWriter);
     }
