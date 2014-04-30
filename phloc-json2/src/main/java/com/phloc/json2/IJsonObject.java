@@ -146,6 +146,14 @@ public interface IJsonObject extends IJsonCollection, Iterable <Map.Entry <Strin
   IJsonObject getObject (@Nullable String sName);
 
   /**
+   * @return A copy of all contained names. Never <code>null</code> but maybe
+   *         empty.
+   */
+  @Nonnull
+  @ReturnsMutableCopy
+  Set <String> getAllNames ();
+
+  /**
    * @return A copy of all contained items. Never <code>null</code> but maybe
    *         empty.
    */
