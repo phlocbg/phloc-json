@@ -77,6 +77,14 @@ public interface IJsonValue extends IJson
    */
   boolean isNullValue ();
 
+  boolean isBooleanValue ();
+
+  boolean isIntValue ();
+
+  boolean isDecimalValue ();
+
+  boolean isStringValue ();
+
   /**
    * @return The serializer to be used. Never <code>null</code>.
    */

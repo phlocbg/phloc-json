@@ -142,6 +142,26 @@ public class JsonValue implements IJsonValue
     return m_aValue == null;
   }
 
+  public boolean isBooleanValue ()
+  {
+    return this == TRUE || this == FALSE;
+  }
+
+  public boolean isIntValue ()
+  {
+    return m_aValue instanceof BigInteger;
+  }
+
+  public boolean isDecimalValue ()
+  {
+    return m_aValue instanceof BigDecimal;
+  }
+
+  public boolean isStringValue ()
+  {
+    return m_aValue instanceof String;
+  }
+
   @Nonnull
   public IJsonValueSerializer getValueSerializer ()
   {
