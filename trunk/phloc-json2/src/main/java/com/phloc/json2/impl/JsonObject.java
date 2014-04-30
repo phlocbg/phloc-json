@@ -231,7 +231,7 @@ public class JsonObject implements IJsonObject
   @ReturnsMutableCopy
   public Set <String> keySet ()
   {
-    return ContainerHelper.newSet (m_aValues.keySet ());
+    return ContainerHelper.newOrderedSet (m_aValues.keySet ());
   }
 
   @Nonnull
@@ -270,16 +270,9 @@ public class JsonObject implements IJsonObject
 
   @Nonnull
   @ReturnsMutableCopy
-  public Set <String> getAllNames ()
-  {
-    return ContainerHelper.newSet (m_aValues.keySet ());
-  }
-
-  @Nonnull
-  @ReturnsMutableCopy
   public Map <String, IJson> getAll ()
   {
-    return ContainerHelper.newMap (m_aValues);
+    return ContainerHelper.newOrderedMap (m_aValues);
   }
 
   @Nonnull
