@@ -19,4 +19,16 @@
 -->
 <FindBugsFilter>
   <!-- Docs: http://findbugs.sourceforge.net/manual/filter.html -->
+  <Match>
+    <Class name="com.phloc.json2.parser.ParseException" />
+  </Match>
+  <Match>
+    <Class name="~com\.phloc\.json2\.parser\.ParserJson*" />
+  </Match>
+  <Match>
+    <Class name="com.phloc.json2.parser.SimpleNode" />
+  </Match>
+  <Match>
+    <Class name="com.phloc.json2.parser.TokenMgrError" />
+  </Match>
 </FindBugsFilter>
