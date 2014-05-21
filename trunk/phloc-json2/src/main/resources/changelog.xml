@@ -20,6 +20,17 @@
 -->
 <changelog xmlns="http://www.phloc.com/ns/changelog/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-json2">
+  <entry date="2014-05-21" category="tech" action="change">
+    <change>
+      <text locale="en">Using a JavaCC generated parser instead of Jackson</text>
+    </change>
+  </entry>
+  <release date="2014-05-21" version="1.0.4" />
+  <entry date="2014-05-21" category="tech" action="change">
+    <change>
+      <text locale="en">Prepared for Maven central release</text>
+    </change>
+  </entry>
   <entry date="2014-04-17" category="tech" action="update">
     <change>
       <text locale="en">Updated to Jackson 2.3.3</text>
