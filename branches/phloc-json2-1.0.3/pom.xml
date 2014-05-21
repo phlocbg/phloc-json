@@ -11,6 +11,7 @@
   <version>1.0.4-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>phloc-json2</name>
+  <description>Library for reading and creating JSON documents</description>
   <url>http://repo.phloc.com/apidocs/phloc-json2/${project.version}</url>
      
   <licenses>
