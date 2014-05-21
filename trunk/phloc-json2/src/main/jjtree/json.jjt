@@ -51,13 +51,6 @@ public class ParserJson
 {
   private static final org.slf4j.Logger s_aLogger = org.slf4j.LoggerFactory.getLogger (ParserJson.class);
   
-  private com.phloc.json2.parser.errorhandler.IJsonParseErrorHandler m_aCustomErrorHandler;
-  
-  public void setCustomErrorHandler (final com.phloc.json2.parser.errorhandler.IJsonParseErrorHandler aCustomErrorHandler)
-  {
-    m_aCustomErrorHandler = aCustomErrorHandler;
-  }
-  
   // Used when NODE_SCOPE_HOOK is true - for debugging only
   // Package scope to avoid warning when NODE_SCOPE_HOOK is false
   void jjtreeOpenNodeScope (final Node aNode)
