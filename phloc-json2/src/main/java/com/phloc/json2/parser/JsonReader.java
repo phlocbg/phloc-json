@@ -48,10 +48,8 @@ import com.phloc.commons.io.streams.NonBlockingStringReader;
 import com.phloc.commons.io.streams.StreamUtils;
 import com.phloc.json2.IJson;
 import com.phloc.json2.parser.errorhandler.DoNothingJsonParseExceptionHandler;
-import com.phloc.json2.parser.errorhandler.IJsonParseErrorHandler;
 import com.phloc.json2.parser.errorhandler.IJsonParseExceptionHandler;
 import com.phloc.json2.parser.errorhandler.LoggingJsonParseExceptionHandler;
-import com.phloc.json2.parser.errorhandler.ThrowingJsonParseErrorHandler;
 
 /**
  * This is the central user class for reading and parsing Json from different
@@ -67,10 +65,6 @@ public final class JsonReader
   private static final Logger s_aLogger = LoggerFactory.getLogger (JsonReader.class);
   private static final ReadWriteLock s_aRWLock = new ReentrantReadWriteLock ();
 
-  // Use the ThrowingJsonParseErrorHandler for maximum backward compatibility
-  @GuardedBy ("s_aRWLock")
-  private static IJsonParseErrorHandler s_aDefaultParseErrorHandler = ThrowingJsonParseErrorHandler.getInstance ();
-
   // Use the LoggingJsonParseExceptionHandler for maximum backward compatibility
   @GuardedBy ("s_aRWLock")
   private static IJsonParseExceptionHandler s_aDefaultParseExceptionHandler = new LoggingJsonParseExceptionHandler ();
@@ -81,45 +75,6 @@ public final class JsonReader
 
   private JsonReader ()
   {}
-
-  /**
-   * @return The default Json parse error handler. May be <code>null</code>. For
-   *         backwards compatibility reasons this is be default an instance of
-   *         {@link ThrowingJsonParseErrorHandler}.
-   */
-  @Nullable
-  public static IJsonParseErrorHandler getDefaultParseErrorHandler ()
-  {
-    s_aRWLock.readLock ().lock ();
-    try
-    {
-      return s_aDefaultParseErrorHandler;
-    }
-    finally
-    {
-      s_aRWLock.readLock ().unlock ();
-    }
-  }
-
-  /**
-   * Set the default Json parse error handler (for recoverable errors).
-   * 
-   * @param aDefaultParseErrorHandler
-   *        The new default error handler to be used. May be <code>null</code>
-   *        to indicate that no special error handler should be used.
-   */
-  public static void setDefaultParseErrorHandler (@Nullable final IJsonParseErrorHandler aDefaultParseErrorHandler)
-  {
-    s_aRWLock.writeLock ().lock ();
-    try
-    {
-      s_aDefaultParseErrorHandler = aDefaultParseErrorHandler;
-    }
-    finally
-    {
-      s_aRWLock.writeLock ().unlock ();
-    }
-  }
 
   /**
    * @return The default Json parse exception handler. May not be
@@ -167,8 +122,6 @@ public final class JsonReader
    * 
    * @param aStream
    *        The stream to read from. May not be <code>null</code>.
-   * @param aCustomErrorHandler
-   *        A custom handler for recoverable errors. May be <code>null</code>.
    * @param aCustomExceptionHandler
    *        A custom handler for unrecoverable errors. May not be
    *        <code>null</code>.
@@ -180,12 +133,10 @@ public final class JsonReader
    */
   @Nullable
   private static JsonNode _readJson (@Nonnull final CharStream aStream,
-                                     @Nullable final IJsonParseErrorHandler aCustomErrorHandler,
                                      @Nonnull final IJsonParseExceptionHandler aCustomExceptionHandler)
   {
     final ParserJsonTokenManager aTokenHdl = new ParserJsonTokenManager (aStream);
     final ParserJson aParser = new ParserJson (aTokenHdl);
-    aParser.setCustomErrorHandler (aCustomErrorHandler);
     try
     {
       // Main parsing
@@ -345,9 +296,7 @@ public final class JsonReader
     try
     {
       final JsonCharStream aCharStream = new JsonCharStream (aReader);
-      final JsonNode aNode = _readJson (aCharStream,
-                                        getDefaultParseErrorHandler (),
-                                        DoNothingJsonParseExceptionHandler.getInstance ());
+      final JsonNode aNode = _readJson (aCharStream, DoNothingJsonParseExceptionHandler.getInstance ());
       return aNode != null;
     }
     finally
@@ -371,30 +320,7 @@ public final class JsonReader
   @Nullable
   public static IJson readFromString (@Nonnull final String sJson, @Nonnull final Charset aFallbackCharset)
   {
-    return readFromString (sJson, aFallbackCharset, null, null);
-  }
-
-  /**
-   * Read the Json from the passed String using a byte stream.
-   * 
-   * @param sJson
-   *        The source string containing the Json to be parsed. May not be
-   *        <code>null</code>.
-   * @param aFallbackCharset
-   *        The charset to be used in case no BOM is present. May not be
-   *        <code>null</code>.
-   * @param aCustomErrorHandler
-   *        An optional custom error handler that can be used to collect the
-   *        recoverable parsing errors. May be <code>null</code>.
-   * @return <code>null</code> if reading failed, the Json declarations
-   *         otherwise.
-   */
-  @Nullable
-  public static IJson readFromString (@Nonnull final String sJson,
-                                      @Nonnull final Charset aFallbackCharset,
-                                      @Nullable final IJsonParseErrorHandler aCustomErrorHandler)
-  {
-    return readFromString (sJson, aFallbackCharset, aCustomErrorHandler, null);
+    return readFromString (sJson, aFallbackCharset, null);
   }
 
   /**
@@ -415,38 +341,10 @@ public final class JsonReader
   @Nullable
   public static IJson readFromString (@Nonnull final String sJson,
                                       @Nonnull final Charset aFallbackCharset,
-                                      @Nullable final IJsonParseExceptionHandler aCustomExceptionHandler)
-  {
-    return readFromString (sJson, aFallbackCharset, null, aCustomExceptionHandler);
-  }
-
-  /**
-   * Read the Json from the passed String using a byte stream.
-   * 
-   * @param sJson
-   *        The source string containing the Json to be parsed. May not be
-   *        <code>null</code>.
-   * @param aFallbackCharset
-   *        The charset to be used in case no BOM is present. May not be
-   *        <code>null</code>.
-   * @param aCustomErrorHandler
-   *        An optional custom error handler that can be used to collect the
-   *        recoverable parsing errors. May be <code>null</code>.
-   * @param aCustomExceptionHandler
-   *        An optional custom exception handler that can be used to collect the
-   *        unrecoverable parsing errors. May be <code>null</code>.
-   * @return <code>null</code> if reading failed, the Json declarations
-   *         otherwise.
-   */
-  @Nullable
-  public static IJson readFromString (@Nonnull final String sJson,
-                                      @Nonnull final Charset aFallbackCharset,
-                                      @Nullable final IJsonParseErrorHandler aCustomErrorHandler,
                                       @Nullable final IJsonParseExceptionHandler aCustomExceptionHandler)
   {
     return readFromStream (new StringInputStreamProvider (sJson, aFallbackCharset),
                            aFallbackCharset,
-                           aCustomErrorHandler,
                            aCustomExceptionHandler);
   }
 
@@ -463,49 +361,7 @@ public final class JsonReader
   @Nullable
   public static IJson readFromString (@Nonnull final String sJson)
   {
-    return readFromReader (new NonBlockingStringReader (sJson),
-                           (IJsonParseErrorHandler) null,
-                           (IJsonParseExceptionHandler) null);
-  }
-
-  /**
-   * Read the Json from the passed String using a character stream. An
-   * eventually contained <code>@charset</code> rule is ignored.
-   * 
-   * @param sJson
-   *        The source string containing the Json to be parsed. May not be
-   *        <code>null</code>.
-   * @param aCustomErrorHandler
-   *        An optional custom error handler that can be used to collect the
-   *        recoverable parsing errors. May be <code>null</code>.
-   * @return <code>null</code> if reading failed, the Json declarations
-   *         otherwise.
-   */
-  @Nullable
-  public static IJson readFromString (@Nonnull final String sJson,
-                                      @Nullable final IJsonParseErrorHandler aCustomErrorHandler)
-  {
-    return readFromReader (new NonBlockingStringReader (sJson), aCustomErrorHandler, (IJsonParseExceptionHandler) null);
-  }
-
-  /**
-   * Read the Json from the passed String using a character stream. An
-   * eventually contained <code>@charset</code> rule is ignored.
-   * 
-   * @param sJson
-   *        The source string containing the Json to be parsed. May not be
-   *        <code>null</code>.
-   * @param aCustomExceptionHandler
-   *        An optional custom exception handler that can be used to collect the
-   *        unrecoverable parsing errors. May be <code>null</code>.
-   * @return <code>null</code> if reading failed, the Json declarations
-   *         otherwise.
-   */
-  @Nullable
-  public static IJson readFromString (@Nonnull final String sJson,
-                                      @Nullable final IJsonParseExceptionHandler aCustomExceptionHandler)
-  {
-    return readFromReader (new NonBlockingStringReader (sJson), (IJsonParseErrorHandler) null, aCustomExceptionHandler);
+    return readFromReader (new NonBlockingStringReader (sJson), (IJsonParseExceptionHandler) null);
   }
 
   /**
@@ -514,9 +370,6 @@ public final class JsonReader
    * @param sJson
    *        The source string containing the Json to be parsed. May not be
    *        <code>null</code>.
-   * @param aCustomErrorHandler
-   *        An optional custom error handler that can be used to collect the
-   *        recoverable parsing errors. May be <code>null</code>.
    * @param aCustomExceptionHandler
    *        An optional custom exception handler that can be used to collect the
    *        unrecoverable parsing errors. May be <code>null</code>.
@@ -525,10 +378,9 @@ public final class JsonReader
    */
   @Nullable
   public static IJson readFromString (@Nonnull final String sJson,
-                                      @Nullable final IJsonParseErrorHandler aCustomErrorHandler,
                                       @Nullable final IJsonParseExceptionHandler aCustomExceptionHandler)
   {
-    return readFromReader (new NonBlockingStringReader (sJson), aCustomErrorHandler, aCustomExceptionHandler);
+    return readFromReader (new NonBlockingStringReader (sJson), aCustomExceptionHandler);
   }
 
   /**
@@ -561,30 +413,7 @@ public final class JsonReader
   @Nullable
   public static IJson readFromFile (@Nonnull final File aFile, @Nonnull final Charset aFallbackCharset)
   {
-    return readFromFile (aFile, aFallbackCharset, null, null);
-  }
-
-  /**
-   * Read the Json from the passed File.
-   * 
-   * @param aFile
-   *        The file containing the Json to be parsed. May not be
-   *        <code>null</code>.
-   * @param aFallbackCharset
-   *        The charset to be used in case no BOM is present. May not be
-   *        <code>null</code>.
-   * @param aCustomErrorHandler
-   *        An optional custom error handler that can be used to collect the
-   *        recoverable parsing errors. May be <code>null</code>.
-   * @return <code>null</code> if reading failed, the Json declarations
-   *         otherwise.
-   */
-  @Nullable
-  public static IJson readFromFile (@Nonnull final File aFile,
-                                    @Nonnull final Charset aFallbackCharset,
-                                    @Nullable final IJsonParseErrorHandler aCustomErrorHandler)
-  {
-    return readFromFile (aFile, aFallbackCharset, aCustomErrorHandler, null);
+    return readFromFile (aFile, aFallbackCharset, null);
   }
 
   /**
@@ -607,37 +436,7 @@ public final class JsonReader
                                     @Nonnull final Charset aFallbackCharset,
                                     @Nullable final IJsonParseExceptionHandler aCustomExceptionHandler)
   {
-    return readFromStream (new FileSystemResource (aFile), aFallbackCharset, null, aCustomExceptionHandler);
-  }
-
-  /**
-   * Read the Json from the passed File.
-   * 
-   * @param aFile
-   *        The file containing the Json to be parsed. May not be
-   *        <code>null</code>.
-   * @param aFallbackCharset
-   *        The charset to be used in case no BOM is present. May not be
-   *        <code>null</code>.
-   * @param aCustomErrorHandler
-   *        An optional custom error handler that can be used to collect the
-   *        recoverable parsing errors. May be <code>null</code>.
-   * @param aCustomExceptionHandler
-   *        An optional custom exception handler that can be used to collect the
-   *        unrecoverable parsing errors. May be <code>null</code>.
-   * @return <code>null</code> if reading failed, the Json declarations
-   *         otherwise.
-   */
-  @Nullable
-  public static IJson readFromFile (@Nonnull final File aFile,
-                                    @Nonnull final Charset aFallbackCharset,
-                                    @Nullable final IJsonParseErrorHandler aCustomErrorHandler,
-                                    @Nullable final IJsonParseExceptionHandler aCustomExceptionHandler)
-  {
-    return readFromStream (new FileSystemResource (aFile),
-                           aFallbackCharset,
-                           aCustomErrorHandler,
-                           aCustomExceptionHandler);
+    return readFromStream (new FileSystemResource (aFile), aFallbackCharset, aCustomExceptionHandler);
   }
 
   /**
@@ -669,29 +468,7 @@ public final class JsonReader
   @Nullable
   public static IJson readFromStream (@Nonnull final IInputStreamProvider aISP, @Nonnull final Charset aFallbackCharset)
   {
-    return readFromStream (aISP, aFallbackCharset, null, null);
-  }
-
-  /**
-   * Read the Json from the passed {@link IInputStreamProvider}.
-   * 
-   * @param aISP
-   *        The input stream provider to use. May not be <code>null</code>.
-   * @param aFallbackCharset
-   *        The charset to be used in case no BOM is present. May not be
-   *        <code>null</code>.
-   * @param aCustomErrorHandler
-   *        An optional custom error handler that can be used to collect the
-   *        recoverable parsing errors. May be <code>null</code>.
-   * @return <code>null</code> if reading failed, the Json declarations
-   *         otherwise.
-   */
-  @Nullable
-  public static IJson readFromStream (@Nonnull final IInputStreamProvider aISP,
-                                      @Nonnull final Charset aFallbackCharset,
-                                      @Nullable final IJsonParseErrorHandler aCustomErrorHandler)
-  {
-    return readFromStream (aISP, aFallbackCharset, aCustomErrorHandler, null);
+    return readFromStream (aISP, aFallbackCharset, null);
   }
 
   /**
@@ -702,9 +479,6 @@ public final class JsonReader
    * @param aFallbackCharset
    *        The charset to be used in case no BOM is present. May not be
    *        <code>null</code>.
-   * @param aCustomErrorHandler
-   *        An optional custom error handler that can be used to collect the
-   *        recoverable parsing errors. May be <code>null</code>.
    * @param aCustomExceptionHandler
    *        An optional custom exception handler that can be used to collect the
    *        unrecoverable parsing errors. May be <code>null</code>.
@@ -714,14 +488,13 @@ public final class JsonReader
   @Nullable
   public static IJson readFromStream (@Nonnull final IInputStreamProvider aISP,
                                       @Nonnull final Charset aFallbackCharset,
-                                      @Nullable final IJsonParseErrorHandler aCustomErrorHandler,
                                       @Nullable final IJsonParseExceptionHandler aCustomExceptionHandler)
   {
     ValueEnforcer.notNull (aISP, "InputStreamProvider");
     final InputStream aIS = aISP.getInputStream ();
     if (aIS == null)
       return null;
-    return readFromStream (aIS, aFallbackCharset, aCustomErrorHandler, aCustomExceptionHandler);
+    return readFromStream (aIS, aFallbackCharset, aCustomExceptionHandler);
   }
 
   /**
@@ -753,29 +526,7 @@ public final class JsonReader
   @Nullable
   public static IJson readFromStream (@Nonnull final InputStream aIS, @Nonnull final Charset aFallbackCharset)
   {
-    return readFromStream (aIS, aFallbackCharset, null, null);
-  }
-
-  /**
-   * Read the Json from the passed {@link InputStream}.
-   * 
-   * @param aIS
-   *        The input stream to use. May not be <code>null</code>.
-   * @param aFallbackCharset
-   *        The charset to be used in case no BOM is present. May not be
-   *        <code>null</code>.
-   * @param aCustomErrorHandler
-   *        An optional custom error handler that can be used to collect the
-   *        recoverable parsing errors. May be <code>null</code>.
-   * @return <code>null</code> if reading failed, the Json declarations
-   *         otherwise.
-   */
-  @Nullable
-  public static IJson readFromStream (@Nonnull final InputStream aIS,
-                                      @Nonnull final Charset aFallbackCharset,
-                                      @Nullable final IJsonParseErrorHandler aCustomErrorHandler)
-  {
-    return readFromStream (aIS, aFallbackCharset, aCustomErrorHandler, null);
+    return readFromStream (aIS, aFallbackCharset, null);
   }
 
   /**
@@ -849,32 +600,6 @@ public final class JsonReader
                                       @Nonnull final Charset aFallbackCharset,
                                       @Nullable final IJsonParseExceptionHandler aCustomExceptionHandler)
   {
-    return readFromStream (aIS, aFallbackCharset, null, aCustomExceptionHandler);
-  }
-
-  /**
-   * Read the Json from the passed {@link InputStream}.
-   * 
-   * @param aIS
-   *        The input stream to use. May not be <code>null</code>.
-   * @param aFallbackCharset
-   *        The charset to be used in case no BOM is present. May not be
-   *        <code>null</code>.
-   * @param aCustomErrorHandler
-   *        An optional custom error handler that can be used to collect the
-   *        recoverable parsing errors. May be <code>null</code>.
-   * @param aCustomExceptionHandler
-   *        An optional custom exception handler that can be used to collect the
-   *        unrecoverable parsing errors. May be <code>null</code>.
-   * @return <code>null</code> if reading failed, the Json declarations
-   *         otherwise.
-   */
-  @Nullable
-  public static IJson readFromStream (@Nonnull final InputStream aIS,
-                                      @Nonnull final Charset aFallbackCharset,
-                                      @Nullable final IJsonParseErrorHandler aCustomErrorHandler,
-                                      @Nullable final IJsonParseExceptionHandler aCustomExceptionHandler)
-  {
     ValueEnforcer.notNull (aIS, "InputStream");
     ValueEnforcer.notNull (aFallbackCharset, "FallbackCharset");
 
@@ -893,13 +618,10 @@ public final class JsonReader
     {
       final JsonCharStream aCharStream = new JsonCharStream (StreamUtils.createReader (aISToUse, aCharsetToUse));
 
-      // Use the default Json parse error handler if none is provided
-      final IJsonParseErrorHandler aRealErrorHandler = aCustomErrorHandler == null ? getDefaultParseErrorHandler ()
-                                                                                  : aCustomErrorHandler;
       // Use the default Json exception handler if none is provided
       final IJsonParseExceptionHandler aRealExceptionHandler = aCustomExceptionHandler == null ? getDefaultParseExceptionHandler ()
                                                                                               : aCustomExceptionHandler;
-      final JsonNode aNode = _readJson (aCharStream, aRealErrorHandler, aRealExceptionHandler);
+      final JsonNode aNode = _readJson (aCharStream, aRealExceptionHandler);
 
       // Failed to interpret content as Json?
       if (aNode == null)
@@ -926,7 +648,7 @@ public final class JsonReader
   @Nullable
   public static IJson readFromReader (@Nonnull final Reader aReader)
   {
-    return readFromReader (aReader, null, null);
+    return readFromReader (aReader, null);
   }
 
   /**
@@ -934,9 +656,6 @@ public final class JsonReader
    * 
    * @param aReader
    *        The reader to use. May not be <code>null</code>.
-   * @param aCustomErrorHandler
-   *        An optional custom error handler that can be used to collect the
-   *        recoverable parsing errors. May be <code>null</code>.
    * @param aCustomExceptionHandler
    *        An optional custom exception handler that can be used to collect the
    *        unrecoverable parsing errors. May be <code>null</code>.
@@ -945,7 +664,6 @@ public final class JsonReader
    */
   @Nullable
   public static IJson readFromReader (@Nonnull final Reader aReader,
-                                      @Nullable final IJsonParseErrorHandler aCustomErrorHandler,
                                       @Nullable final IJsonParseExceptionHandler aCustomExceptionHandler)
   {
     ValueEnforcer.notNull (aReader, "Reader");
@@ -955,13 +673,12 @@ public final class JsonReader
     try
     {
       final JsonCharStream aCharStream = new JsonCharStream (aReader);
-      // Use the default Json parse error handler if none is provided
-      final IJsonParseErrorHandler aRealErrorHandler = aCustomErrorHandler == null ? getDefaultParseErrorHandler ()
-                                                                                  : aCustomErrorHandler;
+
       // Use the default Json exception handler if none is provided
       final IJsonParseExceptionHandler aRealExceptionHandler = aCustomExceptionHandler == null ? getDefaultParseExceptionHandler ()
                                                                                               : aCustomExceptionHandler;
-      final JsonNode aNode = _readJson (aCharStream, aRealErrorHandler, aRealExceptionHandler);
+
+      final JsonNode aNode = _readJson (aCharStream, aRealExceptionHandler);
 
       // Failed to interpret content as Json?
       if (aNode == null)
