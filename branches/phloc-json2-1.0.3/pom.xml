@@ -8,7 +8,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>phloc-json2</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>phloc-json2</name>
   <description>Library for reading and creating JSON documents</description>
@@ -23,9 +23,9 @@
   </licenses>
   
   <scm>
-    <url>http://code.google.com/p/phloc-json/source/browse/tags/phloc-json2-1.0.4</url>
-    <connection>scm:svn:http://phloc-json.googlecode.com/svn/tags/phloc-json2-1.0.4</connection>
-    <developerConnection>scm:svn:https://phloc-json.googlecode.com/svn/tags/phloc-json2-1.0.4</developerConnection>
+    <url>http://code.google.com/p/phloc-json/source/browse/branches/phloc-json2-1.0.3</url>
+    <connection>scm:svn:http://phloc-json.googlecode.com/svn/branches/phloc-json2-1.0.3</connection>
+    <developerConnection>scm:svn:https://phloc-json.googlecode.com/svn/branches/phloc-json2-1.0.3</developerConnection>
   </scm>
 
   <organization>
