@@ -54,7 +54,7 @@ import com.phloc.json2.parser.errorhandler.LoggingJsonParseExceptionHandler;
 /**
  * This is the central user class for reading and parsing Json from different
  * sources. This class reads full Json declarations only.
- * 
+ *
  * @author Philip Helger
  */
 @ThreadSafe
@@ -97,7 +97,7 @@ public final class JsonReader
 
   /**
    * Set the default Json parse exception handler (for unrecoverable errors).
-   * 
+   *
    * @param aDefaultParseExceptionHandler
    *        The new default exception handler to be used. May not be
    *        <code>null</code>.
@@ -119,7 +119,7 @@ public final class JsonReader
 
   /**
    * Main reading of the Json
-   * 
+   *
    * @param aStream
    *        The stream to read from. May not be <code>null</code>.
    * @param aCustomExceptionHandler
@@ -127,9 +127,8 @@ public final class JsonReader
    *        <code>null</code>.
    * @return <code>null</code> if parsing failed with an unrecoverable error
    *         (and no throwing exception handler is used), or <code>null</code>
-   *         if a recoverable error occurred and no
-   *         {@link com.phloc.css.reader.errorhandler.ThrowingJsonParseErrorHandler}
-   *         was used or non-<code>null</code> if parsing succeeded.
+   *         if a recoverable error occurred or non-<code>null</code> if parsing
+   *         succeeded.
    */
   @Nullable
   private static JsonNode _readJson (@Nonnull final CharStream aStream,
@@ -153,7 +152,7 @@ public final class JsonReader
   /**
    * Check if the passed Json file can be parsed without error using the default
    * charset.
-   * 
+   *
    * @param aFile
    *        The file to be parsed. May not be <code>null</code>.
    * @return <code>true</code> if the file can be parsed without error,
@@ -166,7 +165,7 @@ public final class JsonReader
 
   /**
    * Check if the passed Json file can be parsed without error
-   * 
+   *
    * @param aFile
    *        The file to be parsed. May not be <code>null</code>.
    * @param aFallbackCharset
@@ -183,7 +182,7 @@ public final class JsonReader
   /**
    * Check if the passed Json resource can be parsed without error using the
    * default charset
-   * 
+   *
    * @param aISP
    *        The resource to be parsed. May not be <code>null</code>.
    * @return <code>true</code> if the file can be parsed without error,
@@ -196,7 +195,7 @@ public final class JsonReader
 
   /**
    * Check if the passed Json resource can be parsed without error
-   * 
+   *
    * @param aISP
    *        The resource to be parsed. May not be <code>null</code>.
    * @param aFallbackCharset
@@ -223,7 +222,7 @@ public final class JsonReader
    * Check if the passed input stream can be resembled to valid Json content.
    * This is accomplished by fully parsing the Json file each time the method is
    * called using the default charset
-   * 
+   *
    * @param aIS
    *        The input stream to use. Is automatically closed. May not be
    *        <code>null</code>.
@@ -241,7 +240,7 @@ public final class JsonReader
    * called. This is similar to calling
    * {@link #readFromStream(IInputStreamProvider,Charset)} and checking for a
    * non-<code>null</code> result.
-   * 
+   *
    * @param aIS
    *        The input stream to use. Is automatically closed. May not be
    *        <code>null</code>.
@@ -264,7 +263,7 @@ public final class JsonReader
    * accomplished by fully parsing the Json file each time the method is called.
    * This is similar to calling {@link #readFromString(String, Charset)} and
    * checking for a non-<code>null</code> result.
-   * 
+   *
    * @param sJson
    *        The Json string to scan. May not be <code>null</code>.
    * @return <code>true</code> if the Json is valid according to the version,
@@ -283,7 +282,7 @@ public final class JsonReader
    * is similar to calling
    * {@link #readFromStream(IInputStreamProvider, Charset)} and checking for a
    * non-<code>null</code> result.
-   * 
+   *
    * @param aReader
    *        The reader to use. May not be <code>null</code>.
    * @return <code>true</code> if the Json is valid according to the version,
@@ -307,7 +306,7 @@ public final class JsonReader
 
   /**
    * Read the Json from the passed String using a byte stream.
-   * 
+   *
    * @param sJson
    *        The source string containing the Json to be parsed. May not be
    *        <code>null</code>.
@@ -325,7 +324,7 @@ public final class JsonReader
 
   /**
    * Read the Json from the passed String using a byte stream.
-   * 
+   *
    * @param sJson
    *        The source string containing the Json to be parsed. May not be
    *        <code>null</code>.
@@ -351,7 +350,7 @@ public final class JsonReader
   /**
    * Read the Json from the passed String using a character stream. An
    * eventually contained <code>@charset</code> rule is ignored.
-   * 
+   *
    * @param sJson
    *        The source string containing the Json to be parsed. May not be
    *        <code>null</code>.
@@ -366,7 +365,7 @@ public final class JsonReader
 
   /**
    * Read the Json from the passed String using a character stream.
-   * 
+   *
    * @param sJson
    *        The source string containing the Json to be parsed. May not be
    *        <code>null</code>.
@@ -385,7 +384,7 @@ public final class JsonReader
 
   /**
    * Read the Json from the passed File using the default charset.
-   * 
+   *
    * @param aFile
    *        The file containing the Json to be parsed. May not be
    *        <code>null</code>.
@@ -400,7 +399,7 @@ public final class JsonReader
 
   /**
    * Read the Json from the passed File.
-   * 
+   *
    * @param aFile
    *        The file containing the Json to be parsed. May not be
    *        <code>null</code>.
@@ -418,7 +417,7 @@ public final class JsonReader
 
   /**
    * Read the Json from the passed File.
-   * 
+   *
    * @param aFile
    *        The file containing the Json to be parsed. May not be
    *        <code>null</code>.
@@ -442,7 +441,7 @@ public final class JsonReader
   /**
    * Read the Json from the passed {@link IInputStreamProvider} using the
    * default charset.
-   * 
+   *
    * @param aISP
    *        The input stream provider to use. May not be <code>null</code>.
    * @return <code>null</code> if reading failed, the Json declarations
@@ -456,7 +455,7 @@ public final class JsonReader
 
   /**
    * Read the Json from the passed {@link IInputStreamProvider}.
-   * 
+   *
    * @param aISP
    *        The input stream provider to use. May not be <code>null</code>.
    * @param aFallbackCharset
@@ -473,7 +472,7 @@ public final class JsonReader
 
   /**
    * Read the Json from the passed {@link IInputStreamProvider}.
-   * 
+   *
    * @param aISP
    *        The input stream to use. May not be <code>null</code>.
    * @param aFallbackCharset
@@ -500,7 +499,7 @@ public final class JsonReader
   /**
    * Read the Json from the passed {@link InputStream} using the default
    * charset.
-   * 
+   *
    * @param aIS
    *        The input stream to use. May not be <code>null</code>.
    * @return <code>null</code> if reading failed, the Json declarations
@@ -514,7 +513,7 @@ public final class JsonReader
 
   /**
    * Read the Json from the passed {@link InputStream}.
-   * 
+   *
    * @param aIS
    *        The input stream to use. May not be <code>null</code>.
    * @param aFallbackCharset
@@ -532,8 +531,8 @@ public final class JsonReader
   /**
    * If a BOM is present in the {@link InputStream} it is read and if possible
    * the charset is automatically determined from the BOM.
-   * 
-   * @param aI
+   *
+   * @param aIS
    *        The input stream to use. May not be <code>null</code>.
    * @return <code>null</code> if no InputStream could be opened, the pair with
    *         non-<code>null</code> {@link InputStream} and a potentially
@@ -583,7 +582,7 @@ public final class JsonReader
 
   /**
    * Read the Json from the passed {@link InputStream}.
-   * 
+   *
    * @param aIS
    *        The input stream to use. May not be <code>null</code>.
    * @param aFallbackCharset
@@ -639,7 +638,7 @@ public final class JsonReader
 
   /**
    * Read the Json from the passed {@link Reader}.
-   * 
+   *
    * @param aReader
    *        The reader to use. May not be <code>null</code>.
    * @return <code>null</code> if reading failed, the Json declarations
@@ -653,7 +652,7 @@ public final class JsonReader
 
   /**
    * Read the Json from the passed {@link Reader}.
-   * 
+   *
    * @param aReader
    *        The reader to use. May not be <code>null</code>.
    * @param aCustomExceptionHandler
