@@ -65,7 +65,7 @@ public final class JacksonHelper
     }
     catch (final JsonReadException ex)
     {
-      throw new JSONParsingException (ex.getMessage (), ex.getCause ());
+      throw new JSONParsingException (ex.getMessage (), ex.getCause ()); // NOPMD
     }
   }
 
@@ -83,14 +83,16 @@ public final class JacksonHelper
   public static JsonNode parseToNode (@Nonnull @WillClose final InputStream aIS) throws JSONParsingException
   {
     if (aIS == null)
-      throw new NullPointerException ("inputStream");
+    {
+      throw new NullPointerException ("aIS"); //$NON-NLS-1$
+    }
     try
     {
       return com.phloc.json2.serialize.JacksonHelper.parseToNode (aIS);
     }
     catch (final JsonReadException ex)
     {
-      throw new JSONParsingException (ex.getMessage (), ex.getCause ());
+      throw new JSONParsingException (ex.getMessage (), ex.getCause ());// NOPMD
     }
   }
 
@@ -108,14 +110,16 @@ public final class JacksonHelper
   public static JsonNode parseToNode (@Nonnull @WillClose final Reader aReader) throws JSONParsingException
   {
     if (aReader == null)
-      throw new NullPointerException ("reader");
+    {
+      throw new NullPointerException ("aReader"); //$NON-NLS-1$
+    }
     try
     {
       return com.phloc.json2.serialize.JacksonHelper.parseToNode (aReader);
     }
     catch (final JsonReadException ex)
     {
-      throw new JSONParsingException (ex.getMessage (), ex.getCause ());
+      throw new JSONParsingException (ex.getMessage (), ex.getCause ());// NOPMD
     }
   }
 }

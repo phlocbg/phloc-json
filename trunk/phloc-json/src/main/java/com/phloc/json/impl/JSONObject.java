@@ -32,12 +32,13 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.phloc.commons.annotations.Nonempty;
 import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.state.EChange;
-import com.phloc.commons.string.StringParser;
+import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.json.IJSONObject;
@@ -45,7 +46,9 @@ import com.phloc.json.IJSONProperty;
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.IJSONPropertyValueList;
 import com.phloc.json.IJSONPropertyValueNotParsable;
+import com.phloc.json.JSONUtil;
 import com.phloc.json.impl.value.AbstractJSONPropertyValue;
+import com.phloc.json.impl.value.AbstractJSONPropertyValueNumeric;
 import com.phloc.json.impl.value.JSONPropertyValueBigDecimal;
 import com.phloc.json.impl.value.JSONPropertyValueBigInteger;
 import com.phloc.json.impl.value.JSONPropertyValueBoolean;
@@ -69,7 +72,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressWarnings ("deprecation")
 public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implements IJSONObject
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (JSONObject.class);
+
+  private static final long serialVersionUID = 6726669796398394782L;
+
+  private static final Logger LOG = LoggerFactory.getLogger (JSONObject.class);
 
   private final Map <String, IJSONProperty <?>> m_aProperties = new LinkedHashMap <String, IJSONProperty <?>> ();
 
@@ -87,8 +93,9 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   {
     super ();
     if (aProperties == null)
-      throw new NullPointerException ("properties");
-
+    {
+      throw new NullPointerException ("properties"); //$NON-NLS-1$
+    }
     for (final IJSONProperty <?> aProperty : aProperties)
       setProperty (aProperty);
   }
@@ -106,151 +113,200 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return this;
   }
 
+  @Override
   @Nonnull
   public JSONObject setProperty (@Nonnull final IJSONProperty <?> aProperty)
   {
     if (aProperty == null)
-      throw new NullPointerException ("property");
-
-    m_aProperties.put (aProperty.getName (), aProperty.getClone ());
+    {
+      throw new NullPointerException ("property"); //$NON-NLS-1$
+    }
+    this.m_aProperties.put (aProperty.getName (), aProperty.getClone ());
     return this;
   }
 
+  @Override
   @Nullable
   public IJSONProperty <?> getProperty (@Nullable final String sName)
   {
-    return m_aProperties.get (sName);
+    return this.m_aProperties.get (sName);
   }
 
+  @Override
+  @Nullable
+  public Object getPropertyValueData (@Nullable final String sName)
+  {
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
+    return aValue == null ? null : aValue.getData ();
+  }
+
+  @Override
+  @Nullable
+  public Object getNumericProperty (@Nullable final String sName)
+  {
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
+    if (aValue instanceof AbstractJSONPropertyValueNumeric)
+    {
+      return aValue.getData ();
+    }
+    return null;
+  }
+
+  @Override
   @Nonnull
   @ReturnsMutableCopy
   public Set <String> getAllPropertyNames ()
   {
-    return ContainerHelper.newOrderedSet (m_aProperties.keySet ());
+    return ContainerHelper.newOrderedSet (this.m_aProperties.keySet ());
   }
 
   @Nullable
-  private IJSONPropertyValue <?> _getPropertyValueInternal (@Nullable final String sName)
+  private IJSONPropertyValue <?> getPropertyValueInternal (@Nullable final String sName)
   {
-    final IJSONProperty <?> aProperty = m_aProperties.get (sName);
+    final IJSONProperty <?> aProperty = this.m_aProperties.get (sName);
     return aProperty == null ? null : aProperty.getValue ();
   }
 
   // we need to differentiate here the case of set boolean values from the case
   // the property is not found or of wrong type (null). Un-boxing is prevented
   // by PMD anyway and the method is annotated as @Nullable
+  @Override
   @Nullable
   @SuppressFBWarnings ("NP_BOOLEAN_RETURN_NULL")
   public Boolean getBooleanProperty (@Nullable final String sName)
   {
-    final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
     if (aValue instanceof JSONPropertyValueBoolean)
+    {
       return ((JSONPropertyValueBoolean) aValue).getData ();
+    }
     return null;
   }
 
+  @Override
   @Nonnull
   public JSONObject setBooleanProperty (@Nonnull final String sName, final boolean bDataValue)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueBoolean (bDataValue)));
   }
 
+  @Override
   @Nonnull
   public JSONObject setBooleanProperty (@Nonnull final String sName, @Nonnull final Boolean aDataValue)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueBoolean (aDataValue)));
   }
 
+  @Override
   @Nullable
   public Double getDoubleProperty (@Nullable final String sName)
   {
-    final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
-    if (aValue instanceof JSONPropertyValueDouble)
-      return ((JSONPropertyValueDouble) aValue).getData ();
-    // we can also return an integer property as a double (if we use double as a
-    // type, still on parsing Jackson might decide that the type is integer for
-    // e.g. '1')
-    if (aValue instanceof JSONPropertyValueLong)
-      return Double.valueOf (((JSONPropertyValueLong) aValue).getData ().doubleValue ());
-    if (aValue instanceof JSONPropertyValueInteger)
-      return Double.valueOf (((JSONPropertyValueInteger) aValue).getData ().doubleValue ());
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
+    if (aValue instanceof AbstractJSONPropertyValueNumeric)
+    {
+      return Double.valueOf (((AbstractJSONPropertyValueNumeric <?>) aValue).getData ().doubleValue ());
+    }
     return null;
   }
 
+  @Override
   @Nonnull
   public JSONObject setDoubleProperty (@Nonnull final String sName, final double nDataValue)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueDouble (nDataValue)));
   }
 
+  @Override
   @Nonnull
   public JSONObject setDoubleProperty (@Nonnull final String sName, @Nonnull final Double aDataValue)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueDouble (aDataValue)));
   }
 
+  @Override
   @Nullable
   public Integer getIntegerProperty (@Nullable final String sName)
   {
-    final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
-    if (aValue instanceof JSONPropertyValueInteger)
-      return ((JSONPropertyValueInteger) aValue).getData ();
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
+    if (aValue instanceof AbstractJSONPropertyValueNumeric)
+    {
+      return Integer.valueOf (((AbstractJSONPropertyValueNumeric <?>) aValue).getData ().intValue ());
+    }
     return null;
   }
 
+  @Override
+  @Nonnull
+  public Integer getIntegerPropertyNonNull (@Nullable final String sName)
+  {
+    final Integer aValue = getIntegerProperty (sName);
+    if (aValue == null)
+    {
+      throw new NullPointerException ("No Integer value available for property '" + sName + "'!"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    return aValue;
+  }
+
+  @Override
   @Nonnull
   public JSONObject setIntegerProperty (@Nonnull final String sName, final int nDataValue)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueInteger (nDataValue)));
   }
 
+  @Override
   @Nonnull
   public JSONObject setIntegerProperty (@Nonnull final String sName, @Nonnull final Integer aDataValue)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueInteger (aDataValue)));
   }
 
+  @Override
   @Nullable
   public Long getLongProperty (@Nullable final String sName)
   {
-    final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
-    if (aValue instanceof JSONPropertyValueLong)
-      return ((JSONPropertyValueLong) aValue).getData ();
-    // we can also return an integer property as a long (if we use long as a
-    // type, still on parsing Jackson might decide that the type is integer for
-    // e.g. '1')
-    if (aValue instanceof JSONPropertyValueInteger)
-      return Long.valueOf (((JSONPropertyValueInteger) aValue).getData ().longValue ());
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
+    if (aValue instanceof AbstractJSONPropertyValueNumeric)
+    {
+      return Long.valueOf (((AbstractJSONPropertyValueNumeric <?>) aValue).getData ().longValue ());
+    }
     return null;
   }
 
+  @Override
   @Nonnull
   public JSONObject setLongProperty (@Nonnull final String sName, final long nDataValue)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueLong (nDataValue)));
   }
 
+  @Override
   @Nonnull
   public JSONObject setLongProperty (@Nonnull final String sName, @Nonnull final Long aDataValue)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueLong (aDataValue)));
   }
 
+  @Override
   @Nullable
   public String getKeywordProperty (@Nullable final String sName)
   {
-    final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
     if (aValue instanceof JSONPropertyValueKeyword)
+    {
       return ((JSONPropertyValueKeyword) aValue).getData ();
+    }
     return null;
   }
 
+  @Override
   @Nonnull
   public JSONObject setKeywordProperty (@Nonnull final String sName, @Nonnull final String sDataValue)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueKeyword (sDataValue)));
   }
 
+  @Override
   @Nonnull
   public JSONObject setFunctionProperty (@Nonnull final String sName,
                                          @Nonnull final String sBody,
@@ -259,115 +315,139 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueFunction (sBody, aParams)));
   }
 
+  @Override
   @Nonnull
   public JSONObject setFunctionPrebuildProperty (@Nonnull final String sName, @Nonnull final String sFunctionCode)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueFunctionPrebuild (sFunctionCode)));
   }
 
+  @Override
   @SuppressWarnings ("unchecked")
   public <I> List <I> getListProperty (@Nullable final String sName)
   {
-    final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
     if (aValue instanceof IJSONPropertyValueList <?>)
+    {
       return (List <I>) ((IJSONPropertyValueList <?>) aValue).getDataValues ();
+    }
     return null;
   }
 
+  @Override
   @Nonnull
   public JSONObject setListProperty (@Nonnull final String sName, @Nonnull final IJSONPropertyValueList <?> aList)
   {
     return setProperty (JSONProperty.create (sName, aList));
   }
 
+  @Override
   @Nullable
   public IJSONObject getObjectProperty (@Nullable final String sName)
   {
-    final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
     if (aValue instanceof IJSONObject)
+    {
       return (IJSONObject) aValue;
+    }
     if (aValue instanceof JSONPropertyValueJSONObject)
+    {
       return ((JSONPropertyValueJSONObject) aValue).getData ();
+    }
     return null;
   }
 
+  @Override
   @Nonnull
   public JSONObject setObjectProperty (@Nonnull final String sName, @Nonnull final IJSONObject aObject)
   {
     return setProperty (JSONProperty.create (sName, aObject));
   }
 
+  @Override
   @Nullable
   public String getStringProperty (@Nullable final String sName)
   {
-    final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
     if (aValue instanceof JSONPropertyValueString)
+    {
       return ((JSONPropertyValueString) aValue).getData ();
+    }
     return null;
   }
 
+  @Override
+  public String getStringPropertyNonEmpty (@Nonnull @Nonempty final String sName)
+  {
+    if (StringHelper.hasNoText (sName))
+    {
+      throw new IllegalArgumentException ("sName must not be null or empty!"); //$NON-NLS-1$
+    }
+    final String sValue = getStringProperty (sName);
+    if (StringHelper.hasNoText (sValue))
+    {
+      throw new IllegalArgumentException ("Value for property '" + sName + "' must not be empty or null!"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    return sValue;
+  }
+
+  @Override
   @Nonnull
   public JSONObject setStringProperty (@Nonnull final String sName, @Nonnull final String sDataValue)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueString (sDataValue)));
   }
 
+  @Override
   @Nonnull
   public IJSONObject setStringProperties (@Nonnull final Map <String, String> aMap)
   {
     for (final Map.Entry <String, String> aEntry : aMap.entrySet ())
+    {
       setStringProperty (aEntry.getKey (), aEntry.getValue ());
+    }
     return this;
   }
 
+  @Override
   @Nullable
   public BigInteger getBigIntegerProperty (@Nullable final String sName)
   {
-    final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
-    if (aValue instanceof JSONPropertyValueBigInteger)
-      return ((JSONPropertyValueBigInteger) aValue).getData ();
-    // we can also return an integer property as a BigInteger (if we use
-    // BigInteger as a type, still on parsing Jackson might decide that the type
-    // is integer for e.g. '1')
-    if (aValue instanceof JSONPropertyValueLong)
-      return BigInteger.valueOf (((JSONPropertyValueLong) aValue).getData ().longValue ());
-    if (aValue instanceof JSONPropertyValueInteger)
-      return BigInteger.valueOf (((JSONPropertyValueInteger) aValue).getData ().longValue ());
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
+    if (aValue instanceof AbstractJSONPropertyValueNumeric)
+    {
+      return BigInteger.valueOf (((AbstractJSONPropertyValueNumeric <?>) aValue).getData ().longValue ());
+    }
     return null;
   }
 
+  @Override
   @Nonnull
   public JSONObject setBigIntegerProperty (@Nonnull final String sName, @Nonnull final BigInteger aDataValue)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueBigInteger (aDataValue)));
   }
 
+  @Override
   @Nullable
   public BigDecimal getBigDecimalProperty (@Nullable final String sName)
   {
-    final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
-    if (aValue instanceof JSONPropertyValueBigDecimal)
-      return ((JSONPropertyValueBigDecimal) aValue).getData ();
-    // we can also return an integer property as a BigDecimal (if we use
-    // BigDecimal as a type, still on parsing Jackson might decide that the type
-    // is integer for e.g. '1')
-    if (aValue instanceof JSONPropertyValueBigInteger)
-      return new BigDecimal (((JSONPropertyValueBigInteger) aValue).getData ());
-    if (aValue instanceof JSONPropertyValueDouble)
-      return StringParser.parseBigDecimal (((JSONPropertyValueDouble) aValue).getData ().toString ());
-    if (aValue instanceof JSONPropertyValueLong)
-      return BigDecimal.valueOf (((JSONPropertyValueLong) aValue).getData ().longValue ());
-    if (aValue instanceof JSONPropertyValueInteger)
-      return BigDecimal.valueOf (((JSONPropertyValueInteger) aValue).getData ().longValue ());
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
+    if (aValue instanceof AbstractJSONPropertyValueNumeric)
+    {
+      return BigDecimal.valueOf (((AbstractJSONPropertyValueNumeric <?>) aValue).getData ().doubleValue ());
+    }
     return null;
   }
 
+  @Override
   @Nonnull
   public JSONObject setBigDecimalProperty (@Nonnull final String sName, @Nonnull final BigDecimal aDataValue)
   {
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueBigDecimal (aDataValue)));
   }
 
+  @Override
   @Nonnull
   public JSONObject setProperty (@Nonnull final String sName, @Nullable final Object aValue)
   {
@@ -375,109 +455,161 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return setProperty (sName, aValue, false);
   }
 
+  @Override
   @Nonnull
   public JSONObject setProperty (@Nonnull final String sName,
                                  @Nullable final Object aValue,
                                  final boolean bUseTypeConverter)
   {
     if (aValue == null)
+    {
       removeProperty (sName);
+      return this;
+    }
+    if (aValue instanceof IJSONObject)
+    {
+      return setObjectProperty (sName, (IJSONObject) aValue);
+    }
+    if (aValue instanceof IJSONPropertyValue <?>)
+    {
+      return setProperty (JSONProperty.create (sName, (IJSONPropertyValue <?>) aValue));
+    }
+    if (aValue instanceof Boolean)
+    {
+      return setBooleanProperty (sName, (Boolean) aValue);
+    }
+    if (aValue instanceof BigInteger)
+    {
+      return setBigIntegerProperty (sName, (BigInteger) aValue);
+    }
+    if (aValue instanceof BigDecimal)
+    {
+      return setBigDecimalProperty (sName, (BigDecimal) aValue);
+    }
+    if (aValue instanceof Double)
+    {
+      return setDoubleProperty (sName, (Double) aValue);
+    }
+    if (aValue instanceof Integer)
+    {
+      return setIntegerProperty (sName, (Integer) aValue);
+    }
+    if (aValue instanceof Long)
+    {
+      return setLongProperty (sName, (Long) aValue);
+    }
+    if (aValue instanceof String)
+    {
+      return setStringProperty (sName, (String) aValue);
+    }
+    // Unknown type -> use type converter?
+    String sValue;
+    if (bUseTypeConverter)
+    {
+      sValue = TypeConverter.convertIfNecessary (aValue, String.class);
+    }
     else
-      if (aValue instanceof IJSONObject)
-        setObjectProperty (sName, (IJSONObject) aValue);
-      else
-        if (aValue instanceof IJSONPropertyValue <?>)
-          setProperty (JSONProperty.create (sName, (IJSONPropertyValue <?>) aValue));
-        else
-          if (aValue instanceof Boolean)
-            setBooleanProperty (sName, (Boolean) aValue);
-          else
-            if (aValue instanceof BigInteger)
-              setBigIntegerProperty (sName, (BigInteger) aValue);
-            else
-              if (aValue instanceof BigDecimal)
-                setBigDecimalProperty (sName, (BigDecimal) aValue);
-              else
-                if (aValue instanceof Double)
-                  setDoubleProperty (sName, (Double) aValue);
-                else
-                  if (aValue instanceof Integer)
-                    setIntegerProperty (sName, (Integer) aValue);
-                  else
-                    if (aValue instanceof Long)
-                      setLongProperty (sName, (Long) aValue);
-                    else
-                      if (aValue instanceof String)
-                        setStringProperty (sName, (String) aValue);
-                      else
-                      {
-                        // Unknown type -> use type converter?
-                        String sValue;
-                        if (bUseTypeConverter)
-                        {
-                          sValue = TypeConverter.convertIfNecessary (aValue, String.class);
-                        }
-                        else
-                        {
-                          s_aLogger.warn ("Setting property of type " +
-                                          aValue.getClass ().getName () +
-                                          " as String without TypeConverter!");
-                          sValue = String.valueOf (aValue);
-                        }
-                        setStringProperty (sName, sValue);
-                      }
-    return this;
+    {
+      LOG.warn ("Setting property of type " + //$NON-NLS-1$
+                aValue.getClass ().getName () +
+                " as String without TypeConverter!"); //$NON-NLS-1$
+      sValue = String.valueOf (aValue);
+    }
+    return setStringProperty (sName, sValue);
   }
 
+  @Override
   @Nullable
   public List <? extends IJSONPropertyValue <?>> getListValues (@Nullable final String sName)
   {
-    final IJSONPropertyValue <?> aValue = _getPropertyValueInternal (sName);
+    final IJSONPropertyValue <?> aValue = getPropertyValueInternal (sName);
     if (aValue instanceof IJSONPropertyValueList <?>)
+    {
       return ((IJSONPropertyValueList <?>) aValue).getValues ();
+    }
     return null;
   }
 
+  @Override
   @Nonnull
   public JSONObject setObjectListProperty (@Nonnull final String sName,
                                            @Nonnull final Iterable <? extends IJSONObject> aObjectList)
   {
     final IJSONPropertyValueList <IJSONObject> aList = new JSONPropertyValueList <IJSONObject> ();
     for (final IJSONObject aObject : aObjectList)
+    {
       aList.addValue (aObject);
+    }
     return setProperty (JSONProperty.create (sName, aList));
   }
 
+  @Override
   @Nonnull
   public List <IJSONObject> getObjectListProperty (@Nullable final String sName)
   {
     final List <IJSONObject> aReturn = new ArrayList <IJSONObject> ();
     final List <?> aList = getListProperty (sName);
     if (aList != null)
+    {
       for (final Object aValue : aList)
+      {
         if (aValue instanceof IJSONObject)
+        {
           aReturn.add ((IJSONObject) aValue);
+        }
+      }
+    }
     return aReturn;
   }
 
+  @Override
   @Nonnull
   public JSONObject setStringListProperty (@Nonnull final String sName, @Nonnull final Iterable <String> aStringList)
   {
     final IJSONPropertyValueList <JSONPropertyValueString> aList = new JSONPropertyValueList <JSONPropertyValueString> ();
     for (final String sValue : aStringList)
+    {
       aList.addValue (new JSONPropertyValueString (sValue));
+    }
     return setProperty (JSONProperty.create (sName, aList));
   }
 
+  @Override
+  @Nonnull
+  public JSONObject setMixedListProperty (@Nonnull final String sName, @Nonnull final Iterable <?> aValues)
+  {
+    final IJSONPropertyValueList <IJSONPropertyValue <?>> aList = new JSONPropertyValueList <IJSONPropertyValue <?>> ();
+    for (final Object aValue : aValues)
+    {
+      aList.addValue (JSONUtil.getJSONValue (aValue));
+    }
+    return setProperty (JSONProperty.create (sName, aList));
+  }
+
+  @Override
   @Nonnull
   public JSONObject setIntegerListProperty (@Nonnull final String sName, @Nonnull final int [] aIntList)
   {
     final IJSONPropertyValueList <JSONPropertyValueInteger> aList = new JSONPropertyValueList <JSONPropertyValueInteger> ();
     for (final int nValue : aIntList)
+    {
       aList.addValue (new JSONPropertyValueInteger (nValue));
+    }
     return setProperty (JSONProperty.create (sName, aList));
   }
 
+  @Override
+  public JSONObject setIntegerListProperty (@Nonnull final String sName, @Nonnull final List <Integer> aIntegerList)
+  {
+    final IJSONPropertyValueList <JSONPropertyValueInteger> aList = new JSONPropertyValueList <JSONPropertyValueInteger> ();
+    for (final Integer nValue : aIntegerList)
+    {
+      aList.addValue (new JSONPropertyValueInteger (nValue));
+    }
+    return setProperty (JSONProperty.create (sName, aList));
+  }
+
+  @Override
   @Deprecated
   @Nonnull
   public JSONObject setListOfListProperty (@Nonnull final String sName,
@@ -486,6 +618,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return setListOfStringListProperty (sName, aListOfList);
   }
 
+  @Override
   @Nonnull
   public JSONObject setListOfStringListProperty (@Nonnull final String sName,
                                                  @Nonnull final Iterable <? extends Iterable <String>> aListOfList)
@@ -495,7 +628,9 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     {
       final IJSONPropertyValueList <JSONPropertyValueString> aRowList = new JSONPropertyValueList <JSONPropertyValueString> ();
       for (final String aCell : aRow)
+      {
         aRowList.addValue (new JSONPropertyValueString (aCell));
+      }
       aList.addValue (aRowList);
     }
     return setProperty (JSONProperty.create (sName, aList));
@@ -516,7 +651,9 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       final IJSONProperty <?> aProperty = getProperty (sProperty);
       aProperty.appendJSONString (aResult, bAlignAndIndent, nLevel + 1);
       if (nIndex < aPropertyNames.size () - 1)
+      {
         aResult.append (CJSONConstants.TOKEN_SEPARATOR);
+      }
       appendNewLine (aResult, bAlignAndIndent);
       nIndex++;
     }
@@ -524,62 +661,106 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     aResult.append (CJSONConstants.OBJECT_END);
   }
 
+  @Override
   @Nonnull
   public EChange removeProperty (@Nullable final String sName)
   {
-    return EChange.valueOf (m_aProperties.remove (sName) != null);
+    return EChange.valueOf (this.m_aProperties.remove (sName) != null);
   }
 
+  @Override
+  public EChange apply (@Nullable final IJSONObject aObjectToApply)
+  {
+    EChange eChange = EChange.UNCHANGED;
+    if (aObjectToApply != null)
+    {
+      for (final String sPropName : aObjectToApply.getAllPropertyNames ())
+      {
+        setProperty (sPropName, aObjectToApply.getProperty (sPropName).getValue ());
+        eChange = EChange.CHANGED;
+      }
+    }
+    return eChange;
+  }
+
+  @Override
+  public EChange apply (@Nullable final IJSONObject aObjectToApply, @Nonnull @Nonempty final String sPropertyName)
+  {
+    EChange eChange = EChange.UNCHANGED;
+    if (aObjectToApply != null)
+    {
+      final IJSONProperty <?> aProperty = aObjectToApply.getProperty (sPropertyName);
+      if (aProperty != null)
+      {
+        this.setProperty (aProperty);
+        eChange = EChange.CHANGED;
+      }
+    }
+    return eChange;
+  }
+
+  @Override
   public boolean containsNotParsableProperty ()
   {
-    for (final IJSONProperty <?> aProperty : m_aProperties.values ())
+    for (final IJSONProperty <?> aProperty : this.m_aProperties.values ())
     {
       final IJSONPropertyValue <?> aValue = aProperty.getValue ();
       if (aValue instanceof IJSONPropertyValueNotParsable <?>)
+      {
         return true;
+      }
       if (aValue instanceof IJSONObject && ((IJSONObject) aValue).containsNotParsableProperty ())
+      {
         return true;
+      }
     }
     return false;
   }
 
+  @Override
   public boolean isEmpty ()
   {
-    return m_aProperties.isEmpty ();
-  }
-
-  @Nonnegative
-  public int getPropertyCount ()
-  {
-    return m_aProperties.size ();
-  }
-
-  @Nonnull
-  public JSONObject getClone ()
-  {
-    return new JSONObject (m_aProperties.values ());
+    return this.m_aProperties.isEmpty ();
   }
 
   @Override
-  public boolean equals (final Object o)
+  @Nonnegative
+  public int getPropertyCount ()
   {
-    if (o == this)
+    return this.m_aProperties.size ();
+  }
+
+  @Override
+  @Nonnull
+  public JSONObject getClone ()
+  {
+    return new JSONObject (this.m_aProperties.values ());
+  }
+
+  @Override
+  public boolean equals (final Object aOther)
+  {
+    if (aOther == this)
+    {
       return true;
-    if (!super.equals (o))
+    }
+    if (!super.equals (aOther))
+    {
       return false;
-    final JSONObject rhs = (JSONObject) o;
-    return EqualsUtils.equals (m_aProperties, rhs.m_aProperties);
+    }
+    final JSONObject rhs = (JSONObject) aOther;
+    return EqualsUtils.equals (this.m_aProperties, rhs.m_aProperties);
   }
 
   @Override
   public int hashCode ()
   {
-    return HashCodeGenerator.getDerived (super.hashCode ()).append (m_aProperties).getHashCode ();
+    return HashCodeGenerator.getDerived (super.hashCode ()).append (this.m_aProperties).getHashCode ();
   }
 
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ()).append ("properties", m_aProperties).toString ();
+    return ToStringGenerator.getDerived (super.toString ()).append ("properties", this.m_aProperties).toString (); //$NON-NLS-1$
   }
 }

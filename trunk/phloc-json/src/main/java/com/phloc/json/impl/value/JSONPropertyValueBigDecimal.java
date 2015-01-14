@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.string.StringParser;
-import com.phloc.json.IJSONPropertyValue;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -31,12 +30,15 @@ import com.phloc.json.IJSONPropertyValue;
  * @author Philip Helger
  */
 public class JSONPropertyValueBigDecimal extends AbstractJSONPropertyValueNumeric <BigDecimal>
-{
+{// NOPMD
+  private static final long serialVersionUID = -6268818661723280538L;
+
   public JSONPropertyValueBigDecimal (@Nonnull final BigDecimal aData)
   {
     super (aData);
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueBigDecimal getClone ()
   {
@@ -59,7 +61,9 @@ public class JSONPropertyValueBigDecimal extends AbstractJSONPropertyValueNumeri
   {
     final BigDecimal aValue = StringParser.parseBigDecimal (sJSON);
     if (sJSON != null && aValue == null)
-      throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not a BigDecimal!");
+    {
+      throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not a BigDecimal!"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
     return new JSONPropertyValueBigDecimal (aValue);
   }
 }

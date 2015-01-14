@@ -25,6 +25,8 @@ package com.phloc.json.impl;
  */
 public class JSONParsingException extends Exception
 {
+  private static final long serialVersionUID = -1482562259009147578L;
+
   /**
    * Ctor with only a message
    * 

@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 
 import com.phloc.commons.annotations.Nonempty;
 import com.phloc.commons.name.IHasName;
-import com.phloc.json.impl.JSONObject;
 
 /**
  * Interface describing a JSON object property. Properties can again be JSON
@@ -40,6 +39,7 @@ public interface IJSONProperty <T> extends IJSON, IHasName
    * @return the name of the property (unique in the scope of a
    *         {@link JSONObject})
    */
+  @Override
   @Nonnull
   @Nonempty
   String getName ();
@@ -61,6 +61,7 @@ public interface IJSONProperty <T> extends IJSON, IHasName
   /**
    * {@inheritDoc}
    */
+  @Override
   @Nonnull
   IJSONProperty <T> getClone ();
 }

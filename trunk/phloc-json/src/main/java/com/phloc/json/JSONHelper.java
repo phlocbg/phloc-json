@@ -20,7 +20,6 @@ package com.phloc.json;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
-import com.phloc.commons.annotations.PresentForCodeCoverage;
 import com.phloc.json2.serialize.JsonHelper;
 
 /**
@@ -32,10 +31,6 @@ import com.phloc.json2.serialize.JsonHelper;
 @Deprecated
 public final class JSONHelper
 {
-  @PresentForCodeCoverage
-  @SuppressWarnings ("unused")
-  private static final JSONHelper s_aInstance = new JSONHelper ();
-
   private JSONHelper ()
   {}
 

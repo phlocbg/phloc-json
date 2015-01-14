@@ -31,17 +31,18 @@ import com.phloc.json.impl.value.JSONPropertyValueKeyword;
 
 public final class JSONComplexUtilsTest
 {
-  private static final String PROP1 = "Property1";
-  private static final String PROP2 = "Property2";
-  private static final String PROP3 = "Property3";
-  private static final String PROP4 = "Property4";
-  private static final String PROP5 = "Property5";
+  private static final String PROP1 = "Property1"; //$NON-NLS-1$
+  private static final String PROP2 = "Property2"; //$NON-NLS-1$
+  private static final String PROP3 = "Property3"; //$NON-NLS-1$
+  private static final String PROP4 = "Property4"; //$NON-NLS-1$
+  private static final String PROP5 = "Property5"; //$NON-NLS-1$
 
-  private static final String VALUE_STRING = "VALUE";
+  private static final String VALUE_STRING = "VALUE"; //$NON-NLS-1$
   private static final Integer VALUE_INTEGER = Integer.valueOf (42);
   private static final Double VALUE_DOUBLE = Double.valueOf (3.2);
   private static final Boolean VALUE_BOOLEAN = Boolean.FALSE;
 
+  @SuppressWarnings ("static-method")
   @Test
   public void testConvertToJSON ()
   {

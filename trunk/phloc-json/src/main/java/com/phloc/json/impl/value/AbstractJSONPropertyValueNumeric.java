@@ -19,22 +19,22 @@ package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
 
-import com.phloc.json.IJSONPropertyValue;
-
 /**
  * Implementation of {@link IJSONPropertyValue} with a numeric internal data
  * type
  * 
  * @author Philip Helger
  */
-public abstract class AbstractJSONPropertyValueNumeric <DATATYPE extends Number> extends
-                                                                                 AbstractJSONPropertyValue <DATATYPE>
+public abstract class AbstractJSONPropertyValueNumeric <DATATYPE extends Number> extends AbstractJSONPropertyValue <DATATYPE>
 {
+  private static final long serialVersionUID = 1527021852598398711L;
+
   protected AbstractJSONPropertyValueNumeric (@Nonnull final DATATYPE aData)
   {
     super (aData);
   }
 
+  @Override
   public final void appendJSONString (@Nonnull final StringBuilder aResult,
                                       final boolean bAlignAndIndent,
                                       final int nLevel)

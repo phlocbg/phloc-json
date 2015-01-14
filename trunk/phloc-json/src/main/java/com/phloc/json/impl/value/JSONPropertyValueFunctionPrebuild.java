@@ -19,9 +19,7 @@ package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
 
-import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.IJSONPropertyValueNotParsable;
-import com.phloc.json.impl.JSONReader;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -33,9 +31,10 @@ import com.phloc.json.impl.JSONReader;
  * 
  * @author Philip Helger
  */
-public class JSONPropertyValueFunctionPrebuild extends AbstractJSONPropertyValue <String> implements
-                                                                                         IJSONPropertyValueNotParsable <String>
+public class JSONPropertyValueFunctionPrebuild extends AbstractJSONPropertyValue <String> implements IJSONPropertyValueNotParsable <String>
 {
+  private static final long serialVersionUID = 1861816440879230710L;
+
   /**
    * Ctor
    * 
@@ -47,11 +46,13 @@ public class JSONPropertyValueFunctionPrebuild extends AbstractJSONPropertyValue
     super (sFunctionCode);
   }
 
+  @Override
   public void appendJSONString (final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     aResult.append (getData ());
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueFunctionPrebuild getClone ()
   {

@@ -21,15 +21,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
+
 import org.junit.Test;
 
 import com.phloc.commons.mock.PhlocAssert;
+import com.phloc.commons.string.StringParser;
 import com.phloc.json.AbstractJSONTestCase;
 import com.phloc.json.IJSON;
 import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValueList;
 import com.phloc.json.impl.value.JSONPropertyValueBigDecimal;
 import com.phloc.json.impl.value.JSONPropertyValueBoolean;
+import com.phloc.json.impl.value.JSONPropertyValueDouble;
 import com.phloc.json.impl.value.JSONPropertyValueInteger;
 import com.phloc.json.impl.value.JSONPropertyValueString;
 
@@ -39,16 +43,19 @@ import com.phloc.json.impl.value.JSONPropertyValueString;
  * 
  * @author Boris Gregorcic
  */
+@SuppressWarnings ("static-method")
 public final class JSONReaderTest extends AbstractJSONTestCase
 {
+  private static final String PROPERTY = "a"; //$NON-NLS-1$
+
   /**
    * Tests parsing a simple JSON object using the {@link JSONReader}
    */
   @Test
   public void testParseObjectSimple () throws Exception
   {
-    final IJSONObject aParsedObject = JSONReader.parseObject (m_aSimpleObject.getJSONString ());
-    assertEquals (m_aSimpleObject, aParsedObject);
+    final IJSONObject aParsedObject = JSONReader.parseObject (this.m_aSimpleObject.getJSONString ());
+    assertEquals (this.m_aSimpleObject, aParsedObject);
   }
 
   /**
@@ -58,8 +65,8 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseObjectComplex () throws Exception
   {
-    final IJSONObject aParsedObject = JSONReader.parseObject (m_aComplexObject.getJSONString ());
-    assertEquals ("Not the same: " + m_aComplexObject.getJSONString (), m_aComplexObject, aParsedObject);
+    final IJSONObject aParsedObject = JSONReader.parseObject (this.m_aComplexObject.getJSONString ());
+    assertEquals (this.m_aComplexObject, aParsedObject);
   }
 
   /**
@@ -69,7 +76,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseArrayText () throws Exception
   {
-    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[\"" + STR_VALUE1 + "\", \"" + STR_VALUE2 + "\", \"" + STR_VALUE3 + "\"]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[\"" + STR_VALUE1 + "\", \"" + STR_VALUE2 + "\", \"" + STR_VALUE3 + "\"]"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     assertNotNull (aJSONList);
     assertEquals (aJSONList.getValues ().size (), 3);
     assertEquals (aJSONList.getValues ().get (0).getData (), STR_VALUE1);
@@ -84,7 +91,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseArrayBoolean () throws Exception
   {
-    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[" + Boolean.TRUE + ", " + Boolean.FALSE + ", " + Boolean.TRUE + "]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[" + Boolean.TRUE + ", " + Boolean.FALSE + ", " + Boolean.TRUE + "]"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     assertNotNull (aJSONList);
     assertEquals (aJSONList.getValues ().size (), 3);
     assertEquals (aJSONList.getValues ().get (0).getData (), Boolean.TRUE);
@@ -99,7 +106,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseArrayInteger () throws Exception
   {
-    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[" + VALUE_INT1 + ", " + VALUE_INT2 + ", " + VALUE_INT3 + "]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[" + VALUE_INT1 + ", " + VALUE_INT2 + ", " + VALUE_INT3 + "]"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     assertNotNull (aJSONList);
     assertEquals (aJSONList.getValues ().size (), 3);
     assertEquals (aJSONList.getValues ().get (0).getData (), Integer.valueOf (VALUE_INT1));
@@ -116,7 +123,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseArrayEmpty () throws JSONParsingException
   {
-    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[]");
+    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[]"); //$NON-NLS-1$
     assertNotNull (aJSONList);
     assertEquals (aJSONList.getValues ().size (), 0);
   }
@@ -130,7 +137,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseArrayEmptyString () throws JSONParsingException
   {
-    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[\"\"]");
+    final IJSONPropertyValueList <?> aJSONList = JSONReader.parseArray ("[\"\"]"); //$NON-NLS-1$
     assertNotNull (aJSONList);
     assertEquals (aJSONList.getValues ().size (), 1);
   }
@@ -143,7 +150,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testAutoParseString () throws JSONParsingException
   {
-    final IJSON aJSON = JSONReader.parse ("\"" + VALUE_ONE + "\""); //$NON-NLS-2$ 
+    final IJSON aJSON = JSONReader.parse ("\"" + VALUE_ONE + "\""); //$NON-NLS-1$//$NON-NLS-2$ 
     assertNotNull (aJSON);
     assertTrue (aJSON instanceof JSONPropertyValueString);
     assertEquals (((JSONPropertyValueString) aJSON).getData (), VALUE_ONE);
@@ -176,7 +183,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
     assertNotNull (aJSON);
     assertTrue (aJSON instanceof JSONPropertyValueBoolean);
     assertNotNull (((JSONPropertyValueBoolean) aJSON).getData ());
-    assertTrue (((JSONPropertyValueBoolean) aJSON).getData ().booleanValue () == VALUE_BOOL);
+    assertTrue (((JSONPropertyValueBoolean) aJSON).getData ().booleanValue () == VALUE_BOOL);// NOPMD
   }
 
   /**
@@ -203,7 +210,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testAutoParseArray () throws JSONParsingException
   {
-    final IJSON aJSON = JSONReader.parse ("[" + VALUE_INT1 + ", " + VALUE_INT2 + ", " + VALUE_INT3 + "]"); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final IJSON aJSON = JSONReader.parse ("[" + VALUE_INT1 + ", " + VALUE_INT2 + ", " + VALUE_INT3 + "]"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     assertNotNull (aJSON);
     assertTrue (aJSON instanceof IJSONPropertyValueList <?>);
     final IJSONPropertyValueList <?> aJSONList = (IJSONPropertyValueList <?>) aJSON;
@@ -221,37 +228,62 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testAutoParseObject () throws JSONParsingException
   {
-    final IJSON aJSON = JSONReader.parse (m_aComplexObject.getJSONString ());
+    final IJSON aJSON = JSONReader.parse (this.m_aComplexObject.getJSONString ());
     assertNotNull (aJSON);
     assertTrue (aJSON instanceof IJSONObject);
-    assertEquals (aJSON, m_aComplexObject);
+    assertEquals (aJSON, this.m_aComplexObject);
+  }
+
+  @Test
+  public void testGetNumericFlexible () throws JSONParsingException
+  {
+    final IJSONObject aJSON = JSONReader.parseObject ("{\"" + PROPERTY + "\":2.345}"); //$NON-NLS-1$ //$NON-NLS-2$
+    assertNotNull (aJSON);
+    final BigDecimal aBDVal = aJSON.getBigDecimalProperty (PROPERTY);
+    assertNotNull (aBDVal);
+    final Double aDoubleVal = aJSON.getDoubleProperty (PROPERTY);
+    assertNotNull (aDoubleVal);
+    assertEquals (aDoubleVal, Double.valueOf (aBDVal.doubleValue ()));
+
+    final Integer aIntVal = aJSON.getIntegerProperty (PROPERTY);
+    assertNotNull (aIntVal);
+    assertEquals (aIntVal, Integer.valueOf (aDoubleVal.intValue ()));
+  }
+
+  @Test
+  public void testBigDecimal ()
+  {
+    final JSONPropertyValueDouble aValDouble = new JSONPropertyValueDouble (0.1);
+    final BigDecimal aBDVal1 = BigDecimal.valueOf (aValDouble.getData ().doubleValue ());
+    final BigDecimal aBDVal2 = StringParser.parseBigDecimal (aValDouble.getData ().toString ());
+    assertEquals (aBDVal1, aBDVal2);
   }
 
   @Test
   public void testParseMany () throws JSONParsingException
   {
-    final String sLongNum = "-123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587.1236471263179823781236715236751236561283581623587123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587";
-    for (final String s : new String [] { "5",
-                                         "12345",
-                                         "-12345",
-                                         "1236471263179823781236715236751236561283581623587",
-                                         "-1236471263179823781236715236751236561283581623587",
-                                         "0E+39",
-                                         "0E-39",
-                                         "0",
-                                         "123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587.1236471263179823781236715236751236561283581623587123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587",
+    final String sLongNum = "-123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587.1236471263179823781236715236751236561283581623587123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587"; //$NON-NLS-1$
+    for (final String s : new String [] { "5", //$NON-NLS-1$
+                                         "12345", //$NON-NLS-1$
+                                         "-12345", //$NON-NLS-1$
+                                         "1236471263179823781236715236751236561283581623587", //$NON-NLS-1$
+                                         "-1236471263179823781236715236751236561283581623587", //$NON-NLS-1$
+                                         "0E+39", //$NON-NLS-1$
+                                         "0E-39", //$NON-NLS-1$
+                                         "0", //$NON-NLS-1$
+                                         "123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587.1236471263179823781236715236751236561283581623587123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587", //$NON-NLS-1$
                                          sLongNum,
-                                         "[[4,5],[4,6],[4,7,8,9,10],\"abc\",[[4,7,8,9,10],[4,7,8,9,10],[4,7,8," +
+                                         "[[4,5],[4,6],[4,7,8,9,10],\"abc\",[[4,7,8,9,10],[4,7,8,9,10],[4,7,8," + //$NON-NLS-1$
                                              sLongNum +
-                                             ",9,10]," +
+                                             ",9,10]," + //$NON-NLS-1$
                                              sLongNum +
-                                             ",[4,7,8,9,10]]]" })
+                                             ",[4,7,8,9,10]]]" }) //$NON-NLS-1$
     {
       final IJSON aJSON = JSONReader.parse (s);
-      assertNotNull ("Failed to parse " + s, aJSON);
-      assertEquals (s, aJSON.getJSONString (false));
+      assertNotNull ("Failed to parse " + s, aJSON); //$NON-NLS-1$
+      assertEquals (s, aJSON.getJSONString (false)); // NOPMD
     }
-    final IJSON aJSON = JSONReader.parse ("0E-39");
-    assertEquals ("0E-39", aJSON.getJSONString (false));
+    final IJSON aJSON = JSONReader.parse ("0E-39"); //$NON-NLS-1$
+    assertEquals ("0E-39", aJSON.getJSONString (false)); //$NON-NLS-1$ //NOPMD
   }
 }

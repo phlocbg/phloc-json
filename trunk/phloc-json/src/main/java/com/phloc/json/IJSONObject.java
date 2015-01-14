@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.phloc.json;
+package com.phloc.json;// NOPMD
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -27,8 +27,9 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.phloc.commons.annotations.Nonempty;
 import com.phloc.commons.state.EChange;
-import com.phloc.json.impl.JSONReader;
+import com.phloc.json.impl.JSONObject;
 
 /**
  * A basic JSON object
@@ -58,6 +59,34 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    */
   @Nullable
   IJSONProperty <?> getProperty (@Nullable String sName);
+
+  /**
+   * Get the data value of the specified property directly
+   * 
+   * @param sName
+   *        the property name
+   * @return the direct data value or <code>null</code>
+   */
+  Object getPropertyValueData (@Nullable String sName);
+
+  /**
+   * Get the numeric property with the specified name<br>
+   * <b>Numeric properties are:</b>
+   * <ul>
+   * <li><code>Double</code></li>
+   * <li><code>Integer</code></li>
+   * <li><code>Long</code></li>
+   * <li><code>BigDecimal</code></li>
+   * <li><code>BigInteger</code></li>
+   * </ul>
+   * 
+   * @param sName
+   *        name of the requested property
+   * @return the corresponding value of the property if found, <code>null</code>
+   *         otherwise
+   */
+  @Nullable
+  Object getNumericProperty (@Nullable String sName);
 
   /**
    * Get a list of all property names of this object
@@ -97,8 +126,16 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
 
   /**
    * Tries to resolve the value of the passed double property. If not found or
-   * the property with the passed name is not of type <code>Double</code>,
-   * <code>null</code> will be returned.
+   * the property with the passed name is not of a compatible type,
+   * <code>null</code> will be returned.<br>
+   * <b>Compatible types:</b>
+   * <ul>
+   * <li><code>Double</code></li>
+   * <li><code>Integer</code></li>
+   * <li><code>Long</code></li>
+   * <li><code>BigDecimal</code></li>
+   * <li><code>BigInteger</code></li>
+   * </ul>
    * 
    * @param sName
    * @return the Double value of the property with the passed name, or
@@ -123,8 +160,16 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
 
   /**
    * Tries to resolve the value of the passed integer property. If not found or
-   * the property with the passed name is not of type <code>Integer</code>,
-   * <code>null</code> will be returned.
+   * the property with the passed name is not of a compatible type,
+   * <code>null</code> will be returned.<br>
+   * <b>Compatible types:</b>
+   * <ul>
+   * <li><code>Integer</code></li>
+   * <li><code>Double</code></li>
+   * <li><code>Long</code></li>
+   * <li><code>BigDecimal</code></li>
+   * <li><code>BigInteger</code></li>
+   * </ul>
    * 
    * @param sName
    * @return the Integer value of the property with the passed name, or
@@ -132,6 +177,18 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    */
   @Nullable
   Integer getIntegerProperty (@Nullable String sName);
+
+  /**
+   * Tries to resolve the value using {@link #getIntegerProperty(String)}. If no
+   * valid value is available, this method will throw a
+   * {@link NullPointerException} rather thatn returning null.
+   * 
+   * @param sName
+   * @return the Integer value of the property with the passed name, never
+   *         <code>null</code>
+   */
+  @Nonnull
+  Integer getIntegerPropertyNonNull (@Nullable String sName);
 
   /**
    * An easy way to set a new int property in a JSON object. Existing properties
@@ -314,6 +371,18 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   String getStringProperty (@Nullable String sName);
 
   /**
+   * Tries to resolve the value of the passed string property. If not found or
+   * the property with the passed name is not of type <code>String</code> an
+   * {@link IllegalArgumentException} will be thrown.
+   * 
+   * @param sName
+   * @return the String value of the property with the passed name, never
+   *         <code>null</code>
+   */
+  @Nonnull
+  String getStringPropertyNonEmpty (@Nonnull @Nonempty String sName);
+
+  /**
    * An easy way to set a new string property in a JSON object. Existing
    * properties with the same name will be replaced!
    * 
@@ -403,6 +472,30 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   IJSONObject setStringListProperty (@Nonnull String sName, @Nonnull Iterable <String> aStringList);
 
   /**
+   * Creates a list property containing the passed values. Each passed value
+   * will be converted to the corresponding JSON value and added if possible.
+   * <b>ATTENTION:</b> Only the following types will be converted:
+   * <ul>
+   * <li>IJSONPropertyValue</li>
+   * <li>String</li>
+   * <li>Integer</li>
+   * <li>Boolean</li>
+   * <li>BigInteger</li>
+   * <li>BigDecimal</li>
+   * <li>Double</li>
+   * <li>Long</li>
+   * </ul>
+   * 
+   * @param sName
+   *        The name of the property
+   * @param aValues
+   *        The values to set, must not be <code>null</code>, does not allow
+   *        <code>null</code> values!
+   * @return
+   */
+  JSONObject setMixedListProperty (@Nonnull String sName, @Nonnull Iterable <?> aValues);
+
+  /**
    * An easy way to set a new integer list type property in a JSON object.
    * Existing properties with the same name will be replaced!
    * 
@@ -412,6 +505,16 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    */
   @Nonnull
   IJSONObject setIntegerListProperty (@Nonnull String sName, @Nonnull int [] aIntList);
+
+  /**
+   * An easy way to set a new integer list type property in a JSON object.
+   * Existing properties with the same name will be replaced!
+   * 
+   * @param sName
+   * @param aIntegerList
+   * @return this
+   */
+  JSONObject setIntegerListProperty (@Nonnull String sName, @Nonnull List <Integer> aIntegerList);
 
   /**
    * This is a helper method to set an arbitrary property not exactly knowing
@@ -456,7 +559,27 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   EChange removeProperty (@Nullable String sName);
 
   /**
-   * @return <code>true</code> if this object contains not parsable property
+   * Applies all properties from the passed object to this object
+   * 
+   * @param aObjectToApply
+   * @return Whether or not any property was set
+   */
+  EChange apply (@Nullable IJSONObject aObjectToApply);
+
+  /**
+   * Applies the specified property from the passed object to this object if
+   * that property is found and not null in the passed object
+   * 
+   * @param aObjectToApply
+   *        The object from which to read the property
+   * @param sPropertyName
+   *        The property to apply
+   * @return Whether or not the property was set
+   */
+  EChange apply (@Nullable IJSONObject aObjectToApply, @Nonnull @Nonempty String sPropertyName);
+
+  /**
+   * @return <code>true</code> if this object contains not parse-able property
    *         values
    */
   boolean containsNotParsableProperty ();
@@ -476,6 +599,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * {@inheritDoc}
    */
+  @Override
   @Nonnull
   IJSONObject getClone ();
 }

@@ -29,9 +29,10 @@ import org.junit.Test;
 @Deprecated
 public final class JSONHelperTest
 {
-  private static final String STRING_UNESCAPED = "this is a \"test\" containing \b \t \n \f \r \\ / <>\n##+{}()";
-  private static final String STRING_ESCAPED = "this is a \\\"test\\\" containing \\b \\t \\n \\f \\r \\\\ / <>\\n##+{}()";
+  private static final String STRING_UNESCAPED = "this is a \"test\" containing \b \t \n \f \r \\ / <>\n##+{}()"; //$NON-NLS-1$
+  private static final String STRING_ESCAPED = "this is a \\\"test\\\" containing \\b \\t \\n \\f \\r \\\\ / <>\\n##+{}()"; //$NON-NLS-1$
 
+  @SuppressWarnings ("static-method")
   @Test
   public void testEscape ()
   {

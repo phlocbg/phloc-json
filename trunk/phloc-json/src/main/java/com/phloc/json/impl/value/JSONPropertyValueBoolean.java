@@ -20,7 +20,6 @@ package com.phloc.json.impl.value;
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.string.StringParser;
-import com.phloc.json.IJSONPropertyValue;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -30,6 +29,8 @@ import com.phloc.json.IJSONPropertyValue;
  */
 public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean>
 {
+  private static final long serialVersionUID = 2460090172841816466L;
+
   /**
    * Ctor
    * 
@@ -50,11 +51,13 @@ public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean
     this (Boolean.valueOf (bData));
   }
 
+  @Override
   public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     aResult.append (getData ().toString ());
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueBoolean getClone ()
   {

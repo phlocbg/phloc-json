@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.phloc.commons.collections.iterate.IterableIterator;
 import com.phloc.commons.io.IInputStreamProvider;
 import com.phloc.commons.io.IReaderProvider;
+import com.phloc.commons.string.StringHelper;
 import com.phloc.json.IJSON;
 import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValue;
@@ -57,7 +58,7 @@ import com.phloc.json.impl.value.JSONPropertyValueString;
 @Immutable
 public final class JSONReader
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (JSONReader.class);
+  private static final Logger LOG = LoggerFactory.getLogger (JSONReader.class);
 
   private JSONReader ()
   {
@@ -99,8 +100,9 @@ public final class JSONReader
       return new JSONPropertyValueString (aNode.textValue ());
 
     if (!aNode.isNull ())
-      s_aLogger.info ("Having JSON Node with weird type: " + aNode);
-
+    {
+      LOG.warn ("Having JSON Node with weird type: " + aNode); //$NON-NLS-1$
+    }
     return null;
   }
 
@@ -114,18 +116,19 @@ public final class JSONReader
   public static JSONObject convertObject (@Nonnull final ObjectNode aNode)
   {
     if (aNode == null)
-      throw new NullPointerException ("node");
+    {
+      throw new NullPointerException ("aNode"); //$NON-NLS-1$
+    }
 
     final JSONObject aObj = new JSONObject ();
     for (final Map.Entry <String, JsonNode> aEntry : IterableIterator.create (aNode.fields ()))
     {
-      final String sFieldName = aEntry.getKey ();
-      final JsonNode aValue = aEntry.getValue ();
-      final IJSON aConvertedValue = convert (aValue);
-
+      final IJSON aConvertedValue = convert (aEntry.getValue ());
       // Do not set null values
       if (aConvertedValue != null)
-        aObj.setProperty (sFieldName, aConvertedValue);
+      {
+        aObj.setProperty (aEntry.getKey (), aConvertedValue);
+      }
     }
     return aObj;
   }
@@ -142,16 +145,20 @@ public final class JSONReader
   {
     final JSONPropertyValueList <IJSONPropertyValue <?>> ret = new JSONPropertyValueList <IJSONPropertyValue <?>> ();
     for (final JsonNode aNode : aValues)
+    {
       ret.addValue (convert (aNode));
+    }
     return ret;
   }
 
   @Nonnull
-  private static IJSON _convert (@Nonnull final JsonNode aNode) throws JSONParsingException
+  private static IJSON convertInternal (@Nonnull final JsonNode aNode) throws JSONParsingException
   {
     final IJSON aJSON = convert (aNode);
     if (aJSON == null)
-      throw new JSONParsingException ("Failed to convert JSON node to internal representation: " + aNode);
+    {
+      throw new JSONParsingException ("Failed to convert JSON node to internal representation: " + aNode); //$NON-NLS-1$
+    }
     return aJSON;
   }
 
@@ -167,31 +174,31 @@ public final class JSONReader
   @Nonnull
   public static IJSON parse (@Nonnull final String sJSON) throws JSONParsingException
   {
-    return _convert (JacksonHelper.parseToNode (sJSON));
+    return convertInternal (JacksonHelper.parseToNode (sJSON));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final InputStream aIS) throws JSONParsingException
   {
-    return _convert (JacksonHelper.parseToNode (aIS));
+    return convertInternal (JacksonHelper.parseToNode (aIS));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final IInputStreamProvider aIIS) throws JSONParsingException
   {
-    return _convert (JacksonHelper.parseToNode (aIIS.getInputStream ()));
+    return convertInternal (JacksonHelper.parseToNode (aIIS.getInputStream ()));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final Reader aReader) throws JSONParsingException
   {
-    return _convert (JacksonHelper.parseToNode (aReader));
+    return convertInternal (JacksonHelper.parseToNode (aReader));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final IReaderProvider aReaderProvider) throws JSONParsingException
   {
-    return _convert (JacksonHelper.parseToNode (aReaderProvider.getReader ()));
+    return convertInternal (JacksonHelper.parseToNode (aReaderProvider.getReader ()));
   }
 
   /**
@@ -209,7 +216,9 @@ public final class JSONReader
   {
     final JsonNode aParsedNode = JacksonHelper.parseToNode (sJSON);
     if (!aParsedNode.isObject ())
-      throw new JSONParsingException ("Passed JSON string is not an object: '" + sJSON + "'");
+    {
+      throw new JSONParsingException ("Passed JSON string is not an object: '" + sJSON + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
     return convertObject ((ObjectNode) aParsedNode);
   }
 
@@ -229,8 +238,37 @@ public final class JSONReader
   {
     final JsonNode aParsedNode = JacksonHelper.parseToNode (sJSON);
     if (!aParsedNode.isArray ())
-      throw new JSONParsingException ("Passed JSON string is not an array: '" + sJSON + "'");
+    {
+      throw new JSONParsingException ("Passed JSON string is not an array: '" + sJSON + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
     return convertArray ((ArrayNode) aParsedNode);
+  }
+
+  /**
+   * Parse the passed JSON array into an {@link IJSONPropertyValueList} if
+   * possible. This is a safe wrapper around {@link #parseArray(String)} that
+   * just returns <code>null</code> in case of an error and does not throw
+   * exceptions.
+   * 
+   * @param sJSON
+   *        the JSON string to convert
+   * @return the resulting list. The inner list type will be decided depending
+   *         on the type of the first item in the array
+   */
+  public static IJSONPropertyValueList <?> parseArraySafe (final String sJSON)
+  {
+    if (StringHelper.hasNoText (sJSON))
+    {
+      return null;
+    }
+    try
+    {
+      return JSONReader.parseArray (sJSON);
+    }
+    catch (final JSONParsingException aEx)
+    {
+      return null;
+    }
   }
 
   /**
@@ -246,7 +284,9 @@ public final class JSONReader
   {
     final JSONPropertyValueList <JSONPropertyValueBoolean> aList = new JSONPropertyValueList <JSONPropertyValueBoolean> ();
     for (final JsonNode aValue : aValues)
+    {
       aList.addValue (new JSONPropertyValueBoolean (aValue.booleanValue ()));
+    }
     return aList;
   }
 
@@ -263,7 +303,9 @@ public final class JSONReader
   {
     final JSONPropertyValueList <JSONPropertyValueInteger> aList = new JSONPropertyValueList <JSONPropertyValueInteger> ();
     for (final JsonNode aValue : aValues)
+    {
       aList.addValue (new JSONPropertyValueInteger (aValue.intValue ()));
+    }
     return aList;
   }
 
@@ -279,7 +321,9 @@ public final class JSONReader
   {
     final JSONPropertyValueList <JSONPropertyValueString> aList = new JSONPropertyValueList <JSONPropertyValueString> ();
     for (final JsonNode aValue : aValues)
+    {
       aList.addValue (new JSONPropertyValueString (aValue.textValue ()));
+    }
     return aList;
   }
 
@@ -296,7 +340,9 @@ public final class JSONReader
   {
     final JSONPropertyValueList <IJSONObject> aList = new JSONPropertyValueList <IJSONObject> ();
     for (final JsonNode aValue : aValues)
+    {
       aList.addValue (convertObject ((ObjectNode) aValue));
+    }
     return aList;
   }
 }

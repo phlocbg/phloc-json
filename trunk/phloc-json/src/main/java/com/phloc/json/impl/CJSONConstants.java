@@ -61,8 +61,10 @@ public final class CJSONConstants
   /**
    * JS keyword for null
    */
-  public static final String KEYWORD_NULL = "null";
+  public static final String KEYWORD_NULL = "null"; //$NON-NLS-1$
 
   private CJSONConstants ()
-  {}
+  {
+    // private
+  }
 }

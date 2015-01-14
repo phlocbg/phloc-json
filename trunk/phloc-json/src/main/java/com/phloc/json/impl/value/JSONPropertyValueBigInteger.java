@@ -22,7 +22,6 @@ import java.math.BigInteger;
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.string.StringParser;
-import com.phloc.json.IJSONPropertyValue;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -31,12 +30,15 @@ import com.phloc.json.IJSONPropertyValue;
  * @author Philip Helger
  */
 public class JSONPropertyValueBigInteger extends AbstractJSONPropertyValueNumeric <BigInteger>
-{
+{// NOPMD
+  private static final long serialVersionUID = 9120652799872699460L;
+
   public JSONPropertyValueBigInteger (@Nonnull final BigInteger aData)
   {
     super (aData);
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueBigInteger getClone ()
   {
@@ -59,7 +61,9 @@ public class JSONPropertyValueBigInteger extends AbstractJSONPropertyValueNumeri
   {
     final BigInteger aValue = StringParser.parseBigInteger (sJSON);
     if (sJSON != null && aValue == null)
-      throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not a BigInteger!");
+    {
+      throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not a BigInteger!"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
     return new JSONPropertyValueBigInteger (aValue);
   }
 }
