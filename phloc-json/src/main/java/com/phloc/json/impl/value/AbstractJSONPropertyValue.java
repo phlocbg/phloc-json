@@ -30,60 +30,74 @@ import com.phloc.json.impl.AbstractJSON;
  * @author Boris Gregorcic
  * @param <DATATYPE>
  */
-public abstract class AbstractJSONPropertyValue <DATATYPE> extends AbstractJSON implements
-                                                                               IJSONPropertyValue <DATATYPE>
+public abstract class AbstractJSONPropertyValue <DATATYPE> extends AbstractJSON implements IJSONPropertyValue <DATATYPE>
 {
+  private static final long serialVersionUID = -2938754463345307834L;
   private DATATYPE m_aData;
 
   protected AbstractJSONPropertyValue ()
   {
-    m_aData = null;
+    super ();
+    this.m_aData = null;// NOPMD
   }
 
   protected AbstractJSONPropertyValue (@Nonnull final DATATYPE aData)
   {
+    super ();
     if (aData == null)
-      throw new NullPointerException ("data");
-    m_aData = aData;
+    {
+      throw new NullPointerException ("aData"); //$NON-NLS-1$
+    }
+    this.m_aData = aData;
   }
 
+  @Override
   @Nonnull
   @OverrideOnDemand
   public DATATYPE getData ()
   {
-    if (m_aData == null)
-      throw new IllegalStateException ("getData must be overwritten!");
-    return m_aData;
+    if (this.m_aData == null)
+    {
+      throw new IllegalStateException ("getData must be overwritten!"); //$NON-NLS-1$
+    }
+    return this.m_aData;
   }
 
+  @Override
   @Deprecated
   public final void setData (@Nonnull final DATATYPE aData)
   {
     if (aData == null)
-      throw new NullPointerException ("data");
-    m_aData = aData;
+    {
+      throw new NullPointerException ("aData"); //$NON-NLS-1$
+    }
+    this.m_aData = aData;
   }
 
   @Override
-  public boolean equals (final Object o)
+  public boolean equals (final Object aOther)
   {
-    if (o == this)
+    if (aOther == this)
+    {
       return true;
-    if (o == null || !getClass ().equals (o.getClass ()))
+    }
+    if (aOther == null || !getClass ().equals (aOther.getClass ()))
+    {
       return false;
-    final AbstractJSONPropertyValue <?> rhs = (AbstractJSONPropertyValue <?>) o;
-    return EqualsUtils.equals (m_aData, rhs.m_aData);
+    }
+    final AbstractJSONPropertyValue <?> rhs = (AbstractJSONPropertyValue <?>) aOther;
+    return EqualsUtils.equals (this.m_aData, rhs.m_aData);
   }
 
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aData).getHashCode ();
+    return new HashCodeGenerator (this).append (this.m_aData).getHashCode ();
   }
 
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("data", m_aData).toString ();
+    return new ToStringGenerator (this).append ("data", this.m_aData).toString (); //$NON-NLS-1$
   }
 }

@@ -29,13 +29,16 @@ import com.phloc.json.IJSON;
  */
 public abstract class AbstractJSON implements IJSON
 {
-  protected static final String INDENT_STRING = "  ";
+  private static final long serialVersionUID = 1580625257200342447L;
+  protected static final String INDENT_STRING = "  "; //$NON-NLS-1$
 
+  @Override
   public final String getJSONString ()
   {
     return getJSONString (false);
   }
 
+  @Override
   public final String getJSONString (final boolean bAlignAndIndent)
   {
     final StringBuilder aResult = new StringBuilder ();
@@ -56,7 +59,9 @@ public abstract class AbstractJSON implements IJSON
   protected static final void indent (final StringBuilder aResult, final int nLevel, final boolean bAlignAndIndent)
   {
     if (bAlignAndIndent)
+    {
       aResult.append (StringHelper.getRepeated (INDENT_STRING, nLevel));
+    }
   }
 
   /**
@@ -71,6 +76,8 @@ public abstract class AbstractJSON implements IJSON
   {
     // this is to avoid empty lines (is hard to grant otherwise!)
     if (bAlignAndIndent && !StringHelper.endsWith (aSB, CGlobal.LINE_SEPARATOR))
+    {
       aSB.append (CGlobal.LINE_SEPARATOR);
+    }
   }
 }

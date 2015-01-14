@@ -40,6 +40,8 @@ import com.phloc.json.impl.CJSONConstants;
  */
 public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> extends AbstractJSONPropertyValue <List <DATATYPE>> implements IJSONPropertyValueList <DATATYPE>
 {
+  private static final long serialVersionUID = 6549899874312269115L;
+
   /**
    * Default ctor
    */
@@ -59,26 +61,31 @@ public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> ext
     super (ContainerHelper.newList (aList));
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueList <DATATYPE> addValue (@Nonnull final DATATYPE aValue)
   {
     if (aValue == null)
-      throw new NullPointerException ("value");
-
+    {
+      throw new NullPointerException ("value"); //$NON-NLS-1$
+    }
     getData ().add (aValue);
     return this;
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueList <DATATYPE> addAllValues (@Nonnull final Collection <? extends DATATYPE> aValues)
   {
     if (aValues == null)
-      throw new NullPointerException ("values");
-
+    {
+      throw new NullPointerException ("values"); //$NON-NLS-1$
+    }
     getData ().addAll (aValues);
     return this;
   }
 
+  @Override
   @Nonnull
   @ReturnsMutableCopy
   public List <DATATYPE> getValues ()
@@ -86,16 +93,20 @@ public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> ext
     return ContainerHelper.newList (getData ());
   }
 
+  @Override
   @Nonnull
   @ReturnsMutableCopy
   public List <Object> getDataValues ()
   {
     final List <Object> aDataValues = new ArrayList <Object> ();
     for (final DATATYPE aValue : getData ())
+    {
       aDataValues.add (aValue.getData ());
+    }
     return aDataValues;
   }
 
+  @Override
   @SuppressWarnings ("deprecation")
   public void appendJSONString (final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
@@ -115,7 +126,7 @@ public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> ext
       {
         indent (aResult, nLevel + 1, bAlignAndIndent);
       }
-      if ((aValue instanceof IJSONObject) || (aValue instanceof JSONPropertyValueJSONObject))
+      if (aValue instanceof IJSONObject || aValue instanceof JSONPropertyValueJSONObject)
       {
         // JSON object will increase the level already when passing through
         // PropertyValue method
@@ -135,6 +146,7 @@ public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> ext
     aResult.append (CJSONConstants.LIST_END);
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueList <DATATYPE> getClone ()
   {

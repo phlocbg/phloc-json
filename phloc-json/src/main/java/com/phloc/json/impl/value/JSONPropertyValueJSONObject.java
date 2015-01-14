@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 
 import com.phloc.commons.annotations.DevelopersNote;
 import com.phloc.json.IJSONObject;
-import com.phloc.json.IJSONPropertyValue;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -30,9 +29,11 @@ import com.phloc.json.IJSONPropertyValue;
  * @author Boris Gregorcic
  */
 @Deprecated
-@DevelopersNote ("Used JSONObject directly!")
+@DevelopersNote ("Use JSONObject directly!")
 public class JSONPropertyValueJSONObject extends AbstractJSONPropertyValue <IJSONObject>
 {
+  private static final long serialVersionUID = 6857934154142700751L;
+
   /**
    * Ctor
    * 
@@ -43,11 +44,13 @@ public class JSONPropertyValueJSONObject extends AbstractJSONPropertyValue <IJSO
     super (aData.getClone ());
   }
 
+  @Override
   public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     getData ().appendJSONString (aResult, bAlignAndIndent, nLevel + 1);
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueJSONObject getClone ()
   {

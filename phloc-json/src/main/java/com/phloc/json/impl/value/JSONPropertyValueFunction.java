@@ -21,9 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.phloc.commons.collections.ArrayHelper;
-import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.IJSONPropertyValueNotParsable;
-import com.phloc.json.impl.JSONReader;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -36,27 +34,33 @@ import com.phloc.json.impl.JSONReader;
  * 
  * @author Boris Gregorcic
  */
-public class JSONPropertyValueFunction extends AbstractJSONPropertyValue <String> implements
-                                                                                 IJSONPropertyValueNotParsable <String>
+public class JSONPropertyValueFunction extends AbstractJSONPropertyValue <String> implements IJSONPropertyValueNotParsable <String>
 {
+  private static final long serialVersionUID = 3114832342147725869L;
   private final String m_sBody;
   private final String [] m_aParams;
 
   @Nonnull
-  private static String _getFunctionCode (@Nonnull final String sBody, @Nullable final String [] aParams)
+  private static String getFunctionCode (@Nonnull final String sBody, @Nullable final String [] aParams)
   {
-    final StringBuilder aData = new StringBuilder ("function(");
+    final StringBuilder aData = new StringBuilder ("function("); //$NON-NLS-1$
     boolean bFirst = true;
     if (aParams != null)
+    {
       for (final String sParam : aParams)
       {
         if (bFirst)
+        {
           bFirst = false;
+        }
         else
+        {
           aData.append (',');
+        }
         aData.append (sParam);
       }
-    aData.append ("){").append (sBody).append ("}");
+    }
+    aData.append ("){").append (sBody).append ('}'); //$NON-NLS-1$
     return aData.toString ();
   }
 
@@ -70,19 +74,21 @@ public class JSONPropertyValueFunction extends AbstractJSONPropertyValue <String
    */
   public JSONPropertyValueFunction (@Nonnull final String sBody, @Nullable final String... aParams)
   {
-    super (_getFunctionCode (sBody, aParams));
-    m_sBody = sBody;
-    m_aParams = ArrayHelper.getCopy (aParams);
+    super (getFunctionCode (sBody, aParams));
+    this.m_sBody = sBody;
+    this.m_aParams = ArrayHelper.getCopy (aParams);
   }
 
+  @Override
   public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     aResult.append (getData ());
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueFunction getClone ()
   {
-    return new JSONPropertyValueFunction (m_sBody, m_aParams);
+    return new JSONPropertyValueFunction (this.m_sBody, this.m_aParams);
   }
 }

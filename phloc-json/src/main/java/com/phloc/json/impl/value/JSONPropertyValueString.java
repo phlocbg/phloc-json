@@ -19,7 +19,6 @@ package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
 
-import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.impl.CJSONConstants;
 import com.phloc.json2.serialize.JsonHelper;
 
@@ -31,6 +30,8 @@ import com.phloc.json2.serialize.JsonHelper;
  */
 public class JSONPropertyValueString extends AbstractJSONPropertyValue <String>
 {
+  private static final long serialVersionUID = -8760062567609558172L;
+
   /**
    * Ctor
    * 
@@ -41,6 +42,7 @@ public class JSONPropertyValueString extends AbstractJSONPropertyValue <String>
     super (sData);
   }
 
+  @Override
   public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     aResult.append (CJSONConstants.DOUBLEQUOTE)
@@ -48,6 +50,7 @@ public class JSONPropertyValueString extends AbstractJSONPropertyValue <String>
            .append (CJSONConstants.DOUBLEQUOTE);
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueString getClone ()
   {

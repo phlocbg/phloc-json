@@ -20,6 +20,52 @@
 -->
 <changelog xmlns="http://www.phloc.com/ns/changelog/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-json">
+
+  <entry date="2015-01-13" category="feature" action="add">
+    <change>
+      <text locale="en">Added MapBasedAttributeContainerJSONAware for better JSON support in attribute containers</text>
+    </change>
+  </entry>
+  <entry date="2015-01-13" category="feature" action="add">
+    <change>
+      <text locale="en">New IJSONObject API 'getNumericProperty' to retrieve a numeric property independent of the action data type</text>
+    </change>
+  </entry>
+  <entry date="2015-01-13" category="feature" action="add">
+    <change>
+      <text locale="en">New IJSONObject API 'getIntegerPropertyNonNull' for easy handling of non-null values</text>
+    </change>
+  </entry>
+  <entry date="2015-01-13" category="feature" action="add">
+    <change>
+      <text locale="en">New IJSONObject API 'getStringPropertyNonEmpty' for easy handling of non-empty values</text>
+    </change>
+  </entry>
+  <entry date="2015-01-13" category="feature" action="add">
+    <change>
+      <text locale="en">New IJSONObject API 'setMixedListProperty' for support of mixed lists (lists of mixed types)</text>
+    </change>
+  </entry>
+  <entry date="2015-01-13" category="feature" action="add">
+    <change>
+      <text locale="en">New IJSONObject API 'setIntegerListProperty'</text>
+    </change>
+  </entry>
+  <entry date="2015-01-13" category="feature" action="add">
+    <change>
+      <text locale="en">New IJSONObject API 'apply' for applying all properties of a passed object to this object, optionally only one property</text>
+    </change>
+  </entry>
+  <entry date="2015-01-13" category="feature" action="add">
+    <change>
+      <text locale="en">New interface IJSONReadable for initializing from JSON</text>
+    </change>
+  </entry>
+  <entry date="2015-01-13" category="feature" action="add">
+    <change>
+      <text locale="en">Added JSONUtil with some utility methods: for handling multi-lingual texts, list values, parsing and creating arrays, checking for null or empty etc.</text>
+    </change>
+  </entry>
   <release date="2014-05-21" version="2.5.4" />
   <entry date="2014-05-21" category="tech" action="change">
     <change>

@@ -36,6 +36,7 @@ import com.phloc.json2.serialize.JsonHelper;
  */
 public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSONProperty <DATATYPE>
 {
+  private static final long serialVersionUID = 5022572758866668024L;
   private final String m_sName;
   private IJSONPropertyValue <DATATYPE> m_aValue;
 
@@ -49,71 +50,87 @@ public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSON
    */
   private JSONProperty (@Nonnull @Nonempty final String sName, @Nonnull final IJSONPropertyValue <DATATYPE> aValue)
   {
+    super ();
     if (StringHelper.hasNoText (sName))
-      throw new IllegalArgumentException ("name may not be empty");
+    {
+      throw new IllegalArgumentException ("sName must not be null or empty!"); //$NON-NLS-1$
+    }
     if (aValue == null)
-      throw new NullPointerException ("value");
-    m_sName = sName;
-    m_aValue = aValue.getClone ();
+    {
+      throw new NullPointerException ("aValue"); //$NON-NLS-1$
+    }
+    this.m_sName = sName;
+    this.m_aValue = aValue.getClone ();
   }
 
+  @Override
   @Nonnull
   @Nonempty
   public String getName ()
   {
-    return m_sName;
+    return this.m_sName;
   }
 
+  @Override
   @Nonnull
   public IJSONPropertyValue <DATATYPE> getValue ()
   {
-    return m_aValue;
+    return this.m_aValue;
   }
 
+  @Override
   public void setValue (@Nonnull final IJSONPropertyValue <DATATYPE> aValue)
   {
     if (aValue == null)
-      throw new NullPointerException ("value");
-    m_aValue = aValue.getClone ();
+    {
+      throw new NullPointerException ("aValue"); //$NON-NLS-1$
+    }
+    this.m_aValue = aValue.getClone ();
   }
 
+  @Override
   public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     indent (aResult, nLevel, bAlignAndIndent);
     aResult.append (CJSONConstants.DOUBLEQUOTE)
-           .append (JsonHelper.jsonEscape (m_sName))
+           .append (JsonHelper.jsonEscape (this.m_sName))
            .append (CJSONConstants.DOUBLEQUOTE)
            .append (CJSONConstants.VALUE_ASSIGNMENT);
-    m_aValue.appendJSONString (aResult, bAlignAndIndent, nLevel);
-  }
-
-  @Nonnull
-  public JSONProperty <DATATYPE> getClone ()
-  {
-    return new JSONProperty <DATATYPE> (m_sName, m_aValue);
+    this.m_aValue.appendJSONString (aResult, bAlignAndIndent, nLevel);
   }
 
   @Override
-  public boolean equals (final Object o)
+  @Nonnull
+  public JSONProperty <DATATYPE> getClone ()
   {
-    if (o == this)
+    return new JSONProperty <DATATYPE> (this.m_sName, this.m_aValue);
+  }
+
+  @Override
+  public boolean equals (final Object aOther)
+  {
+    if (aOther == this)
+    {
       return true;
-    if (!(o instanceof JSONProperty <?>))
+    }
+    if (!(aOther instanceof JSONProperty <?>))
+    {
       return false;
-    final JSONProperty <?> rhs = (JSONProperty <?>) o;
-    return EqualsUtils.equals (m_sName, rhs.m_sName) && m_aValue.equals (rhs.m_aValue);
+    }
+    final JSONProperty <?> rhs = (JSONProperty <?>) aOther;
+    return EqualsUtils.equals (this.m_sName, rhs.m_sName) && this.m_aValue.equals (rhs.m_aValue);
   }
 
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_sName).append (m_aValue).getHashCode ();
+    return new HashCodeGenerator (this).append (this.m_sName).append (this.m_aValue).getHashCode ();
   }
 
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("name", m_sName).append ("value", m_aValue).toString ();
+    return new ToStringGenerator (this).append ("name", this.m_sName).append ("value", this.m_aValue).toString (); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Nonnull

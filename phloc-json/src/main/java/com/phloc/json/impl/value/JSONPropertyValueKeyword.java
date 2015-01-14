@@ -19,9 +19,7 @@ package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
 
-import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.IJSONPropertyValueNotParsable;
-import com.phloc.json.impl.JSONReader;
 import com.phloc.json2.serialize.JsonHelper;
 
 /**
@@ -37,6 +35,8 @@ import com.phloc.json2.serialize.JsonHelper;
  */
 public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String> implements IJSONPropertyValueNotParsable <String>
 {
+  private static final long serialVersionUID = -6528980743302232277L;
+
   /**
    * Ctor
    * 
@@ -47,11 +47,13 @@ public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String>
     super (sData);
   }
 
+  @Override
   public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     aResult.append (JsonHelper.jsonEscape (getData ()));
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueKeyword getClone ()
   {

@@ -20,7 +20,6 @@ package com.phloc.json.impl.value;
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.string.StringParser;
-import com.phloc.json.IJSONPropertyValue;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -29,7 +28,9 @@ import com.phloc.json.IJSONPropertyValue;
  * @author Boris Gregorcic
  */
 public class JSONPropertyValueInteger extends AbstractJSONPropertyValueNumeric <Integer>
-{
+{// NOPMD
+  private static final long serialVersionUID = 3460792306207775710L;
+
   public JSONPropertyValueInteger (@Nonnull final Integer aData)
   {
     super (aData);
@@ -40,6 +41,7 @@ public class JSONPropertyValueInteger extends AbstractJSONPropertyValueNumeric <
     this (Integer.valueOf (nData));
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueInteger getClone ()
   {
@@ -62,7 +64,9 @@ public class JSONPropertyValueInteger extends AbstractJSONPropertyValueNumeric <
   {
     final Integer aValue = StringParser.parseIntObj (sJSON);
     if (sJSON != null && aValue == null)
-      throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not an integer!");
+    {
+      throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not an integer!"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
     return new JSONPropertyValueInteger (aValue);
   }
 }

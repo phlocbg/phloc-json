@@ -20,7 +20,6 @@ package com.phloc.json.impl.value;
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.string.StringParser;
-import com.phloc.json.IJSONPropertyValue;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -29,7 +28,9 @@ import com.phloc.json.IJSONPropertyValue;
  * @author Boris Gregorcic
  */
 public class JSONPropertyValueDouble extends AbstractJSONPropertyValueNumeric <Double>
-{
+{// NOPMD
+  private static final long serialVersionUID = 8185684520958800838L;
+
   public JSONPropertyValueDouble (@Nonnull final Double aData)
   {
     super (aData);
@@ -40,6 +41,7 @@ public class JSONPropertyValueDouble extends AbstractJSONPropertyValueNumeric <D
     this (Double.valueOf (dData));
   }
 
+  @Override
   @Nonnull
   public JSONPropertyValueDouble getClone ()
   {
@@ -62,7 +64,9 @@ public class JSONPropertyValueDouble extends AbstractJSONPropertyValueNumeric <D
   {
     final Double aValue = StringParser.parseDoubleObj (sJSON);
     if (sJSON != null && aValue == null)
-      throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not a double!");
+    {
+      throw new IllegalArgumentException ("Parsed JSON '" + sJSON + "' is not a double!"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
     return new JSONPropertyValueDouble (aValue);
   }
 }
