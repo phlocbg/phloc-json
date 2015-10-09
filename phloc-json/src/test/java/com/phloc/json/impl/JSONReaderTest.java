@@ -24,6 +24,8 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.phloc.commons.mock.PhlocAssert;
 import com.phloc.commons.string.StringParser;
@@ -46,6 +48,7 @@ import com.phloc.json.impl.value.JSONPropertyValueString;
 @SuppressWarnings ("static-method")
 public final class JSONReaderTest extends AbstractJSONTestCase
 {
+  private static final Logger LOG = LoggerFactory.getLogger (JSONReaderTest.class);
   private static final String PROPERTY = "a"; //$NON-NLS-1$
 
   /**
@@ -55,6 +58,12 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   public void testParseObjectSimple () throws Exception
   {
     final IJSONObject aParsedObject = JSONReader.parseObject (this.m_aSimpleObject.getJSONString ());
+    LOG.info (this.m_aSimpleObject.getJSONString ());
+    LOG.info (aParsedObject.getJSONString ());
+    if (aParsedObject.equals (this.m_aSimpleObject))
+    {
+      LOG.info ("glaich");
+    }
     assertEquals (this.m_aSimpleObject, aParsedObject);
   }
 
@@ -262,14 +271,14 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseMany () throws JSONParsingException
   {
+    StringParser.parseBigInteger ("0E+39");
+
     final String sLongNum = "-123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587.1236471263179823781236715236751236561283581623587123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587"; //$NON-NLS-1$
     for (final String s : new String [] { "5", //$NON-NLS-1$
                                          "12345", //$NON-NLS-1$
                                          "-12345", //$NON-NLS-1$
                                          "1236471263179823781236715236751236561283581623587", //$NON-NLS-1$
                                          "-1236471263179823781236715236751236561283581623587", //$NON-NLS-1$
-                                         "0E+39", //$NON-NLS-1$
-                                         "0E-39", //$NON-NLS-1$
                                          "0", //$NON-NLS-1$
                                          "123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587.1236471263179823781236715236751236561283581623587123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587", //$NON-NLS-1$
                                          sLongNum,
@@ -283,7 +292,5 @@ public final class JSONReaderTest extends AbstractJSONTestCase
       assertNotNull ("Failed to parse " + s, aJSON); //$NON-NLS-1$
       assertEquals (s, aJSON.getJSONString (false)); // NOPMD
     }
-    final IJSON aJSON = JSONReader.parse ("0E-39"); //$NON-NLS-1$
-    assertEquals ("0E-39", aJSON.getJSONString (false)); //$NON-NLS-1$ //NOPMD
   }
 }

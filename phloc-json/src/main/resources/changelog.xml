@@ -21,6 +21,17 @@
 <changelog xmlns="http://www.phloc.com/ns/changelog/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-json">
 
+  <release date="2015-10-09" version="2.6.0" />
+  <entry date="2015-10-09" category="tech" action="update">
+    <change>
+      <text locale="en">Updated to phloc-json2 1.2.0</text>
+    </change>
+  </entry>
+  <entry date="2015-10-09" category="tech" action="update">
+    <change>
+      <text locale="en">Changed JSON parsing from jackson to phloc-json2</text>
+    </change>
+  </entry>
   <release date="2015-01-14" version="2.5.6" />
   <release date="2015-01-14" version="2.5.5" />
   <entry date="2015-01-13" category="feature" action="add">
