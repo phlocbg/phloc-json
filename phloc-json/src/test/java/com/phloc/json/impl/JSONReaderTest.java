@@ -23,10 +23,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.phloc.commons.charset.CCharset;
+import com.phloc.commons.io.resource.ClassPathResource;
+import com.phloc.commons.io.streams.StreamUtils;
 import com.phloc.commons.mock.PhlocAssert;
 import com.phloc.commons.string.StringParser;
 import com.phloc.json.AbstractJSONTestCase;
@@ -38,6 +42,7 @@ import com.phloc.json.impl.value.JSONPropertyValueBoolean;
 import com.phloc.json.impl.value.JSONPropertyValueDouble;
 import com.phloc.json.impl.value.JSONPropertyValueInteger;
 import com.phloc.json.impl.value.JSONPropertyValueString;
+import com.phloc.json2.serialize.JsonHelper;
 
 /**
  * This is a test for basic JSON object unmarshalling and for testing the
@@ -50,6 +55,8 @@ public final class JSONReaderTest extends AbstractJSONTestCase
 {
   private static final Logger LOG = LoggerFactory.getLogger (JSONReaderTest.class);
   private static final String PROPERTY = "a"; //$NON-NLS-1$
+
+  private static final String MOCK_JSON_FULL = "com/phloc/json/mock/mockLibraryFull.json"; //$NON-NLS-1$
 
   /**
    * Tests parsing a simple JSON object using the {@link JSONReader}
@@ -293,4 +300,30 @@ public final class JSONReaderTest extends AbstractJSONTestCase
       assertEquals (s, aJSON.getJSONString (false)); // NOPMD
     }
   }
+
+  @Test
+  public void testParseBig () throws JSONParsingException
+  {
+    final String sJSON = StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_FULL),
+                                                          CCharset.CHARSET_UTF_8_OBJ);
+    final IJSON aJSON = JSONReader.parse (sJSON);
+  }
+
+  @Test
+  public void testEscaping () throws JSONParsingException
+  {
+    assertEscaped ("aaa\"bbb");
+    assertEscaped ("aaa\\\"bbb");
+    assertEscaped ("aaa\\/bbb");
+    assertEscaped ("aaa\bbbb");
+  }
+
+  private static void assertEscaped (final String sValue) throws JSONParsingException
+  {
+    final String sJSON = "{\"prop\":\"" + JsonHelper.jsonEscape (sValue) + "\"}";
+    final IJSONObject aJSON = JSONReader.parseObject (sJSON);
+    Assert.assertEquals (sValue, aJSON.getStringProperty ("prop"));
+
+  }
+
 }
