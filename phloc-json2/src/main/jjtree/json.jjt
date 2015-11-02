@@ -106,7 +106,7 @@ TOKEN :
 | < #ESCAPE_OTHER: "\\" ["\"","/","\\","b","f","n","r","t"] >
 | < #ESCAPE: <ESCAPE_UNICODE>
            | <ESCAPE_OTHER> >
-| < STRING: "\"" ( ~["\"","/","\\","\b","\f","\n","\r","\t"]
+| < STRING: "\"" ( ~["\"","\\","\b","\f","\n","\r","\t"]
                  | <ESCAPE>
                  )* "\"" > { matchedToken.image = ParseUtils.unescapeString(image); }
 

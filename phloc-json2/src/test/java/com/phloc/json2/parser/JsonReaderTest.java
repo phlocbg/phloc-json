@@ -19,12 +19,22 @@ package com.phloc.json2.parser;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Assert;
 import org.junit.Test;
 
+import com.phloc.commons.charset.CCharset;
+import com.phloc.commons.io.resource.ClassPathResource;
+import com.phloc.commons.io.streams.StreamUtils;
 import com.phloc.json2.IJson;
+import com.phloc.json2.IJsonObject;
+import com.phloc.json2.serialize.JsonHelper;
 
 public class JsonReaderTest
 {
+  private static final String MOCK_JSON_MINI = "com/phloc/json/mock/mockLibraryMini.json"; //$NON-NLS-1$
+  private static final String MOCK_JSON_MEDIUM = "com/phloc/json/mock/mockLibrary.json"; //$NON-NLS-1$
+  private static final String MOCK_JSON_FULL = "com/phloc/json/mock/mockLibraryFull.json"; //$NON-NLS-1$
+
   @Test
   public void testBasic ()
   {
@@ -83,4 +93,65 @@ public class JsonReaderTest
       assertNotNull ("Failed to parse: " + sJson, aJson);
     }
   }
+
+  @Test
+  public void testParseMini ()
+  {
+    final String sJSON = StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_MINI),
+                                                          CCharset.CHARSET_UTF_8_OBJ);
+    final IJson aJSON = JsonReader.readFromString (sJSON);
+    assertNotNull ("Failed to parse: " + sJSON, aJSON);
+  }
+
+  @Test
+  public void testParseMedium ()
+  {
+    final String sJSON = StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_MEDIUM),
+                                                          CCharset.CHARSET_UTF_8_OBJ);
+    final IJson aJSON = JsonReader.readFromString (sJSON);
+    assertNotNull ("Failed to parse: " + sJSON, aJSON);
+  }
+
+  @Test
+  public void testParseFull ()
+  {
+    final String sJSON = StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_FULL),
+                                                          CCharset.CHARSET_UTF_8_OBJ);
+    final IJson aJSON = JsonReader.readFromString (sJSON);
+    assertNotNull ("Failed to parse: " + sJSON, aJSON);
+  }
+
+  @Test
+  public void testParseSlash ()
+  {
+    final String sJSON = "{\"prop\":\"aaa/bbb\"}";
+    final IJson aJSON = JsonReader.readFromString (sJSON);
+    assertNotNull ("Failed to parse: " + sJSON, aJSON);
+  }
+
+  @Test
+  public void testParseSlashEscaped ()
+  {
+    final String sJSON = "{\"prop\":\"aaa\\/bbb\"}";
+    final IJson aJSON = JsonReader.readFromString (sJSON);
+    assertNotNull ("Failed to parse: " + sJSON, aJSON);
+  }
+
+  @Test
+  public void testEscaping ()
+  {
+    assertEscaped ("aaa\"bbb");
+    assertEscaped ("aaa\\\"bbb");
+    assertEscaped ("aaa\\/bbb");
+    assertEscaped ("aaa\bbbb");
+  }
+
+  private static void assertEscaped (final String sValue)
+  {
+    final String sJSON = "{\"prop\":\"" + JsonHelper.jsonEscape (sValue) + "\"}";
+    final IJson aJSON = JsonReader.readFromString (sJSON);
+    Assert.assertEquals (sValue, ((IJsonObject) aJSON).getValue ("prop").getValue ());
+
+  }
+
 }

@@ -20,6 +20,12 @@
 -->
 <changelog xmlns="http://www.phloc.com/ns/changelog/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-json2">
+  <release date="2015-11-02" version="1.2.1" />
+  <entry date="2015-11-02" category="tech" action="fix">
+    <change>
+      <text locale="en">Fixed wrong unescaping of forward slashes in strings (could not parse)</text>
+    </change>
+  </entry>
   <release date="2015-10-09" version="1.2.0" />
   <entry date="2014-05-21" category="tech" action="change">
     <change>
