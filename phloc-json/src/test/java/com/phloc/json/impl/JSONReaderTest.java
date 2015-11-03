@@ -37,12 +37,12 @@ import com.phloc.json.AbstractJSONTestCase;
 import com.phloc.json.IJSON;
 import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValueList;
+import com.phloc.json.JSONHelper;
 import com.phloc.json.impl.value.JSONPropertyValueBigDecimal;
 import com.phloc.json.impl.value.JSONPropertyValueBoolean;
 import com.phloc.json.impl.value.JSONPropertyValueDouble;
 import com.phloc.json.impl.value.JSONPropertyValueInteger;
 import com.phloc.json.impl.value.JSONPropertyValueString;
-import com.phloc.json2.serialize.JsonHelper;
 
 /**
  * This is a test for basic JSON object unmarshalling and for testing the
@@ -56,7 +56,10 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   private static final Logger LOG = LoggerFactory.getLogger (JSONReaderTest.class);
   private static final String PROPERTY = "a"; //$NON-NLS-1$
 
-  private static final String MOCK_JSON_FULL = "com/phloc/json/mock/mockLibraryFull.json"; //$NON-NLS-1$
+  private static final String MOCK_JSON_LIB = "com/phloc/json/mock/mockLibrary.json"; //$NON-NLS-1$
+  private static final String MOCK_JSON_LIB_FULL = "com/phloc/json/mock/mockLibraryFull.json"; //$NON-NLS-1$
+  private static final String MOCK_JSON_LIB_MINI = "com/phloc/json/mock/mockLibraryMini.json"; //$NON-NLS-1$
+  private static final String MOCK_JSON_MODEL = "com/phloc/json/mock/modelWithEndpoints.json"; //$NON-NLS-1$
 
   /**
    * Tests parsing a simple JSON object using the {@link JSONReader}
@@ -69,7 +72,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
     LOG.info (aParsedObject.getJSONString ());
     if (aParsedObject.equals (this.m_aSimpleObject))
     {
-      LOG.info ("glaich");
+      LOG.info ("glaich"); //$NON-NLS-1$
     }
     assertEquals (this.m_aSimpleObject, aParsedObject);
   }
@@ -278,7 +281,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseMany () throws JSONParsingException
   {
-    StringParser.parseBigInteger ("0E+39");
+    StringParser.parseBigInteger ("0E+39"); //$NON-NLS-1$
 
     final String sLongNum = "-123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587.1236471263179823781236715236751236561283581623587123647126317982378123671523675123656128358162358712364712631798237812367152367512365612835816235871236471263179823781236715236751236561283581623587"; //$NON-NLS-1$
     for (final String s : new String [] { "5", //$NON-NLS-1$
@@ -302,27 +305,47 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   }
 
   @Test
-  public void testParseBig () throws JSONParsingException
+  public void testParseLib () throws JSONParsingException
   {
-    final String sJSON = StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_FULL),
-                                                          CCharset.CHARSET_UTF_8_OBJ);
-    final IJSON aJSON = JSONReader.parse (sJSON);
+    JSONReader.parse (StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_LIB),
+                                                       CCharset.CHARSET_UTF_8_OBJ));
+  }
+
+  @Test
+  public void testParseLibFull () throws JSONParsingException
+  {
+    JSONReader.parse (StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_LIB_FULL),
+                                                       CCharset.CHARSET_UTF_8_OBJ));
+  }
+
+  @Test
+  public void testParseLibMini () throws JSONParsingException
+  {
+    JSONReader.parse (StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_LIB_MINI),
+                                                       CCharset.CHARSET_UTF_8_OBJ));
+  }
+
+  @Test
+  public void testParseModel () throws JSONParsingException
+  {
+    JSONReader.parse (StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_MODEL),
+                                                       CCharset.CHARSET_UTF_8_OBJ));
   }
 
   @Test
   public void testEscaping () throws JSONParsingException
   {
-    assertEscaped ("aaa\"bbb");
-    assertEscaped ("aaa\\\"bbb");
-    assertEscaped ("aaa\\/bbb");
-    assertEscaped ("aaa\bbbb");
+    assertEscaped ("aaa\"bbb"); //$NON-NLS-1$
+    assertEscaped ("aaa\\\"bbb"); //$NON-NLS-1$
+    assertEscaped ("aaa\\/bbb"); //$NON-NLS-1$
+    assertEscaped ("aaa\bbbb"); //$NON-NLS-1$
   }
 
   private static void assertEscaped (final String sValue) throws JSONParsingException
   {
-    final String sJSON = "{\"prop\":\"" + JsonHelper.jsonEscape (sValue) + "\"}";
+    final String sJSON = "{\"prop\":\"" + JSONHelper.jsonEscape (sValue) + "\"}"; //$NON-NLS-1$ //$NON-NLS-2$
     final IJSONObject aJSON = JSONReader.parseObject (sJSON);
-    Assert.assertEquals (sValue, aJSON.getStringProperty ("prop"));
+    Assert.assertEquals (sValue, aJSON.getStringProperty ("prop")); //$NON-NLS-1$
 
   }
 

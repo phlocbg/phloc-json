@@ -19,8 +19,8 @@ package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
 
+import com.phloc.json.JSONHelper;
 import com.phloc.json.impl.CJSONConstants;
-import com.phloc.json2.serialize.JsonHelper;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -46,7 +46,7 @@ public class JSONPropertyValueString extends AbstractJSONPropertyValue <String>
   public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     aResult.append (CJSONConstants.DOUBLEQUOTE)
-           .append (JsonHelper.jsonEscape (getData ()))
+           .append (JSONHelper.jsonEscape (getData ()))
            .append (CJSONConstants.DOUBLEQUOTE);
   }
 

@@ -19,7 +19,6 @@ package com.phloc.json.impl;
 
 import java.io.InputStream;
 import java.io.Reader;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
 
@@ -27,6 +26,19 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
+import com.fasterxml.jackson.databind.node.BooleanNode;
+import com.fasterxml.jackson.databind.node.DecimalNode;
+import com.fasterxml.jackson.databind.node.DoubleNode;
+import com.fasterxml.jackson.databind.node.FloatNode;
+import com.fasterxml.jackson.databind.node.IntNode;
+import com.fasterxml.jackson.databind.node.LongNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ShortNode;
+import com.fasterxml.jackson.databind.node.ValueNode;
+import com.phloc.commons.collections.iterate.IterableIterator;
 import com.phloc.commons.io.IInputStreamProvider;
 import com.phloc.commons.io.IReaderProvider;
 import com.phloc.commons.string.StringHelper;
@@ -42,11 +54,6 @@ import com.phloc.json.impl.value.JSONPropertyValueKeyword;
 import com.phloc.json.impl.value.JSONPropertyValueList;
 import com.phloc.json.impl.value.JSONPropertyValueLong;
 import com.phloc.json.impl.value.JSONPropertyValueString;
-import com.phloc.json2.IJson;
-import com.phloc.json2.impl.JsonArray;
-import com.phloc.json2.impl.JsonObject;
-import com.phloc.json2.impl.JsonValue;
-import com.phloc.json2.parser.JsonReader;
 
 /**
  * The JSONReader can be used to parse an existing JSON string into the
@@ -63,25 +70,26 @@ public final class JSONReader
   }
 
   @Nullable
-  public static IJSONPropertyValue <?> convert (@Nonnull final IJson aNode)
+  public static IJSONPropertyValue <?> convert (@Nonnull final JsonNode aNode)
   {
     if (aNode.isObject ())
-      return convertObject ((JsonObject) aNode);
+      return convertObject ((ObjectNode) aNode);
 
     if (aNode.isArray ())
-      return convertArray ((JsonArray) aNode);
+      return convertArray ((ArrayNode) aNode);
 
-    if (aNode.isValue ())
+    if (aNode.isValueNode ())
     {
-      final JsonValue aValue = (JsonValue) aNode;
+      final ValueNode aValue = (ValueNode) aNode;
       // boolean
-      if (aValue.isBooleanValue ())
-        return new JSONPropertyValueBoolean (aValue.getCastedValue (Boolean.class));
-
-      // integers
-      if (aValue.isIntValue ())
+      if (aValue.isBoolean ())
       {
-        final BigInteger aVal = aValue.getCastedValue (BigInteger.class);
+        return new JSONPropertyValueBoolean (((BooleanNode) aValue).asBoolean ());
+      }
+      // integers
+      if (aValue.isBigInteger ())
+      {
+        final BigInteger aVal = ((BigIntegerNode) aValue).bigIntegerValue ();
         // check if it fits in an integer
         final int nVal = aVal.intValue ();
         if (String.valueOf (nVal).equals (aVal.toString ()))
@@ -96,19 +104,52 @@ public final class JSONReader
         }
         return new JSONPropertyValueBigInteger (aVal);
       }
+      if (aValue.isLong ())
+      {
+        final Long aVal = Long.valueOf (((LongNode) aValue).longValue ());
+        // check if it fits in an integer
+        final int nVal = aVal.intValue ();
+        if (String.valueOf (nVal).equals (aVal.toString ()))
+        {
+          return new JSONPropertyValueInteger (nVal);
+        }
+        // check if it fits in a long
+        return new JSONPropertyValueLong (aVal.longValue ());
+      }
+      if (aValue.isInt ())
+      {
+        return new JSONPropertyValueInteger (((IntNode) aValue).asInt ());
+      }
+      if (aValue.isShort ())
+      {
+        return new JSONPropertyValueInteger (((ShortNode) aValue).asInt ());
+      }
 
       // floating points
-      if (aValue.isDecimalValue ())
+      if (aValue.isBigDecimal ())
       {
-        return new JSONPropertyValueBigDecimal (aValue.getCastedValue (BigDecimal.class));
+        return new JSONPropertyValueBigDecimal (((DecimalNode) aValue).decimalValue ());
       }
+      if (aValue.isDouble ())
+      {
+        return new JSONPropertyValueBigDecimal (((DoubleNode) aValue).decimalValue ());
+      }
+      if (aValue.isFloat ())
+      {
+        return new JSONPropertyValueBigDecimal (((FloatNode) aValue).decimalValue ());
+      }
+
       // Text
-      if (aValue.isStringValue ())
-        return new JSONPropertyValueString (aValue.getCastedValue (String.class));
+      if (aNode.isTextual ())
+      {
+        return new JSONPropertyValueString (aNode.textValue ());
+      }
 
       // null
-      if (aValue.isNullValue ())
+      if (aValue.isNull ())
+      {
         return new JSONPropertyValueKeyword (CJSONConstants.KEYWORD_NULL);
+      }
     }
     return null;
   }
@@ -120,24 +161,26 @@ public final class JSONReader
    * @return the resulting object
    */
   @Nonnull
-  public static JSONObject convertObject (@Nonnull final JsonObject aNode)
+  public static JSONObject convertObject (@Nonnull final ObjectNode aNode)
   {
     if (aNode == null)
     {
       throw new NullPointerException ("aNode"); //$NON-NLS-1$
     }
-
-    final JSONObject aObj = new JSONObject ();
-    for (final Map.Entry <String, IJson> aEntry : aNode.getAll ().entrySet ())
+    final JSONObject aObject = new JSONObject ();
+    for (final Map.Entry <String, JsonNode> aEntry : IterableIterator.create (aNode.fields ()))
     {
-      final IJSON aConvertedValue = convert (aEntry.getValue ());
+      final String sFieldName = aEntry.getKey ();
+      final JsonNode aChildNode = aEntry.getValue ();
+      // Recursive convert
+      final IJSONPropertyValue <?> aConvertedValue = convert (aChildNode);
       // Do not set null values
       if (aConvertedValue != null)
       {
-        aObj.setProperty (aEntry.getKey (), aConvertedValue);
+        aObject.setProperty (sFieldName, aConvertedValue);
       }
     }
-    return aObj;
+    return aObject;
   }
 
   /**
@@ -148,25 +191,19 @@ public final class JSONReader
    * @return a property list representing the passed array
    */
   @Nonnull
-  public static JSONPropertyValueList <?> convertArray (final JsonArray aValues)
+  public static JSONPropertyValueList <?> convertArray (final ArrayNode aValues)
   {
-    final JSONPropertyValueList <IJSONPropertyValue <?>> ret = new JSONPropertyValueList <IJSONPropertyValue <?>> ();
-    for (final IJson aNode : aValues.getAll ())
+    final JSONPropertyValueList <IJSONPropertyValue <?>> aArray = new JSONPropertyValueList <IJSONPropertyValue <?>> ();
+    for (final JsonNode aChildNode : aValues)
     {
-      ret.addValue (convert (aNode));
+      // Recursive convert
+      final IJSONPropertyValue <?> aConvertedValue = convert (aChildNode);
+      if (aConvertedValue != null)
+      {
+        aArray.addValue (aConvertedValue);
+      }
     }
-    return ret;
-  }
-
-  @Nonnull
-  private static IJSON convertInternal (@Nonnull final IJson aNode) throws JSONParsingException
-  {
-    final IJSON aJSON = convert (aNode);
-    if (aJSON == null)
-    {
-      throw new JSONParsingException ("Failed to convert JSON node to internal representation: " + aNode); //$NON-NLS-1$
-    }
-    return aJSON;
+    return aArray;
   }
 
   /**
@@ -181,41 +218,36 @@ public final class JSONReader
   @Nonnull
   public static IJSON parse (@Nonnull final String sJSON) throws JSONParsingException
   {
-    return convertInternal (parseJSONNonNull (sJSON));
+    return parseJSONNonNull (sJSON);
   }
 
-  private static IJson parseJSONNonNull (@Nonnull final String sJSON) throws JSONParsingException
+  private static IJSON parseJSONNonNull (@Nonnull final String sJSON) throws JSONParsingException
   {
-    final IJson aJson = JsonReader.readFromString (sJSON);
-    if (aJson == null)
-    {
-      throw new JSONParsingException ("Failed to parse JSON: " + sJSON); //$NON-NLS-1$
-    }
-    return aJson;
+    return convert (JacksonHelper.parseToNode (sJSON));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final InputStream aIS) throws JSONParsingException
   {
-    return convertInternal (JsonReader.readFromStream (aIS));
+    return convert (JacksonHelper.parseToNode (aIS));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final IInputStreamProvider aIIS) throws JSONParsingException
   {
-    return convertInternal (JsonReader.readFromStream (aIIS.getInputStream ()));
+    return convert (JacksonHelper.parseToNode (aIIS.getInputStream ()));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final Reader aReader) throws JSONParsingException
   {
-    return convertInternal (JsonReader.readFromReader (aReader));
+    return convert (JacksonHelper.parseToNode (aReader));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final IReaderProvider aReaderProvider) throws JSONParsingException
   {
-    return convertInternal (JsonReader.readFromReader (aReaderProvider.getReader ()));
+    return convert (JacksonHelper.parseToNode (aReaderProvider.getReader ()));
   }
 
   /**
@@ -231,12 +263,12 @@ public final class JSONReader
   @Nonnull
   public static IJSONObject parseObject (@Nonnull final String sJSON) throws JSONParsingException
   {
-    final IJson aJson = parseJSONNonNull (sJSON);
-    if (!aJson.isObject ())
+    final IJSON aJSON = parseJSONNonNull (sJSON);
+    if (!(aJSON instanceof IJSONObject))
     {
       throw new JSONParsingException ("Passed JSON string is not an object: '" + sJSON + "'"); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    return convertObject ((JsonObject) aJson);
+    return (IJSONObject) aJSON;
   }
 
   /**
@@ -253,12 +285,12 @@ public final class JSONReader
   @Nonnull
   public static IJSONPropertyValueList <?> parseArray (@Nonnull final String sJSON) throws JSONParsingException
   {
-    final IJson aJson = parseJSONNonNull (sJSON);
-    if (!aJson.isArray ())
+    final IJSON aJSON = parseJSONNonNull (sJSON);
+    if (!(aJSON instanceof IJSONPropertyValueList))
     {
       throw new JSONParsingException ("Passed JSON string is not an array: '" + sJSON + "'"); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    return convertArray ((JsonArray) aJson);
+    return (IJSONPropertyValueList <?>) aJSON;
   }
 
   /**
@@ -287,5 +319,4 @@ public final class JSONReader
       return null;
     }
   }
-
 }

@@ -26,7 +26,7 @@ import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json.IJSONProperty;
 import com.phloc.json.IJSONPropertyValue;
-import com.phloc.json2.serialize.JsonHelper;
+import com.phloc.json.JSONHelper;
 
 /**
  * Default implementation of {@link IJSONProperty}
@@ -93,7 +93,7 @@ public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSON
   {
     indent (aResult, nLevel, bAlignAndIndent);
     aResult.append (CJSONConstants.DOUBLEQUOTE)
-           .append (JsonHelper.jsonEscape (this.m_sName))
+           .append (JSONHelper.jsonEscape (this.m_sName))
            .append (CJSONConstants.DOUBLEQUOTE)
            .append (CJSONConstants.VALUE_ASSIGNMENT);
     this.m_aValue.appendJSONString (aResult, bAlignAndIndent, nLevel);

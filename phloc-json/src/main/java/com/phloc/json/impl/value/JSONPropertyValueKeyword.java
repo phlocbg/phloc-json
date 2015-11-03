@@ -20,7 +20,7 @@ package com.phloc.json.impl.value;
 import javax.annotation.Nonnull;
 
 import com.phloc.json.IJSONPropertyValueNotParsable;
-import com.phloc.json2.serialize.JsonHelper;
+import com.phloc.json.JSONHelper;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -50,7 +50,7 @@ public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String>
   @Override
   public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
-    aResult.append (JsonHelper.jsonEscape (getData ()));
+    aResult.append (JSONHelper.jsonEscape (getData ()));
   }
 
   @Override
