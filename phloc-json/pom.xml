@@ -27,7 +27,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>phloc-json</artifactId>
-  <version>3.0.3-SNAPSHOT</version>
+  <version>3.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>phloc-json</name>
   <description>Library for read and writing JSON objects in a typesafe manner</description>
