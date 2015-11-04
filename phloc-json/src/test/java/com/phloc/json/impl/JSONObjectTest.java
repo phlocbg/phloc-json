@@ -537,4 +537,20 @@ public final class JSONObjectTest
     aObject.setLongProperty (PROP, Long.valueOf (47));
     Assert.assertEquals (BigDecimal.valueOf (47.0), aObject.getBigDecimalProperty (PROP));
   }
+
+  @Test
+  public void testParseNullValues () throws JSONParsingException
+  {
+    final String sJSON = "{aaa:true,bbb:null,ccc:\"foo\"}"; //$NON-NLS-1$
+    {
+      final IJSONObject aJSON = JSONReader.parseObject (sJSON);
+      Assert.assertEquals (ContainerHelper.newSet ("aaa", "ccc"), aJSON.getAllPropertyNames ()); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    JSONSettings.getInstance ().setParseNullValues (true);
+    {
+      final IJSONObject aJSON = JSONReader.parseObject (sJSON);
+      Assert.assertEquals (ContainerHelper.newSet ("aaa", "bbb", "ccc"), aJSON.getAllPropertyNames ()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+    JSONSettings.getInstance ().setParseNullValues (JSONSettings.DEFAULT_PARSE_NULL_VALUES);
+  }
 }

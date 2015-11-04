@@ -146,7 +146,7 @@ public final class JSONReader
       }
 
       // null
-      if (aValue.isNull ())
+      if (aValue.isNull () && JSONSettings.getInstance ().isParseNullValues ())
       {
         return new JSONPropertyValueKeyword (CJSONConstants.KEYWORD_NULL);
       }
