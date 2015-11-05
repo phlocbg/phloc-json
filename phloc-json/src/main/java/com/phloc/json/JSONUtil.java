@@ -135,6 +135,19 @@ public final class JSONUtil
   }
 
   /**
+   * Creates a property value list from the list of passed values
+   * 
+   * @param aValues
+   *        An iterable container of values extending {@link IJSONPropertyValue}
+   * @return The resulting {@link IJSONPropertyValueList}
+   */
+  @Nonnull
+  public static IJSONPropertyValueList <IJSONPropertyValue <?>> getValueList (@Nullable final Iterable <? extends IJSONPropertyValue <?>> aValues)
+  {
+    return new JSONPropertyValueList <IJSONPropertyValue <?>> (aValues);
+  }
+
+  /**
    * Tries to parse the passed JSON into a String list and returns the list of
    * the contained Strings. If anything goes wrong, this method will return
    * null.

@@ -218,4 +218,19 @@ public class JSONUtilTest
     aObject.setProperty (PROP, aData);
     Assert.assertNotNull (aObject.getProperty (PROP));
   }
+
+  @Test
+  public void testGetValueList ()
+  {
+    final List <IJSONObject> aObjects = ContainerHelper.newList ();
+    final IJSONObject aObj1 = new JSONObject ();
+    aObj1.setStringProperty ("a", "b"); //$NON-NLS-1$ //$NON-NLS-2$
+    aObjects.add (aObj1);
+    final IJSONObject aObj2 = new JSONObject ();
+    aObj2.setStringProperty ("c", "d"); //$NON-NLS-1$ //$NON-NLS-2$
+    aObjects.add (aObj2);
+    final IJSONPropertyValueList <?> aPropList = JSONUtil.getValueList (aObjects);
+    Assert.assertEquals (aObjects, aPropList.getDataValues ());
+    Assert.assertEquals ("[{\"a\":\"b\"},{\"c\":\"d\"}]", aPropList.getJSONString ()); //$NON-NLS-1$
+  }
 }
