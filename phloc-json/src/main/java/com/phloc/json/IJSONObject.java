@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import com.phloc.commons.annotations.Nonempty;
 import com.phloc.commons.state.EChange;
 import com.phloc.json.impl.JSONObject;
+import com.phloc.json.impl.JSONReader;
 
 /**
  * A basic JSON object
@@ -446,7 +447,8 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    */
   @Deprecated
   @Nonnull
-  IJSONObject setListOfListProperty (@Nonnull String sName, @Nonnull Iterable <? extends Iterable <String>> aListOfList);
+  IJSONObject setListOfListProperty (@Nonnull String sName,
+                                     @Nonnull Iterable <? extends Iterable <String>> aListOfList);
 
   /**
    * An easy way to set a new nested list (array of string arrays) property in a
@@ -546,6 +548,86 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    */
   @Nonnull
   IJSONObject setProperty (@Nonnull String sName, @Nullable Object aValue, boolean bUseTypeConverter);
+
+  /**
+   * Sets the passed string property if the value is not <code>null</code>.
+   * Empty values will still be set.
+   * 
+   * @param sName
+   *        The property name
+   * @param sValue
+   *        The value to set, may be <code>null</code>
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull @Nonempty String sName, @Nullable String sValue);
+
+  /**
+   * Sets the passed string property if the value is not <code>null</code>.
+   * Empty values will be set according to the passed flag.
+   * 
+   * @param sName
+   *        The property name
+   * @param sValue
+   *        The value to set, may be <code>null</code>
+   * @param bEmitEmptyValue
+   *        Whether or not empty values should be set
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull @Nonempty String sName, @Nullable String sValue, boolean bEmitEmptyValue);
+
+  /**
+   * Sets the passed object property if the value is not <code>null</code>.
+   * Empty object values will still be set.
+   * 
+   * @param sName
+   *        The property name
+   * @param aValue
+   *        The value to set, may be <code>null</code>
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull @Nonempty String sName, @Nullable IJSONObject aValue);
+
+  /**
+   * Sets the passed object property if the value is not <code>null</code>.
+   * Empty values will be set according to the passed flag.
+   * 
+   * @param sName
+   *        The property name
+   * @param aValue
+   *        The value to set, may be <code>null</code>
+   * @param bEmitEmptyValue
+   *        Whether or not empty values should be set
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull @Nonempty String sName, @Nullable IJSONObject aValue, boolean bOmitEmptyValue);
+
+  /**
+   * Sets the passed boolean value.
+   * 
+   * @param sName
+   *        The property name
+   * @param bValue
+   *        The value to set
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull @Nonempty String sName, boolean bValue);
+
+  /**
+   * Sets the passed integer value.
+   * 
+   * @param sName
+   *        The property name
+   * @param nValue
+   *        The value to set
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull @Nonempty String sName, int nValue);
 
   /**
    * Tries to resolve a property with the passed name and if found, removes the

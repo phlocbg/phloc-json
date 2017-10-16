@@ -67,7 +67,7 @@
     <dependency>
       <groupId>com.phloc</groupId>
       <artifactId>phloc-commons</artifactId>
-      <version>4.4.4</version>
+      <version>4.4.11</version>
     </dependency>
 
     <dependency>

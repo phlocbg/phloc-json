@@ -637,6 +637,54 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   }
 
   @Override
+  public JSONObject set (@Nonnull @Nonempty final String sName, @Nullable final String sValue)
+  {
+    return set (sName, sValue, true);
+  }
+
+  @Override
+  public JSONObject set (@Nonnull @Nonempty final String sName,
+                         @Nullable final String sValue,
+                         final boolean bEmitEmptyValue)
+  {
+    if (sValue != null && (bEmitEmptyValue || StringHelper.hasText (sValue)))
+    {
+      setStringProperty (sName, sValue);
+    }
+    return this;
+  }
+
+  @Override
+  public JSONObject set (@Nonnull @Nonempty final String sName, @Nullable final IJSONObject aValue)
+  {
+    return set (sName, aValue, true);
+  }
+
+  @Override
+  public JSONObject set (@Nonnull @Nonempty final String sName,
+                         @Nullable final IJSONObject aValue,
+                         final boolean bEmitEmptyValue)
+  {
+    if (aValue != null && (bEmitEmptyValue || !aValue.isEmpty ()))
+    {
+      setObjectProperty (sName, aValue);
+    }
+    return this;
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull @Nonempty String sName, final boolean bValue)
+  {
+    return setBooleanProperty (sName, bValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull @Nonempty String sName, final int nValue)
+  {
+    return setIntegerProperty (sName, nValue);
+  }
+
+  @Override
   public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     appendNewLine (aResult, bAlignAndIndent);
