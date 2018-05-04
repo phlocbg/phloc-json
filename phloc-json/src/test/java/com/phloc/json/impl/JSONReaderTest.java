@@ -59,7 +59,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   private static final String MOCK_JSON_LIB = "com/phloc/json/mock/mockLibrary.json"; //$NON-NLS-1$
   private static final String MOCK_JSON_LIB_FULL = "com/phloc/json/mock/mockLibraryFull.json"; //$NON-NLS-1$
   private static final String MOCK_JSON_LIB_MINI = "com/phloc/json/mock/mockLibraryMini.json"; //$NON-NLS-1$
-  private static final String MOCK_JSON_MODEL = "com/phloc/json/mock/modelWithEndpoints.json"; //$NON-NLS-1$
+  private static final String MOCK_JSON_MODEL = "com/phloc/json/mock/modelWithEndpoints.jsonill"; //$NON-NLS-1$
 
   /**
    * Tests parsing a simple JSON object using the {@link JSONReader}
@@ -328,8 +328,10 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testParseModel () throws JSONParsingException
   {
-    JSONReader.parse (StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_MODEL),
+    IJSON aJSON = JSONReader.parse (StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_MODEL),
                                                        CCharset.CHARSET_UTF_8_OBJ));
+    Assert.assertTrue (aJSON instanceof IJSONObject);
+    Assert.assertNotNull (((IJSONObject)aJSON).getStringProperty ("model"));
   }
 
   @Test
