@@ -52,11 +52,6 @@ public final class JacksonHelper
     // Feature that determines whether parser will allow use of unquoted field
     // names (which is allowed by Javascript, but not by JSON specification).
     aObjectMapper.configure (JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-    if (false)
-    {
-      // Allow single quotes for strings?
-      aObjectMapper.configure (JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-    }
     // Always use BigDecimal
     aObjectMapper.enable (DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
     // As of 2.1.4 BigDecimals are compacted by default - with this method
