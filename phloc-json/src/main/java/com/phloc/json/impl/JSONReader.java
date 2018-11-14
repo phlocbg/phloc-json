@@ -69,6 +69,17 @@ public final class JSONReader
     // private
   }
 
+  @Nonnull
+  public static IJSONPropertyValue <?> convertNonnull (@Nonnull final JsonNode aNode) throws JSONParsingException
+  {
+    final IJSONPropertyValue <?> aValue = convert (aNode);
+    if (aValue == null)
+    {
+      throw new JSONParsingException ("Unable to convert node to JSON: '" + aNode + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    return aValue;
+  }
+
   @Nullable
   public static IJSONPropertyValue <?> convert (@Nonnull final JsonNode aNode)
   {
@@ -223,31 +234,31 @@ public final class JSONReader
 
   private static IJSON parseJSONNonNull (@Nonnull final String sJSON) throws JSONParsingException
   {
-    return convert (JacksonHelper.parseToNode (sJSON));
+    return convertNonnull (JacksonHelper.parseToNode (sJSON));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final InputStream aIS) throws JSONParsingException
   {
-    return convert (JacksonHelper.parseToNode (aIS));
+    return convertNonnull (JacksonHelper.parseToNode (aIS));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final IInputStreamProvider aIIS) throws JSONParsingException
   {
-    return convert (JacksonHelper.parseToNode (aIIS.getInputStream ()));
+    return convertNonnull (JacksonHelper.parseToNode (aIIS.getInputStream ()));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final Reader aReader) throws JSONParsingException
   {
-    return convert (JacksonHelper.parseToNode (aReader));
+    return convertNonnull (JacksonHelper.parseToNode (aReader));
   }
 
   @Nonnull
   public static IJSON parse (@Nonnull final IReaderProvider aReaderProvider) throws JSONParsingException
   {
-    return convert (JacksonHelper.parseToNode (aReaderProvider.getReader ()));
+    return convertNonnull (JacksonHelper.parseToNode (aReaderProvider.getReader ()));
   }
 
   /**

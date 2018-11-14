@@ -21,6 +21,17 @@
 <changelog xmlns="http://www.phloc.com/ns/changelog/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-json">
 
+  <release date="2018-11-14" version="3.1.0" />
+  <entry date="2018-11-14" category="tech" action="update">
+    <change>
+      <text locale="en">Updated to jackson 2.9.7</text>
+    </change>
+  </entry>
+  <entry date="2018-11-14" category="tech" action="update">
+    <change>
+      <text locale="en">Updated to phloc-commons 4.4.13</text>
+    </change>
+  </entry>
   <release date="2017-10-16" version="3.0.4" />
   <entry date="2017-10-16" category="api" action="add">
     <change>

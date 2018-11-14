@@ -75,7 +75,12 @@ public final class JacksonHelper
   {
     try
     {
-      return createObjectMapper ().readTree (new NonBlockingStringReader (sJSON));
+      final JsonNode aNode = createObjectMapper ().readTree (new NonBlockingStringReader (sJSON));
+      if (aNode == null)
+      {
+        throw new JSONParsingException ("no conent to map");
+      }
+      return aNode;
     }
     catch (final Throwable t)
     {
