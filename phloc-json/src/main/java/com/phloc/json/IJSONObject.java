@@ -332,7 +332,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * 
    * @param sName
    *        Property name
-   * @param I
+   * @param <I>
    *        Type of the list items
    * @return a list of the inner values stored in the list value of the property
    *         with the passed name, or <code>null</code>

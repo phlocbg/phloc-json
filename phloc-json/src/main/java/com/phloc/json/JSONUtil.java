@@ -189,7 +189,7 @@ public final class JSONUtil
    *        The JSON array to convert
    * @param aClass
    *        The expected class of the contained elements in the array
-   * @param T
+   * @param <T>
    *        Type of the array elements
    * @return A list of elements, or <code>null</code>
    */
