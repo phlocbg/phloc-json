@@ -21,7 +21,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.phloc.commons.collections.ArrayHelper;
+import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.IJSONPropertyValueNotParsable;
+import com.phloc.json.impl.JSONReader;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type

@@ -19,8 +19,10 @@ package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
 
+import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.IJSONPropertyValueNotParsable;
 import com.phloc.json.JSONHelper;
+import com.phloc.json.impl.JSONReader;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -41,6 +43,7 @@ public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String>
    * Ctor
    * 
    * @param sData
+   *        data value
    */
   public JSONPropertyValueKeyword (@Nonnull final String sData)
   {

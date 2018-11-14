@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 
 import com.phloc.commons.annotations.DevelopersNote;
 import com.phloc.json.IJSONObject;
+import com.phloc.json.IJSONPropertyValue;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -38,6 +39,7 @@ public class JSONPropertyValueJSONObject extends AbstractJSONPropertyValue <IJSO
    * Ctor
    * 
    * @param aData
+   *        data value
    */
   public JSONPropertyValueJSONObject (@Nonnull final IJSONObject aData)
   {

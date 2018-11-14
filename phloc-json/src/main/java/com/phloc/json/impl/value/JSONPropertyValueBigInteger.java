@@ -22,6 +22,7 @@ import java.math.BigInteger;
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.string.StringParser;
+import com.phloc.json.IJSONPropertyValue;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type

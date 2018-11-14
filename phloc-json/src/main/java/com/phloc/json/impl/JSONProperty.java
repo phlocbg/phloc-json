@@ -33,6 +33,7 @@ import com.phloc.json.JSONHelper;
  * 
  * @author Boris Gregorcic
  * @param <DATATYPE>
+ *        The internal data type of this property
  */
 public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSONProperty <DATATYPE>
 {

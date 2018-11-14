@@ -19,6 +19,8 @@ package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
 
+import com.phloc.json.IJSONPropertyValue;
+
 /**
  * Implementation of {@link IJSONPropertyValue} with a numeric internal data
  * type

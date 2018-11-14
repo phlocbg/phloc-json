@@ -20,6 +20,7 @@ package com.phloc.json.impl.value;
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.string.StringParser;
+import com.phloc.json.IJSONPropertyValue;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
@@ -35,6 +36,7 @@ public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean
    * Ctor
    * 
    * @param aData
+   *        data value
    */
   public JSONPropertyValueBoolean (@Nonnull final Boolean aData)
   {
@@ -45,6 +47,7 @@ public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean
    * Ctor
    * 
    * @param bData
+   *        data value
    */
   public JSONPropertyValueBoolean (final boolean bData)
   {

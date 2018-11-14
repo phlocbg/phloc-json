@@ -68,10 +68,10 @@ public final class JSONUtil
    * Creates a multilingual text from the passed JSON objects property
    * specified.
    * 
-   * @param aJSON
+   * @param aJSONObject
    *        the JSON object containing the multilingual text property
-   * @param sAttributeName
-   *        attribute that contains multi lingual text
+   * @param sProperty
+   *        property that contains multi lingual text
    * @return the multi lingual values of the specified attribute in the pass
    *         JSON object
    */
@@ -89,7 +89,9 @@ public final class JSONUtil
     final IJSONObject aMultilingualValues = aJSONObject.getObjectProperty (sProperty);
     if (aMultilingualValues == null)
     {
-      throw new IllegalArgumentException ("No object property with the specified name " + sProperty + " found in the passed JSON Object"); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException ("No object property with the specified name " + //$NON-NLS-1$
+                                          sProperty +
+                                          " found in the passed JSON Object"); //$NON-NLS-1$
     }
     return getMultiLingualText (aMultilingualValues);
   }
@@ -153,6 +155,7 @@ public final class JSONUtil
    * null.
    * 
    * @param sJSON
+   *        JSON string to parse
    * @return The list of contained Strings, or <code>null</code>
    */
   @Nullable
@@ -167,6 +170,7 @@ public final class JSONUtil
    * null.
    * 
    * @param sJSON
+   *        JSON string to parse
    * @return list of the contained JSON objects
    */
   @Nullable
@@ -207,7 +211,12 @@ public final class JSONUtil
         }
         else
         {
-          LOG.error ("Unable to convert element of type " + aToken.getClass ().getName () + " to desired type " + aClass.getName () + " in passed JSON array: " + aArray.getJSONString ()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          LOG.error ("Unable to convert element of type " + //$NON-NLS-1$
+                     aToken.getClass ().getName () +
+                     " to desired type " + //$NON-NLS-1$
+                     aClass.getName () +
+                     " in passed JSON array: " + //$NON-NLS-1$
+                     aArray.getJSONString ());
           return null;
         }
       }
@@ -241,7 +250,7 @@ public final class JSONUtil
    *         <code>null</code>
    */
   @Nonnull
-  public static JSONPropertyValueList <IJSONPropertyValueList <IJSONObject>> getJSONMultiArray (@Nonnull final IJSONConvertible [][] aMultiArray)
+  public static JSONPropertyValueList <IJSONPropertyValueList <IJSONObject>> getJSONMultiArray (@Nonnull final IJSONConvertible [] [] aMultiArray)
   {
     if (aMultiArray == null)
     {

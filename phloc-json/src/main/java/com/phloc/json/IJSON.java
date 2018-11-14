@@ -38,8 +38,8 @@ public interface IJSON extends ICloneable <IJSON>, Serializable
 
   /**
    * Generates a JSON String representation of this object, either compact or
-   * pretty-printed.<br/>
-   * <br/>
+   * pretty-printed.<br>
+   * <br>
    * <b>NOTE:</b>Do not use pretty print for actual data generation, but only
    * for debug purposes!
    * 

@@ -37,7 +37,7 @@ public interface IJSONProperty <T> extends IJSON, IHasName
 {
   /**
    * @return the name of the property (unique in the scope of a
-   *         {@link JSONObject})
+   *         {@link IJSONObject})
    */
   @Override
   @Nonnull
@@ -55,6 +55,7 @@ public interface IJSONProperty <T> extends IJSON, IHasName
    * Sets the passed value in this property
    * 
    * @param aValue
+   *        Value to set, may not be <code>null</code>
    */
   void setValue (@Nonnull IJSONPropertyValue <T> aValue);
 

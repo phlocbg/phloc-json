@@ -169,6 +169,7 @@ public final class JSONReader
    * Converts a passed {@link JsonNode} into a {@link JSONObject}
    * 
    * @param aNode
+   *        The node to convert, may not be <code>null</code>
    * @return the resulting object
    */
   @Nonnull
@@ -199,6 +200,7 @@ public final class JSONReader
    * {@link JSONPropertyValueList}
    * 
    * @param aValues
+   *        The array node to convert
    * @return a property list representing the passed array
    */
   @Nonnull

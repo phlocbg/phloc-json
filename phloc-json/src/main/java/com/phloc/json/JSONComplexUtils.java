@@ -40,11 +40,12 @@ public final class JSONComplexUtils
 
   /**
    * Converts the passed property map to a new JSON object containing all
-   * properties from the map.<br/>
+   * properties from the map.<br>
    * <b>ATTENTION:</b> Currently only simple types are supported, no container
    * types or nested objects!
    * 
    * @param aProperties
+   *        The source map
    * @return the created JSON object
    */
   @Nonnull
@@ -55,7 +56,7 @@ public final class JSONComplexUtils
 
   /**
    * Converts the passed property map to a new JSON object containing all
-   * properties from the map.<br/>
+   * properties from the map.<br>
    * <b>ATTENTION:</b> Currently only simple types are supported, no container
    * types or nested objects!
    * 

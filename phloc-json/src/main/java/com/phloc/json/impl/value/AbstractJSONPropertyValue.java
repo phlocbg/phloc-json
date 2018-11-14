@@ -29,6 +29,7 @@ import com.phloc.json.impl.AbstractJSON;
 /**
  * @author Boris Gregorcic
  * @param <DATATYPE>
+ *        The internal data type of this property
  */
 public abstract class AbstractJSONPropertyValue <DATATYPE> extends AbstractJSON implements IJSONPropertyValue <DATATYPE>
 {

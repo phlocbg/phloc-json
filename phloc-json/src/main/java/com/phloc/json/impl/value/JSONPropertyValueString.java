@@ -19,6 +19,7 @@ package com.phloc.json.impl.value;
 
 import javax.annotation.Nonnull;
 
+import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.JSONHelper;
 import com.phloc.json.impl.CJSONConstants;
 
@@ -36,6 +37,7 @@ public class JSONPropertyValueString extends AbstractJSONPropertyValue <String>
    * Ctor
    * 
    * @param sData
+   *        data value
    */
   public JSONPropertyValueString (@Nonnull final String sData)
   {

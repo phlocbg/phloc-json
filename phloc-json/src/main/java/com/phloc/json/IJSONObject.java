@@ -103,6 +103,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * <code>null</code> will be returned.
    * 
    * @param sName
+   *        Property name
    * @return the Boolean value of the property with the passed name, or
    *         <code>null</code>
    */
@@ -116,7 +117,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @param sName
    *        Property name
    * @param bDataValue
-   *        property value
+   *        Property value
    * @return this
    */
   @Nonnull
@@ -139,6 +140,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * </ul>
    * 
    * @param sName
+   *        Property name
    * @return the Double value of the property with the passed name, or
    *         <code>null</code>
    */
@@ -150,7 +152,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * properties with the same name will be replaced!
    * 
    * @param sName
+   *        Property name
    * @param dDataValue
+   *        Property value
    * @return this
    */
   @Nonnull
@@ -173,6 +177,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * </ul>
    * 
    * @param sName
+   *        Property name
    * @return the Integer value of the property with the passed name, or
    *         <code>null</code>
    */
@@ -185,6 +190,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * {@link NullPointerException} rather thatn returning null.
    * 
    * @param sName
+   *        Property name
    * @return the Integer value of the property with the passed name, never
    *         <code>null</code>
    */
@@ -196,7 +202,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * with the same name will be replaced!
    * 
    * @param sName
+   *        Property name
    * @param nDataValue
+   *        Property value
    * @return this
    */
   @Nonnull
@@ -211,6 +219,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * <code>null</code> will be returned.
    * 
    * @param sName
+   *        Property name
    * @return the Long value of the property with the passed name, or
    *         <code>null</code>
    */
@@ -222,7 +231,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * properties with the same name will be replaced!
    * 
    * @param sName
+   *        Property name
    * @param nDataValue
+   *        Property value
    * @return this
    */
   @Nonnull
@@ -237,6 +248,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * <code>null</code> will be returned.
    * 
    * @param sName
+   *        Property name
    * @return the String value of the keyword valuer of the property with the
    *         passed name, or <code>null</code>
    */
@@ -315,9 +327,11 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * Tries to resolve the value of the passed list property. If not found or the
    * property with the passed name is not of type
-   * <code>IJSONPropertyValueList <?></code>, <code>null</code> will returned.
+   * <code>IJSONPropertyValueList &lt;?&gt;</code>, <code>null</code> will
+   * returned.
    * 
    * @param sName
+   *        Property name
    * @return a list of the inner values stored in the list value of the property
    *         with the passed name, or <code>null</code>
    */
@@ -329,7 +343,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * properties with the same name will be replaced!
    * 
    * @param sName
+   *        Property name
    * @param aList
+   *        Property value
    * @return this
    */
   @Nonnull
@@ -341,6 +357,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * <code>null</code> will be returned.
    * 
    * @param sName
+   *        Property name
    * @return the IJSONObject value of the property with the passed name, or
    *         <code>null</code>
    */
@@ -352,6 +369,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * properties with the same name will be replaced!
    * 
    * @param sName
+   *        Property name
    * @param aObject
    *        the nested object
    * @return this
@@ -365,6 +383,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * <code>null</code> will be returned.
    * 
    * @param sName
+   *        Property name
    * @return the String value of the property with the passed name, or
    *         <code>null</code>
    */
@@ -377,6 +396,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * {@link IllegalArgumentException} will be thrown.
    * 
    * @param sName
+   *        Property name
    * @return the String value of the property with the passed name, never
    *         <code>null</code>
    */
@@ -388,7 +408,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * properties with the same name will be replaced!
    * 
    * @param sName
+   *        Property name
    * @param sDataValue
+   *        Property value
    * @return this
    */
   @Nonnull
@@ -412,9 +434,11 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * Tries to resolve the value of the passed list property. If not found or the
    * property with the passed name is not of type
-   * <code>IJSONPropertyValueList <?></code>, <code>null</code> will returned.
+   * <code>IJSONPropertyValueList &lt;?&gt;</code>, <code>null</code> will
+   * returned.
    * 
    * @param sName
+   *        Property name
    * @return a list of {@link IJSONPropertyValue}s contained, or
    *         <code>null</code>
    */
@@ -429,7 +453,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * Existing properties with the same name will be replaced!
    * 
    * @param sName
+   *        Property name
    * @param aObjectList
+   *        Property value
    * @return this
    */
   @Nonnull
@@ -440,7 +466,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * JSON object. Existing properties with the same name will be replaced!
    * 
    * @param sName
+   *        Property name
    * @param aListOfList
+   *        Property value
    * @return this
    * @deprecated Use {@link #setListOfStringListProperty(String,Iterable)}
    *             instead
@@ -455,7 +483,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * JSON object. Existing properties with the same name will be replaced!
    * 
    * @param sName
+   *        Property name
    * @param aListOfList
+   *        Property value
    * @return this
    */
   @Nonnull
@@ -467,7 +497,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * Existing properties with the same name will be replaced!
    * 
    * @param sName
+   *        Property name
    * @param aStringList
+   *        Property value
    * @return this
    */
   @Nonnull
@@ -493,7 +525,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * @param aValues
    *        The values to set, must not be <code>null</code>, does not allow
    *        <code>null</code> values!
-   * @return
+   * @return this
    */
   JSONObject setMixedListProperty (@Nonnull String sName, @Nonnull Iterable <?> aValues);
 
@@ -502,7 +534,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * Existing properties with the same name will be replaced!
    * 
    * @param sName
+   *        Property name
    * @param aIntList
+   *        Property value
    * @return this
    */
   @Nonnull
@@ -513,7 +547,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * Existing properties with the same name will be replaced!
    * 
    * @param sName
+   *        Property name
    * @param aIntegerList
+   *        Property value
    * @return this
    */
   JSONObject setIntegerListProperty (@Nonnull String sName, @Nonnull List <Integer> aIntegerList);
@@ -644,6 +680,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * Applies all properties from the passed object to this object
    * 
    * @param aObjectToApply
+   *        Object to apply on this
    * @return Whether or not any property was set
    */
   EChange apply (@Nullable IJSONObject aObjectToApply);

@@ -31,6 +31,7 @@ public class JSONParsingException extends Exception
    * Ctor with only a message
    * 
    * @param sMsg
+   *        Exception message
    */
   public JSONParsingException (final String sMsg)
   {
@@ -41,7 +42,9 @@ public class JSONParsingException extends Exception
    * Ctor with a message and an inner exception
    * 
    * @param sMessage
+   *        Exception message
    * @param aException
+   *        nested exception
    */
   public JSONParsingException (final String sMessage, final Throwable aException)
   {

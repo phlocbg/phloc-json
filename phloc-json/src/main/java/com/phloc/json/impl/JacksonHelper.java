@@ -95,7 +95,7 @@ public final class JacksonHelper
    * @param aIS
    *        the JSON input stream to convert, can be any valid JSON mark-up
    * @return the resulting JSON node structure
-   * @throws JsonReadException
+   * @throws JSONParsingException
    *         in case parsing failed
    */
   @Nonnull
@@ -120,7 +120,7 @@ public final class JacksonHelper
    * @param aReader
    *        the JSON Reader to convert, can be any valid JSON mark-up
    * @return the resulting JSON node structure
-   * @throws JsonReadException
+   * @throws JSONParsingException
    *         in case parsing failed
    */
   @Nonnull
