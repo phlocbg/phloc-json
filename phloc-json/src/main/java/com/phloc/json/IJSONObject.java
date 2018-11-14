@@ -332,6 +332,8 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * 
    * @param sName
    *        Property name
+   * @param I
+   *        Type of the list items
    * @return a list of the inner values stored in the list value of the property
    *         with the passed name, or <code>null</code>
    */
@@ -606,12 +608,13 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    *        The property name
    * @param sValue
    *        The value to set, may be <code>null</code>
-   * @param bEmitEmptyValue
-   *        Whether or not empty values should be set
+   * @param bHandleEmptyValue
+   *        Whether or not empty values should be set, default is
+   *        <code>true</code>
    * @return this for chaining, never <code>null</code>
    */
   @Nonnull
-  JSONObject set (@Nonnull @Nonempty String sName, @Nullable String sValue, boolean bEmitEmptyValue);
+  JSONObject set (@Nonnull @Nonempty String sName, @Nullable String sValue, boolean bHandleEmptyValue);
 
   /**
    * Sets the passed object property if the value is not <code>null</code>.
@@ -634,12 +637,13 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    *        The property name
    * @param aValue
    *        The value to set, may be <code>null</code>
-   * @param bEmitEmptyValue
-   *        Whether or not empty values should be set
+   * @param bHandleEmptyValue
+   *        Whether or not empty values should be set, default is
+   *        <code>true</code>
    * @return this for chaining, never <code>null</code>
    */
   @Nonnull
-  JSONObject set (@Nonnull @Nonempty String sName, @Nullable IJSONObject aValue, boolean bOmitEmptyValue);
+  JSONObject set (@Nonnull @Nonempty String sName, @Nullable IJSONObject aValue, boolean bHandleEmptyValue);
 
   /**
    * Sets the passed boolean value.

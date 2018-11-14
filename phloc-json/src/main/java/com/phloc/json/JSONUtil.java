@@ -189,6 +189,8 @@ public final class JSONUtil
    *        The JSON array to convert
    * @param aClass
    *        The expected class of the contained elements in the array
+   * @param T
+   *        Type of the array elements
    * @return A list of elements, or <code>null</code>
    */
   @SuppressWarnings ("unchecked")
@@ -229,6 +231,7 @@ public final class JSONUtil
    * Tells whether the passed object is null or has no property at all
    * 
    * @param aObject
+   *        Object to check
    * @return <code>true</code> if <code>null</code> or empty, <code>false</code>
    *         otherwise
    */

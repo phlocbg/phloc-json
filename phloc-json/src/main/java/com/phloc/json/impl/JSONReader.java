@@ -227,6 +227,7 @@ public final class JSONReader
    *        the JSON string to convert, must be a valid JSON string!
    * @return the resulting IJSON representation
    * @throws JSONParsingException
+   *         in case parsing fails
    */
   @Nonnull
   public static IJSON parse (@Nonnull final String sJSON) throws JSONParsingException
