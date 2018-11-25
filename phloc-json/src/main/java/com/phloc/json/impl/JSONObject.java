@@ -87,9 +87,16 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   public JSONObject ()
   {
     super ();
+    JSONStatistics.getInstance ().onObjectCreated ();
   }
 
   public JSONObject (@Nonnull final Iterable <? extends IJSONProperty <?>> aProperties)
+  {
+    this (aProperties, ECloneStategy.INHERIT);
+  }
+
+  public JSONObject (@Nonnull final Iterable <? extends IJSONProperty <?>> aProperties,
+                     final ECloneStategy eCloneStrategy)
   {
     super ();
     if (aProperties == null)
@@ -97,7 +104,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       throw new NullPointerException ("properties"); //$NON-NLS-1$
     }
     for (final IJSONProperty <?> aProperty : aProperties)
-      setProperty (aProperty);
+    {
+      setProperty (aProperty, eCloneStrategy);
+    }
+    JSONStatistics.getInstance ().onObjectCreated ();
   }
 
   /**
@@ -117,11 +127,21 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setProperty (@Nonnull final IJSONProperty <?> aProperty)
   {
+    return setProperty (aProperty, ECloneStategy.INHERIT);
+  }
+
+  @Nonnull
+  private JSONObject setProperty (@Nonnull final IJSONProperty <?> aProperty, final ECloneStategy eCloneStrategy)
+  {
     if (aProperty == null)
     {
       throw new NullPointerException ("property"); //$NON-NLS-1$
     }
-    this.m_aProperties.put (aProperty.getName (), aProperty.getClone ());
+    this.m_aProperties.put (aProperty.getName (),
+                            (eCloneStrategy == ECloneStategy.FORCE ||
+                             eCloneStrategy != ECloneStategy.AVOID && JSONSettings.getInstance ().isCloneProperties ())
+                                                                                                                        ? aProperty.getClone ()
+                                                                                                                        : aProperty);
     return this;
   }
 
@@ -187,14 +207,16 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setBooleanProperty (@Nonnull final String sName, final boolean bDataValue)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueBoolean (bDataValue)));
+    return setProperty (JSONProperty.create (sName, new JSONPropertyValueBoolean (bDataValue), ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
   @Nonnull
   public JSONObject setBooleanProperty (@Nonnull final String sName, @Nonnull final Boolean aDataValue)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueBoolean (aDataValue)));
+    return setProperty (JSONProperty.create (sName, new JSONPropertyValueBoolean (aDataValue), ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
@@ -213,14 +235,16 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setDoubleProperty (@Nonnull final String sName, final double nDataValue)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueDouble (nDataValue)));
+    return setProperty (JSONProperty.create (sName, new JSONPropertyValueDouble (nDataValue), ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
   @Nonnull
   public JSONObject setDoubleProperty (@Nonnull final String sName, @Nonnull final Double aDataValue)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueDouble (aDataValue)));
+    return setProperty (JSONProperty.create (sName, new JSONPropertyValueDouble (aDataValue), ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
@@ -251,14 +275,16 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setIntegerProperty (@Nonnull final String sName, final int nDataValue)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueInteger (nDataValue)));
+    return setProperty (JSONProperty.create (sName, new JSONPropertyValueInteger (nDataValue), ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
   @Nonnull
   public JSONObject setIntegerProperty (@Nonnull final String sName, @Nonnull final Integer aDataValue)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueInteger (aDataValue)));
+    return setProperty (JSONProperty.create (sName, new JSONPropertyValueInteger (aDataValue), ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
@@ -277,14 +303,16 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setLongProperty (@Nonnull final String sName, final long nDataValue)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueLong (nDataValue)));
+    return setProperty (JSONProperty.create (sName, new JSONPropertyValueLong (nDataValue), ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
   @Nonnull
   public JSONObject setLongProperty (@Nonnull final String sName, @Nonnull final Long aDataValue)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueLong (aDataValue)));
+    return setProperty (JSONProperty.create (sName, new JSONPropertyValueLong (aDataValue), ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
@@ -303,7 +331,8 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setKeywordProperty (@Nonnull final String sName, @Nonnull final String sDataValue)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueKeyword (sDataValue)));
+    return setProperty (JSONProperty.create (sName, new JSONPropertyValueKeyword (sDataValue), ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
@@ -312,14 +341,20 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
                                          @Nonnull final String sBody,
                                          @Nullable final String... aParams)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueFunction (sBody, aParams)));
+    return setProperty (JSONProperty.create (sName,
+                                             new JSONPropertyValueFunction (sBody, aParams),
+                                             ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
   @Nonnull
   public JSONObject setFunctionPrebuildProperty (@Nonnull final String sName, @Nonnull final String sFunctionCode)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueFunctionPrebuild (sFunctionCode)));
+    return setProperty (JSONProperty.create (sName,
+                                             new JSONPropertyValueFunctionPrebuild (sFunctionCode),
+                                             ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
@@ -338,7 +373,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setListProperty (@Nonnull final String sName, @Nonnull final IJSONPropertyValueList <?> aList)
   {
-    return setProperty (JSONProperty.create (sName, aList));
+    return setProperty (JSONProperty.create (sName, aList, ECloneStategy.INHERIT), ECloneStategy.AVOID);
   }
 
   @Override
@@ -361,7 +396,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setObjectProperty (@Nonnull final String sName, @Nonnull final IJSONObject aObject)
   {
-    return setProperty (JSONProperty.create (sName, aObject));
+    return setProperty (JSONProperty.create (sName, aObject, ECloneStategy.INHERIT), ECloneStategy.AVOID);
   }
 
   @Override
@@ -395,7 +430,8 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setStringProperty (@Nonnull final String sName, @Nonnull final String sDataValue)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueString (sDataValue)));
+    return setProperty (JSONProperty.create (sName, new JSONPropertyValueString (sDataValue), ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
@@ -425,7 +461,8 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setBigIntegerProperty (@Nonnull final String sName, @Nonnull final BigInteger aDataValue)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueBigInteger (aDataValue)));
+    return setProperty (JSONProperty.create (sName, new JSONPropertyValueBigInteger (aDataValue), ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
@@ -444,7 +481,8 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setBigDecimalProperty (@Nonnull final String sName, @Nonnull final BigDecimal aDataValue)
   {
-    return setProperty (JSONProperty.create (sName, new JSONPropertyValueBigDecimal (aDataValue)));
+    return setProperty (JSONProperty.create (sName, new JSONPropertyValueBigDecimal (aDataValue), ECloneStategy.AVOID),
+                        ECloneStategy.AVOID);
   }
 
   @Override
@@ -472,7 +510,8 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     }
     if (aValue instanceof IJSONPropertyValue <?>)
     {
-      return setProperty (JSONProperty.create (sName, (IJSONPropertyValue <?>) aValue));
+      return setProperty (JSONProperty.create (sName, (IJSONPropertyValue <?>) aValue, ECloneStategy.INHERIT),
+                          ECloneStategy.AVOID);
     }
     if (aValue instanceof Boolean)
     {
@@ -540,7 +579,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     {
       aList.addValue (aObject);
     }
-    return setProperty (JSONProperty.create (sName, aList));
+    return setProperty (JSONProperty.create (sName, aList, ECloneStategy.INHERIT), ECloneStategy.AVOID);
   }
 
   @Override
@@ -571,7 +610,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     {
       aList.addValue (new JSONPropertyValueString (sValue));
     }
-    return setProperty (JSONProperty.create (sName, aList));
+    return setProperty (JSONProperty.create (sName, aList, ECloneStategy.AVOID), ECloneStategy.AVOID);
   }
 
   @Override
@@ -583,7 +622,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     {
       aList.addValue (JSONUtil.getJSONValue (aValue));
     }
-    return setProperty (JSONProperty.create (sName, aList));
+    return setProperty (JSONProperty.create (sName, aList, ECloneStategy.INHERIT), ECloneStategy.AVOID);
   }
 
   @Override
@@ -595,7 +634,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     {
       aList.addValue (new JSONPropertyValueInteger (nValue));
     }
-    return setProperty (JSONProperty.create (sName, aList));
+    return setProperty (JSONProperty.create (sName, aList, ECloneStategy.AVOID), ECloneStategy.AVOID);
   }
 
   @Override
@@ -606,7 +645,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     {
       aList.addValue (new JSONPropertyValueInteger (nValue));
     }
-    return setProperty (JSONProperty.create (sName, aList));
+    return setProperty (JSONProperty.create (sName, aList, ECloneStategy.AVOID), ECloneStategy.AVOID);
   }
 
   @Override
@@ -633,7 +672,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       }
       aList.addValue (aRowList);
     }
-    return setProperty (JSONProperty.create (sName, aList));
+    return setProperty (JSONProperty.create (sName, aList, ECloneStategy.AVOID), ECloneStategy.AVOID);
   }
 
   @Override
@@ -740,7 +779,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       final IJSONProperty <?> aProperty = aObjectToApply.getProperty (sPropertyName);
       if (aProperty != null)
       {
-        this.setProperty (aProperty);
+        this.setProperty (aProperty, ECloneStategy.FORCE);
         eChange = EChange.CHANGED;
       }
     }
@@ -782,7 +821,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject getClone ()
   {
-    return new JSONObject (this.m_aProperties.values ());
+    return new JSONObject (this.m_aProperties.values (), ECloneStategy.FORCE);
   }
 
   @Override

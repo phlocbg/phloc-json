@@ -25,6 +25,7 @@ import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.string.ToStringGenerator;
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.impl.AbstractJSON;
+import com.phloc.json.impl.JSONStatistics;
 
 /**
  * @author Boris Gregorcic
@@ -40,6 +41,7 @@ public abstract class AbstractJSONPropertyValue <DATATYPE> extends AbstractJSON 
   {
     super ();
     this.m_aData = null;// NOPMD
+    JSONStatistics.getInstance ().onPropertyValueCreated ();
   }
 
   protected AbstractJSONPropertyValue (@Nonnull final DATATYPE aData)
@@ -50,6 +52,7 @@ public abstract class AbstractJSONPropertyValue <DATATYPE> extends AbstractJSON 
       throw new NullPointerException ("aData"); //$NON-NLS-1$
     }
     this.m_aData = aData;
+    JSONStatistics.getInstance ().onPropertyValueCreated ();
   }
 
   @Override

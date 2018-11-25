@@ -21,7 +21,28 @@
 <changelog xmlns="http://www.phloc.com/ns/changelog/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-json">
 
-  <release date="2018-11-14" version="4.0.0" />
+  <release date="2018-11-26" version="4.0.3" />
+  <entry date="2018-11-26" category="feature" action="add">
+    <change>
+      <text locale="en">Added JSONStatistics which can be used to track the number of create JSON objects, properties and values</text>
+    </change>
+  </entry>
+  <entry date="2018-11-26" category="feature" action="add">
+    <change>
+      <text locale="en">Added cloning strategy, used in relevant places (objects, property, property values) in order to avoid unnecessary clone actions</text>
+    </change>
+  </entry>
+  <entry date="2018-11-26" category="feature" action="add">
+    <change>
+      <text locale="en">Added possibility to turn off cloning (JSONSettings) for undecided cases (can be used to improve memory footprint and performance when taking care about cloning outside if necessary)</text>
+    </change>
+  </entry>
+  <entry date="2018-11-26" category="tech" action="fix">
+    <change>
+      <text locale="en">Fixed so property value lists properly clone their contained values on clone</text>
+    </change>
+  </entry>
+  <release date="2018-11-14" version="4.0.2" />
   <entry date="2018-11-14" category="tech" action="update">
     <change>
       <text locale="en">Updated to jackson 2.9.7</text>

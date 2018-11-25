@@ -380,6 +380,37 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   }
 
   @Test
+  public void testCompareCloneLevels () throws JSONParsingException
+  {
+    testCloneLevel (true);
+    testCloneLevel (false);
+  }
+
+  private void testCloneLevel (final boolean bClone) throws JSONParsingException
+  {
+    final boolean bOriginalState = JSONSettings.getInstance ().isCloneProperties ();
+    JSONSettings.getInstance ().setCloneProperties (bClone);
+    try
+    {
+      JSONStatistics.getInstance ().reset ();
+      JSONStatistics.getInstance ().start ();
+      JSONReader.parse (StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_LIB_FULL),
+                                                         CCharset.CHARSET_UTF_8_OBJ));
+      JSONStatistics.getInstance ().stop ();
+      LOG.info ("OBJECTS: " +
+                JSONStatistics.getInstance ().getObjectCount () +
+                " PROPERTIES: " +
+                JSONStatistics.getInstance ().getPropertyCount () +
+                " VALUES: " +
+                JSONStatistics.getInstance ().getPropertyValueCount ());
+    }
+    finally
+    {
+      JSONSettings.getInstance ().setCloneProperties (bOriginalState);
+    }
+  }
+
+  @Test
   public void testParseLibMini () throws JSONParsingException
   {
     JSONReader.parse (StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_LIB_MINI),

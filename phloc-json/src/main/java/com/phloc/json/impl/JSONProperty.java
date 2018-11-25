@@ -48,8 +48,12 @@ public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSON
    *        property name. May neither be <code>null</code> nor empty.
    * @param aValue
    *        Property value. May not be <code>null</code>.
+   * @param eCloneStrategy
+   *        How to deal with the value regarding cloning
    */
-  private JSONProperty (@Nonnull @Nonempty final String sName, @Nonnull final IJSONPropertyValue <DATATYPE> aValue)
+  private JSONProperty (@Nonnull @Nonempty final String sName,
+                        @Nonnull final IJSONPropertyValue <DATATYPE> aValue,
+                        final ECloneStategy eCloneStrategy)
   {
     super ();
     if (StringHelper.hasNoText (sName))
@@ -61,7 +65,11 @@ public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSON
       throw new NullPointerException ("aValue"); //$NON-NLS-1$
     }
     this.m_sName = sName;
-    this.m_aValue = aValue.getClone ();
+    this.m_aValue = (eCloneStrategy == ECloneStategy.FORCE ||
+                     eCloneStrategy != ECloneStategy.AVOID && JSONSettings.getInstance ().isCloneProperties ())
+                                                                                                                ? aValue.getClone ()
+                                                                                                                : aValue;
+    JSONStatistics.getInstance ().onPropertyCreated ();
   }
 
   @Override
@@ -82,11 +90,19 @@ public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSON
   @Override
   public void setValue (@Nonnull final IJSONPropertyValue <DATATYPE> aValue)
   {
+    setValue (aValue, ECloneStategy.INHERIT);
+  }
+
+  private void setValue (@Nonnull final IJSONPropertyValue <DATATYPE> aValue, final ECloneStategy eCloneStrategy)
+  {
     if (aValue == null)
     {
       throw new NullPointerException ("aValue"); //$NON-NLS-1$
     }
-    this.m_aValue = aValue.getClone ();
+    this.m_aValue = (eCloneStrategy == ECloneStategy.FORCE ||
+                     eCloneStrategy != ECloneStategy.AVOID && JSONSettings.getInstance ().isCloneProperties ())
+                                                                                                                ? aValue.getClone ()
+                                                                                                                : aValue;
   }
 
   @Override
@@ -104,7 +120,7 @@ public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSON
   @Nonnull
   public JSONProperty <DATATYPE> getClone ()
   {
-    return new JSONProperty <DATATYPE> (this.m_sName, this.m_aValue);
+    return new JSONProperty <DATATYPE> (this.m_sName, this.m_aValue, ECloneStategy.FORCE);
   }
 
   @Override
@@ -136,8 +152,9 @@ public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSON
 
   @Nonnull
   public static <DATATYPE> JSONProperty <DATATYPE> create (@Nonnull @Nonempty final String sName,
-                                                           @Nonnull final IJSONPropertyValue <DATATYPE> aValue)
+                                                           @Nonnull final IJSONPropertyValue <DATATYPE> aValue,
+                                                           final ECloneStategy eCloneStrategy)
   {
-    return new JSONProperty <DATATYPE> (sName, aValue);
+    return new JSONProperty <DATATYPE> (sName, aValue, eCloneStrategy);
   }
 }

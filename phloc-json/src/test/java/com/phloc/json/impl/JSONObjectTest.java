@@ -350,15 +350,14 @@ public final class JSONObjectTest
 
     if (!bCompareJSONValue && bUseTypeConverter)
     {
-      Assert.assertEquals (TypeConverter.convertIfNecessary (aValue, String.class), aObj.getProperty (KEY)
-                                                                                        .getValue ()
-                                                                                        .getData ());
+      Assert.assertEquals (TypeConverter.convertIfNecessary (aValue, String.class),
+                           aObj.getProperty (KEY).getValue ().getData ());
     }
     else
     {
-      Assert.assertEquals (aValue, bCompareJSONValue ? aObj.getProperty (KEY).getValue () : aObj.getProperty (KEY)
-                                                                                                .getValue ()
-                                                                                                .getData ());
+      Assert.assertEquals (aValue,
+                           bCompareJSONValue ? aObj.getProperty (KEY).getValue ()
+                                             : aObj.getProperty (KEY).getValue ().getData ());
     }
   }
 
@@ -552,5 +551,106 @@ public final class JSONObjectTest
       Assert.assertEquals (ContainerHelper.newSet ("aaa", "bbb", "ccc"), aJSON.getAllPropertyNames ()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     JSONSettings.getInstance ().setParseNullValues (JSONSettings.DEFAULT_PARSE_NULL_VALUES);
+  }
+
+  @Test
+  public void testClone () throws JSONParsingException
+  {
+    final String sJSON = "{a:[{name:\"Anton\"},{name:\"Albert\"}],b:[{name:\"Bertram\"}]}";
+
+    final IJSONObject aJSONOrig = JSONReader.parseObject (sJSON);
+
+    final IJSONObject aJSONOne = JSONReader.parseObject (sJSON);
+    Assert.assertEquals (aJSONOrig.getJSONString (), aJSONOne.getJSONString ());
+
+    final IJSONObject aJSONClone = aJSONOne.getClone ();
+    Assert.assertEquals (aJSONOrig.getJSONString (), aJSONClone.getJSONString ());
+
+    aJSONClone.set ("foo", "bar");
+    Assert.assertEquals (aJSONOrig.getJSONString (), aJSONOne.getJSONString ());
+
+    // make sure operations on clone do not affect original source (--> lists
+    // had a problem here)
+    final List <IJSONObject> aValues = aJSONClone.getObjectListProperty ("a");
+    aValues.get (0).set ("age", 43);
+    Assert.assertEquals (aJSONOrig.getJSONString (), aJSONOne.getJSONString ());
+  }
+
+  @Test
+  public void testSideEffectsObject () throws JSONParsingException
+  {
+    _testSideEffectsObject (true);
+    _testSideEffectsObject (false);
+  }
+
+  private void _testSideEffectsObject (final boolean bClone) throws JSONParsingException
+  {
+    final boolean bOriginalState = JSONSettings.getInstance ().isCloneProperties ();
+    try
+    {
+      JSONSettings.getInstance ().setCloneProperties (bClone);
+      final String sJSON = "{a:{name:\"Anton\"},b:{name:\"Bertram\"}}";
+
+      final IJSONObject aJSONOrig = JSONReader.parseObject (sJSON);
+      final IJSONObject aJSONTwo = new JSONObject ();
+
+      final IJSONObject aObject = aJSONOrig.getObjectProperty ("a");
+      aJSONTwo.set ("a", aObject);
+      Assert.assertEquals (aJSONOrig.getObjectProperty ("a").getJSONString (),
+                           aJSONTwo.getObjectProperty ("a").getJSONString ());
+      aObject.set ("age", 14);
+      if (bClone)
+      {
+        Assert.assertNotEquals (aJSONOrig.getObjectProperty ("a").getJSONString (),
+                                aJSONTwo.getObjectProperty ("a").getJSONString ());
+      }
+      else
+      {
+        Assert.assertEquals (aJSONOrig.getObjectProperty ("a").getJSONString (),
+                             aJSONTwo.getObjectProperty ("a").getJSONString ());
+      }
+    }
+    finally
+    {
+      JSONSettings.getInstance ().setCloneProperties (bOriginalState);
+    }
+  }
+
+  @Test
+  public void testSideEffectsObject2 () throws JSONParsingException
+  {
+    _testSideEffectsObject2 (true);
+    _testSideEffectsObject2 (false);
+  }
+
+  private void _testSideEffectsObject2 (final boolean bClone) throws JSONParsingException
+  {
+    final boolean bOriginalState = JSONSettings.getInstance ().isCloneProperties ();
+    try
+    {
+      JSONSettings.getInstance ().setCloneProperties (bClone);
+      final String sJSON = "{a:{name:\"Anton\"},b:{name:\"Bertram\"}}";
+
+      final IJSONObject aJSONOrig = JSONReader.parseObject (sJSON);
+      final IJSONObject aJSONAdded = new JSONObject ();
+      aJSONAdded.set ("x", "y");
+      aJSONOrig.set ("added", aJSONAdded);
+
+      Assert.assertEquals (aJSONOrig.getObjectProperty ("added").getJSONString (), aJSONAdded.getJSONString ());
+
+      aJSONAdded.set ("y", "z");
+      if (bClone)
+      {
+        Assert.assertNotEquals (aJSONOrig.getObjectProperty ("added").getJSONString (), aJSONAdded.getJSONString ());
+      }
+      else
+      {
+        Assert.assertEquals (aJSONOrig.getObjectProperty ("added").getJSONString (), aJSONAdded.getJSONString ());
+      }
+    }
+    finally
+    {
+      JSONSettings.getInstance ().setCloneProperties (bOriginalState);
+    }
   }
 }
