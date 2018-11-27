@@ -24,7 +24,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.phloc.commons.ICloneable;
 import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.json.IJSONObject;
@@ -34,7 +33,7 @@ import com.phloc.json.impl.CJSONConstants;
 
 /**
  * Default implementation of {@link IJSONPropertyValueList}
- * 
+ *
  * @author Boris Gregorcic
  * @param <DATATYPE>
  *        The inner data type
@@ -53,7 +52,7 @@ public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> ext
 
   /**
    * Ctor
-   * 
+   *
    * @param aList
    *        List to use as the basis
    */
@@ -155,14 +154,7 @@ public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> ext
     final List <DATATYPE> aClonedData = ContainerHelper.newList ();
     for (final DATATYPE aItem : getData ())
     {
-      if (aItem instanceof ICloneable <?>)
-      {
-        aClonedData.add (((ICloneable <DATATYPE>) aItem).getClone ());
-      }
-      else
-      {
-        aClonedData.add (aItem);
-      }
+      aClonedData.add ((DATATYPE) aItem.getClone ());
     }
     return new JSONPropertyValueList <DATATYPE> (aClonedData);
   }
