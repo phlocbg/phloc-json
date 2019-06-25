@@ -34,7 +34,7 @@ import com.phloc.json.impl.JSONReader;
 
 /**
  * A basic JSON object
- * 
+ *
  * @author Boris Gregorcic
  * @author Philip Helger
  */
@@ -42,7 +42,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
 {
   /**
    * adds the passed property
-   * 
+   *
    * @param aProperty
    *        The property to be set
    * @return this
@@ -52,7 +52,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
 
   /**
    * Get the property with the specified name
-   * 
+   *
    * @param sName
    *        name of the requested property
    * @return the corresponding {@link IJSONProperty} if found, <code>null</code>
@@ -63,7 +63,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
 
   /**
    * Get the data value of the specified property directly
-   * 
+   *
    * @param sName
    *        the property name
    * @return the direct data value or <code>null</code>
@@ -80,7 +80,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * <li><code>BigDecimal</code></li>
    * <li><code>BigInteger</code></li>
    * </ul>
-   * 
+   *
    * @param sName
    *        name of the requested property
    * @return the corresponding value of the property if found, <code>null</code>
@@ -91,7 +91,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
 
   /**
    * Get a list of all property names of this object
-   * 
+   *
    * @return the property names (according to property ordering)
    */
   @Nonnull
@@ -101,7 +101,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * Tries to resolve the value of the passed boolean property. If not found or
    * the property with the passed name is not of type <code>Boolean</code>,
    * <code>null</code> will be returned.
-   * 
+   *
    * @param sName
    *        Property name
    * @return the Boolean value of the property with the passed name, or
@@ -113,7 +113,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new boolean property in a JSON object. Existing
    * properties with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param bDataValue
@@ -138,7 +138,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * <li><code>BigDecimal</code></li>
    * <li><code>BigInteger</code></li>
    * </ul>
-   * 
+   *
    * @param sName
    *        Property name
    * @return the Double value of the property with the passed name, or
@@ -150,7 +150,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new double property in a JSON object. Existing
    * properties with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param dDataValue
@@ -175,7 +175,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * <li><code>BigDecimal</code></li>
    * <li><code>BigInteger</code></li>
    * </ul>
-   * 
+   *
    * @param sName
    *        Property name
    * @return the Integer value of the property with the passed name, or
@@ -188,7 +188,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * Tries to resolve the value using {@link #getIntegerProperty(String)}. If no
    * valid value is available, this method will throw a
    * {@link NullPointerException} rather thatn returning null.
-   * 
+   *
    * @param sName
    *        Property name
    * @return the Integer value of the property with the passed name, never
@@ -200,7 +200,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new int property in a JSON object. Existing properties
    * with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param nDataValue
@@ -217,7 +217,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * Tries to resolve the value of the passed long property. If not found or the
    * property with the passed name is not of type <code>Long</code>,
    * <code>null</code> will be returned.
-   * 
+   *
    * @param sName
    *        Property name
    * @return the Long value of the property with the passed name, or
@@ -229,7 +229,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new long property in a JSON object. Existing
    * properties with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param nDataValue
@@ -246,7 +246,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * Tries to resolve the value of the passed keyword property. If not found or
    * the property with the passed name is not of type <code>Keyword</code>,
    * <code>null</code> will be returned.
-   * 
+   *
    * @param sName
    *        Property name
    * @return the String value of the keyword valuer of the property with the
@@ -262,7 +262,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * fact, that the {@link JSONReader#parseObject(String)} uses the default
    * {@link com.fasterxml.jackson.databind.ObjectMapper} which is not capable to
    * handle keywords.
-   * 
+   *
    * @param sName
    *        Property name
    * @param sDataValue
@@ -280,7 +280,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * fact, that the {@link JSONReader#parseObject(String)} uses the default
    * {@link com.fasterxml.jackson.databind.ObjectMapper} which is not capable to
    * handle functions.
-   * 
+   *
    * @param sName
    *        The name of the function property
    * @param sBody
@@ -308,7 +308,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * fact, that the {@link JSONReader#parseObject(String)} uses the default
    * {@link com.fasterxml.jackson.databind.ObjectMapper} which is not capable to
    * handle functions.
-   * 
+   *
    * @param sName
    *        The name of the function property
    * @param sFunctionCode
@@ -329,7 +329,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * property with the passed name is not of type
    * <code>IJSONPropertyValueList &lt;?&gt;</code>, <code>null</code> will
    * returned.
-   * 
+   *
    * @param sName
    *        Property name
    * @param <I>
@@ -343,7 +343,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new list type property in a JSON object. Existing
    * properties with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param aList
@@ -357,7 +357,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * Tries to resolve the value of the passed object property. If not found or
    * the property with the passed name is not of type <code>IJSONObject</code>,
    * <code>null</code> will be returned.
-   * 
+   *
    * @param sName
    *        Property name
    * @return the IJSONObject value of the property with the passed name, or
@@ -369,7 +369,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new JSON object property in a JSON object. Existing
    * properties with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param aObject
@@ -383,7 +383,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * Tries to resolve the value of the passed string property. If not found or
    * the property with the passed name is not of type <code>String</code>,
    * <code>null</code> will be returned.
-   * 
+   *
    * @param sName
    *        Property name
    * @return the String value of the property with the passed name, or
@@ -396,7 +396,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * Tries to resolve the value of the passed string property. If not found or
    * the property with the passed name is not of type <code>String</code> an
    * {@link IllegalArgumentException} will be thrown.
-   * 
+   *
    * @param sName
    *        Property name
    * @return the String value of the property with the passed name, never
@@ -408,7 +408,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new string property in a JSON object. Existing
    * properties with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param sDataValue
@@ -438,7 +438,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * property with the passed name is not of type
    * <code>IJSONPropertyValueList &lt;?&gt;</code>, <code>null</code> will
    * returned.
-   * 
+   *
    * @param sName
    *        Property name
    * @return a list of {@link IJSONPropertyValue}s contained, or
@@ -453,7 +453,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new JSON object list type property in a JSON object.
    * Existing properties with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param aObjectList
@@ -466,7 +466,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new nested list (array of string arrays) property in a
    * JSON object. Existing properties with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param aListOfList
@@ -483,7 +483,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new nested list (array of string arrays) property in a
    * JSON object. Existing properties with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param aListOfList
@@ -497,7 +497,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new string list type property in a JSON object.
    * Existing properties with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param aStringList
@@ -521,7 +521,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * <li>Double</li>
    * <li>Long</li>
    * </ul>
-   * 
+   *
    * @param sName
    *        The name of the property
    * @param aValues
@@ -534,7 +534,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new integer list type property in a JSON object.
    * Existing properties with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param aIntList
@@ -547,7 +547,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * An easy way to set a new integer list type property in a JSON object.
    * Existing properties with the same name will be replaced!
-   * 
+   *
    * @param sName
    *        Property name
    * @param aIntegerList
@@ -560,7 +560,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * This is a helper method to set an arbitrary property not exactly knowing
    * the internal data type. As a fall-back a string property will be used if no
    * matching data type can be found. No type conversion happens by default.
-   * 
+   *
    * @param sName
    *        Property name
    * @param aValue
@@ -574,7 +574,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    * This is a helper method to set an arbitrary property not exactly knowing
    * the internal data type. As a fall-back a the type converter to string will
    * be used if the parameter is <code>true</code>.
-   * 
+   *
    * @param sName
    *        Property name
    * @param aValue
@@ -590,7 +590,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * Sets the passed string property if the value is not <code>null</code>.
    * Empty values will still be set.
-   * 
+   *
    * @param sName
    *        The property name
    * @param sValue
@@ -603,7 +603,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * Sets the passed string property if the value is not <code>null</code>.
    * Empty values will be set according to the passed flag.
-   * 
+   *
    * @param sName
    *        The property name
    * @param sValue
@@ -619,7 +619,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * Sets the passed object property if the value is not <code>null</code>.
    * Empty object values will still be set.
-   * 
+   *
    * @param sName
    *        The property name
    * @param aValue
@@ -632,7 +632,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * Sets the passed object property if the value is not <code>null</code>.
    * Empty values will be set according to the passed flag.
-   * 
+   *
    * @param sName
    *        The property name
    * @param aValue
@@ -645,9 +645,15 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   @Nonnull
   JSONObject set (@Nonnull @Nonempty String sName, @Nullable IJSONObject aValue, boolean bHandleEmptyValue);
 
+  @Nonnull
+  JSONObject set (@Nonnull @Nonempty String sName, @Nullable List <IJSONObject> aValue);
+
+  @Nonnull
+  JSONObject set (@Nonnull @Nonempty String sName, @Nullable List <IJSONObject> aValue, boolean bEmitEmptyValue);
+
   /**
    * Sets the passed boolean value.
-   * 
+   *
    * @param sName
    *        The property name
    * @param bValue
@@ -659,7 +665,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
 
   /**
    * Sets the passed integer value.
-   * 
+   *
    * @param sName
    *        The property name
    * @param nValue
@@ -670,9 +676,21 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   JSONObject set (@Nonnull @Nonempty String sName, int nValue);
 
   /**
+   * Sets the passed integer value if it is non-null.
+   *
+   * @param sName
+   *        The property name
+   * @param aValue
+   *        The value to set, may be <code>null</code>
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull @Nonempty String sName, @Nullable Integer aValue);
+
+  /**
    * Tries to resolve a property with the passed name and if found, removes the
    * property
-   * 
+   *
    * @param sName
    *        The name of the property to be removed
    * @return {@link EChange}
@@ -682,7 +700,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
 
   /**
    * Applies all properties from the passed object to this object
-   * 
+   *
    * @param aObjectToApply
    *        Object to apply on this
    * @return Whether or not any property was set
@@ -692,7 +710,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * Applies the specified property from the passed object to this object if
    * that property is found and not null in the passed object
-   * 
+   *
    * @param aObjectToApply
    *        The object from which to read the property
    * @param sPropertyName
@@ -725,4 +743,8 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   @Override
   @Nonnull
   IJSONObject getClone ();
+
+  Set <IJSONObject> getParentsRecursive ();
+
+  Set <IJSONObject> getChildrenRecursive ();
 }

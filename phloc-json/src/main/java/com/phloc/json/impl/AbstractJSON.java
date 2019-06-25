@@ -24,7 +24,7 @@ import com.phloc.json.IJSON;
 /**
  * This is the base class for all JSON implementation domain objects. It
  * contains default implementation for shared methods.
- * 
+ *
  * @author Boris Gregorcic
  */
 public abstract class AbstractJSON implements IJSON
@@ -42,13 +42,13 @@ public abstract class AbstractJSON implements IJSON
   public final String getJSONString (final boolean bAlignAndIndent)
   {
     final StringBuilder aResult = new StringBuilder ();
-    appendJSONString (aResult, bAlignAndIndent, 0);
+    appendJSONString (aResult, bAlignAndIndent, 0, null);
     return aResult.toString ();
   }
 
   /**
    * Emits the indentation characters for the current level
-   * 
+   *
    * @param aResult
    *        The string builder to which to add
    * @param nLevel
@@ -66,7 +66,7 @@ public abstract class AbstractJSON implements IJSON
 
   /**
    * Appends a new line
-   * 
+   *
    * @param aSB
    *        The string builder to which to add
    * @param bAlignAndIndent

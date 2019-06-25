@@ -18,6 +18,7 @@
 package com.phloc.json;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +26,7 @@ import com.phloc.commons.ICloneable;
 
 /**
  * High level interface describing an object which can be converted to JSON
- * 
+ *
  * @author Boris Gregorcic
  */
 public interface IJSON extends ICloneable <IJSON>, Serializable
@@ -42,7 +43,7 @@ public interface IJSON extends ICloneable <IJSON>, Serializable
    * <br>
    * <b>NOTE:</b>Do not use pretty print for actual data generation, but only
    * for debug purposes!
-   * 
+   *
    * @param bAlignAndIndent
    *        whether or not the JSON String should be indented and aligned
    *        (pretty printed)
@@ -55,7 +56,7 @@ public interface IJSON extends ICloneable <IJSON>, Serializable
    * This is an internal method appending the resulting JSON String to a already
    * existing passed {@link StringBuilder}. This is more efficient than to
    * create a new {@link StringBuilder} at each level.
-   * 
+   *
    * @param aResult
    *        The {@link StringBuilder} to append to
    * @param bAlignAndIndent
@@ -63,5 +64,34 @@ public interface IJSON extends ICloneable <IJSON>, Serializable
    * @param nLevel
    *        Current level of indentation
    */
-  void appendJSONString (@Nonnull StringBuilder aResult, boolean bAlignAndIndent, int nLevel);
+  @Deprecated
+  default void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
+  {
+    // empty default for implementations which already removed that method (new
+    // one will be used)
+  }
+
+  /**
+   * This is an internal method appending the resulting JSON String to a already
+   * existing passed {@link StringBuilder}. This is more efficient than to
+   * create a new {@link StringBuilder} at each level.
+   *
+   * @param aResult
+   *        The {@link StringBuilder} to append to
+   * @param bAlignAndIndent
+   *        <code>true</code> if pretty print should be used
+   * @param nLevel
+   *        Current level of indentation
+   * @param aAncestors
+   *        All unique ancestor objects which were already processed until here.
+   *        This is used to avoid problems outputting cyclic dependencies
+   */
+  default void appendJSONString (@Nonnull final StringBuilder aResult,
+                                 final boolean bAlignAndIndent,
+                                 final int nLevel,
+                                 final Set <IJSONObject> aAncestors)
+  {
+    // compatibility handling
+    appendJSONString (aResult, bAlignAndIndent, nLevel);
+  }
 }

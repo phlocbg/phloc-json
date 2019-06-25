@@ -66,7 +66,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Represents a JSON object having a map of named JSON properties
- * 
+ *
  * @author Boris Gregorcic, philip
  */
 @SuppressWarnings ("deprecation")
@@ -78,6 +78,8 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   private static final Logger LOG = LoggerFactory.getLogger (JSONObject.class);
 
   private final Map <String, IJSONProperty <?>> m_aProperties = new LinkedHashMap <String, IJSONProperty <?>> ();
+  Set <IJSONObject> m_aParents = ContainerHelper.newSet ();
+  Set <IJSONObject> m_aChildren = ContainerHelper.newSet ();
 
   /**
    * Default Ctor. Handle with care as it by default sets a <code>null</code>
@@ -113,7 +115,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   /**
    * Override since otherwise JSONObjects might return null for certain
    * constructors
-   * 
+   *
    * @return this
    */
   @Override
@@ -138,10 +140,11 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       throw new NullPointerException ("property"); //$NON-NLS-1$
     }
     this.m_aProperties.put (aProperty.getName (),
-                            (eCloneStrategy == ECloneStategy.FORCE ||
-                             eCloneStrategy != ECloneStategy.AVOID && JSONSettings.getInstance ().isCloneProperties ())
-                                                                                                                        ? aProperty.getClone ()
-                                                                                                                        : aProperty);
+                            eCloneStrategy == ECloneStategy.FORCE ||
+                                                  eCloneStrategy != ECloneStategy.AVOID &&
+                                                                     JSONSettings.getInstance ().isCloneProperties ()
+                                                                                                                      ? aProperty.getClone ()
+                                                                                                                      : aProperty);
     return this;
   }
 
@@ -396,7 +399,73 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setObjectProperty (@Nonnull final String sName, @Nonnull final IJSONObject aObject)
   {
-    return setProperty (JSONProperty.create (sName, aObject, ECloneStategy.INHERIT), ECloneStategy.AVOID);
+    final boolean bCheckCycles = !JSONSettings.getInstance ().isCloneProperties () && aObject instanceof JSONObject;
+    if (bCheckCycles)
+    {
+      checkCycle (aObject);
+    }
+    setProperty (JSONProperty.create (sName, aObject, ECloneStategy.INHERIT), ECloneStategy.AVOID);
+    if (bCheckCycles)
+    {
+      ((JSONObject) aObject).m_aParents.add (this);
+      this.m_aChildren.add (aObject);
+    }
+    return this;
+  }
+
+  @Override
+  public Set <IJSONObject> getParentsRecursive ()
+  {
+    final Set <IJSONObject> aResult = ContainerHelper.newSet ();
+    for (final IJSONObject aParent : this.m_aParents)
+    {
+      aResult.add (aParent);
+      aResult.addAll (aParent.getParentsRecursive ());
+    }
+    return aResult;
+  }
+
+  @Override
+  public Set <IJSONObject> getChildrenRecursive ()
+  {
+    final Set <IJSONObject> aResult = ContainerHelper.newSet ();
+    for (final IJSONObject aChild : this.m_aChildren)
+    {
+      aResult.add (aChild);
+      aResult.addAll (aChild.getChildrenRecursive ());
+    }
+    return aResult;
+  }
+
+  private Set <IJSONObject> getWithAncestors ()
+  {
+    final Set <IJSONObject> aAncestors = getParentsRecursive ();
+    aAncestors.add (this);
+    return aAncestors;
+  }
+
+  private Set <IJSONObject> getWithDescendants ()
+  {
+    final Set <IJSONObject> aDescendants = getChildrenRecursive ();
+    aDescendants.add (this);
+    return aDescendants;
+  }
+
+  private void checkCycle (final IJSONObject aChild)
+  {
+    if (this == aChild)
+    {
+      throw new IllegalArgumentException ("Circle detected: Unable to set object reference from A to B when A==B!");
+    }
+    if (aChild instanceof JSONObject)
+    {
+      final Set <IJSONObject> aCycles = ContainerHelper.getIntersected (getWithAncestors (),
+                                                                        ((JSONObject) aChild).getWithDescendants ());
+      if (!ContainerHelper.isEmpty (aCycles))
+      {
+        throw new IllegalArgumentException ("Circle detected: Unable to set object reference from A to B when B or one of its descendants is the same as A or one of its ancestors!");
+      }
+    }
   }
 
   @Override
@@ -579,7 +648,27 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     {
       aList.addValue (aObject);
     }
-    return setProperty (JSONProperty.create (sName, aList, ECloneStategy.INHERIT), ECloneStategy.AVOID);
+    final boolean bCloneProperties = JSONSettings.getInstance ().isCloneProperties ();
+    if (!bCloneProperties)
+    {
+      for (final IJSONObject aObject : aObjectList)
+      {
+        checkCycle (aObject);
+      }
+    }
+    setProperty (JSONProperty.create (sName, aList, ECloneStategy.INHERIT), ECloneStategy.AVOID);
+    if (!bCloneProperties)
+    {
+      for (final IJSONObject aObject : aObjectList)
+      {
+        if (aObject instanceof JSONObject)
+        {
+          ((JSONObject) aObject).m_aParents.add (this);
+          this.m_aChildren.add (aObject);
+        }
+      }
+    }
+    return this;
   }
 
   @Override
@@ -712,6 +801,24 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   }
 
   @Override
+  public JSONObject set (@Nonnull @Nonempty final String sName, @Nullable final List <IJSONObject> aValue)
+  {
+    return set (sName, aValue, true);
+  }
+
+  @Override
+  public JSONObject set (@Nonnull @Nonempty final String sName,
+                         @Nullable final List <IJSONObject> aValue,
+                         final boolean bEmitEmptyValue)
+  {
+    if (aValue != null && (bEmitEmptyValue || !aValue.isEmpty ()))
+    {
+      setObjectListProperty (sName, aValue);
+    }
+    return this;
+  }
+
+  @Override
   public JSONObject set (final @Nonnull @Nonempty String sName, final boolean bValue)
   {
     return setBooleanProperty (sName, bValue);
@@ -724,25 +831,49 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   }
 
   @Override
-  public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
+  public JSONObject set (final @Nonnull @Nonempty String sName, final @Nullable Integer aValue)
+  {
+    if (aValue == null)
+    {
+      return this;
+    }
+    return setIntegerProperty (sName, aValue);
+  }
+
+  @Override
+  public void appendJSONString (@Nonnull final StringBuilder aResult,
+                                final boolean bAlignAndIndent,
+                                final int nLevel,
+                                final Set <IJSONObject> aAncestors)
   {
     appendNewLine (aResult, bAlignAndIndent);
     indent (aResult, nLevel, bAlignAndIndent);
     aResult.append (CJSONConstants.OBJECT_START);
     appendNewLine (aResult, bAlignAndIndent);
 
-    final Set <String> aPropertyNames = getAllPropertyNames ();
-    int nIndex = 0;
-    for (final String sProperty : aPropertyNames)
+    if (ContainerHelper.contains (aAncestors, this))
     {
-      final IJSONProperty <?> aProperty = getProperty (sProperty);
-      aProperty.appendJSONString (aResult, bAlignAndIndent, nLevel + 1);
-      if (nIndex < aPropertyNames.size () - 1)
+      LOG.warn ("Skipping JSON object at level {} in string generation as it is part of a cyclic reference. Current position: {} ",
+                nLevel,
+                aResult);
+    }
+    else
+    {
+      final Set <String> aPropertyNames = getAllPropertyNames ();
+      int nIndex = 0;
+      final Set <IJSONObject> aNewAncestors = ContainerHelper.newSet (aAncestors);
+      aNewAncestors.add (this);
+      for (final String sProperty : aPropertyNames)
       {
-        aResult.append (CJSONConstants.TOKEN_SEPARATOR);
+        final IJSONProperty <?> aProperty = getProperty (sProperty);
+        aProperty.appendJSONString (aResult, bAlignAndIndent, nLevel + 1, aNewAncestors);
+        if (nIndex < aPropertyNames.size () - 1)
+        {
+          aResult.append (CJSONConstants.TOKEN_SEPARATOR);
+        }
+        appendNewLine (aResult, bAlignAndIndent);
+        nIndex++;
       }
-      appendNewLine (aResult, bAlignAndIndent);
-      nIndex++;
     }
     indent (aResult, nLevel, bAlignAndIndent);
     aResult.append (CJSONConstants.OBJECT_END);

@@ -17,8 +17,11 @@
  */
 package com.phloc.json.impl.value;
 
+import java.util.Set;
+
 import javax.annotation.Nonnull;
 
+import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.IJSONPropertyValueNotParsable;
 import com.phloc.json.impl.JSONReader;
@@ -30,7 +33,7 @@ import com.phloc.json.impl.JSONReader;
  * that the {@link JSONReader#parseObject(String)} uses the default
  * {@link com.fasterxml.jackson.databind.ObjectMapper} which is not capable to
  * handle functions.
- * 
+ *
  * @author Philip Helger
  */
 public class JSONPropertyValueFunctionPrebuild extends AbstractJSONPropertyValue <String> implements IJSONPropertyValueNotParsable <String>
@@ -39,7 +42,7 @@ public class JSONPropertyValueFunctionPrebuild extends AbstractJSONPropertyValue
 
   /**
    * Ctor
-   * 
+   *
    * @param sFunctionCode
    *        The function code done
    */
@@ -49,7 +52,10 @@ public class JSONPropertyValueFunctionPrebuild extends AbstractJSONPropertyValue
   }
 
   @Override
-  public void appendJSONString (final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
+  public void appendJSONString (final StringBuilder aResult,
+                                final boolean bAlignAndIndent,
+                                final int nLevel,
+                                final Set <IJSONObject> aAncestors)
   {
     aResult.append (getData ());
   }

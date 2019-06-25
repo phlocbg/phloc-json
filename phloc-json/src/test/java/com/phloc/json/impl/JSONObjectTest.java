@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.state.EChange;
@@ -37,13 +39,14 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Test class for class {@link JSONObject}
- * 
+ *
  * @author Philip Helger
  * @author Boris Gregorcic
  */
 @SuppressWarnings ("static-method")
 public final class JSONObjectTest
 {
+  Logger LOG = LoggerFactory.getLogger (JSONObjectTest.class);
   private static final String PROP = "property"; //$NON-NLS-1$
   private static final String KEY = "testProperty"; //$NON-NLS-1$
   private static final String A_KEY = "A"; //$NON-NLS-1$
@@ -556,7 +559,7 @@ public final class JSONObjectTest
   @Test
   public void testClone () throws JSONParsingException
   {
-    final String sJSON = "{a:[{name:\"Anton\"},{name:\"Albert\"}],b:[{name:\"Bertram\"}]}";
+    final String sJSON = "{a:[{name:\"Anton\"},{name:\"Albert\"}],b:[{name:\"Bertram\", props:[{x:\"y\"}]}]}";
 
     final IJSONObject aJSONOrig = JSONReader.parseObject (sJSON);
 
@@ -574,6 +577,22 @@ public final class JSONObjectTest
     final List <IJSONObject> aValues = aJSONClone.getObjectListProperty ("a");
     aValues.get (0).set ("age", 43);
     Assert.assertEquals (aJSONOrig.getJSONString (), aJSONOne.getJSONString ());
+    Assert.assertNotEquals (aJSONClone.getJSONString (), aJSONOne.getJSONString ());
+
+    final List <IJSONObject> aOrigValues = aJSONOrig.getListProperty ("b");
+    final IJSONObject aBertramOrig = aOrigValues.get (0);
+    final List <IJSONObject> aClonedValues = aJSONClone.getListProperty ("b");
+    final IJSONObject aBertramClone = aClonedValues.get (0);
+    Assert.assertFalse (aBertramOrig == aBertramClone);
+    final List <IJSONObject> aBertramOrigProps = aBertramOrig.getListProperty ("props");
+    final List <IJSONObject> aBertramCloneProps = aBertramClone.getListProperty ("props");
+    Assert.assertFalse (aBertramOrigProps == aBertramCloneProps);
+    final IJSONObject aBertramOrigVal = aBertramOrigProps.get (0);
+    final IJSONObject aBertramCloneVal = aBertramCloneProps.get (0);
+    Assert.assertFalse (aBertramOrigVal == aBertramCloneVal);
+    aBertramCloneVal.set ("w", "v");
+    Assert.assertEquals (aJSONOrig.getJSONString (), aJSONOne.getJSONString ());
+    Assert.assertNotEquals (aJSONClone.getJSONString (), aJSONOne.getJSONString ());
   }
 
   @Test
@@ -581,6 +600,48 @@ public final class JSONObjectTest
   {
     _testSideEffectsObject (true);
     _testSideEffectsObject (false);
+  }
+
+  @Test (expected = IllegalArgumentException.class)
+  public void testSetObjectCycleWithoutCloning ()
+  {
+    final boolean bOriginalState = JSONSettings.getInstance ().isCloneProperties ();
+    try
+    {
+      JSONSettings.getInstance ().setCloneProperties (false);
+      final IJSONObject a = new JSONObject ();
+      a.set ("id", "a");
+      final IJSONObject b = new JSONObject ();
+      b.set ("id", "b");
+      a.set ("relates", b);
+      b.set ("relates", a);
+      this.LOG.info (a.getJSONString ());
+    }
+    finally
+    {
+      JSONSettings.getInstance ().setCloneProperties (bOriginalState);
+    }
+  }
+
+  @Test
+  public void testSetObjectCycleWithCloning ()
+  {
+    final boolean bOriginalState = JSONSettings.getInstance ().isCloneProperties ();
+    try
+    {
+      JSONSettings.getInstance ().setCloneProperties (true);
+      final IJSONObject a = new JSONObject ();
+      a.set ("id", "a");
+      final IJSONObject b = new JSONObject ();
+      b.set ("id", "b");
+      a.set ("relates", b);
+      b.set ("relates", a);
+      this.LOG.info (a.getJSONString ());
+    }
+    finally
+    {
+      JSONSettings.getInstance ().setCloneProperties (bOriginalState);
+    }
   }
 
   private void _testSideEffectsObject (final boolean bClone) throws JSONParsingException

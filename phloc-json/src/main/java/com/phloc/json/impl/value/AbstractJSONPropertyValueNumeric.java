@@ -17,14 +17,17 @@
  */
 package com.phloc.json.impl.value;
 
+import java.util.Set;
+
 import javax.annotation.Nonnull;
 
+import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValue;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with a numeric internal data
  * type
- * 
+ *
  * @author Philip Helger
  */
 public abstract class AbstractJSONPropertyValueNumeric <DATATYPE extends Number> extends AbstractJSONPropertyValue <DATATYPE>
@@ -39,7 +42,8 @@ public abstract class AbstractJSONPropertyValueNumeric <DATATYPE extends Number>
   @Override
   public final void appendJSONString (@Nonnull final StringBuilder aResult,
                                       final boolean bAlignAndIndent,
-                                      final int nLevel)
+                                      final int nLevel,
+                                      final Set <IJSONObject> aAncestors)
   {
     aResult.append (getData ().toString ());
   }

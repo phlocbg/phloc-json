@@ -17,8 +17,11 @@
  */
 package com.phloc.json.impl.value;
 
+import java.util.Set;
+
 import javax.annotation.Nonnull;
 
+import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.IJSONPropertyValueNotParsable;
 import com.phloc.json.JSONHelper;
@@ -32,7 +35,7 @@ import com.phloc.json.impl.JSONReader;
  * that the {@link JSONReader#parseObject(String)} uses the default
  * {@link com.fasterxml.jackson.databind.ObjectMapper} which is not capable to
  * handle keywords.
- * 
+ *
  * @author Boris Gregorcic
  */
 public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String> implements IJSONPropertyValueNotParsable <String>
@@ -41,7 +44,7 @@ public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String>
 
   /**
    * Ctor
-   * 
+   *
    * @param sData
    *        data value
    */
@@ -51,7 +54,10 @@ public class JSONPropertyValueKeyword extends AbstractJSONPropertyValue <String>
   }
 
   @Override
-  public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
+  public void appendJSONString (@Nonnull final StringBuilder aResult,
+                                final boolean bAlignAndIndent,
+                                final int nLevel,
+                                final Set <IJSONObject> aAncestors)
   {
     aResult.append (JSONHelper.jsonEscape (getData ()));
   }

@@ -17,6 +17,8 @@
  */
 package com.phloc.json.impl.value;
 
+import java.util.Set;
+
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.annotations.DevelopersNote;
@@ -26,7 +28,7 @@ import com.phloc.json.IJSONPropertyValue;
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
  * {@link Object}
- * 
+ *
  * @author Boris Gregorcic
  */
 @Deprecated
@@ -37,7 +39,7 @@ public class JSONPropertyValueJSONObject extends AbstractJSONPropertyValue <IJSO
 
   /**
    * Ctor
-   * 
+   *
    * @param aData
    *        data value
    */
@@ -47,9 +49,12 @@ public class JSONPropertyValueJSONObject extends AbstractJSONPropertyValue <IJSO
   }
 
   @Override
-  public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
+  public void appendJSONString (@Nonnull final StringBuilder aResult,
+                                final boolean bAlignAndIndent,
+                                final int nLevel,
+                                final Set <IJSONObject> aAncestors)
   {
-    getData ().appendJSONString (aResult, bAlignAndIndent, nLevel + 1);
+    getData ().appendJSONString (aResult, bAlignAndIndent, nLevel + 1, aAncestors);
   }
 
   @Override

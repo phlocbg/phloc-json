@@ -21,6 +21,11 @@
 <changelog xmlns="http://www.phloc.com/ns/changelog/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-json">
 
+  <entry date="2019-06-25" category="tech" action="fix">
+    <change>
+      <text locale="en">Added detection of circular dependencies in case of deactivated property cloning</text>
+    </change>
+  </entry>
   <release date="2018-11-26" version="4.0.3" />
   <entry date="2018-11-26" category="feature" action="add">
     <change>

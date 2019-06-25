@@ -17,15 +17,18 @@
  */
 package com.phloc.json.impl.value;
 
+import java.util.Set;
+
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.string.StringParser;
+import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValue;
 
 /**
  * Implementation of {@link IJSONPropertyValue} with the internal data type
  * {@link Boolean}
- * 
+ *
  * @author Boris Gregorcic
  */
 public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean>
@@ -34,7 +37,7 @@ public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean
 
   /**
    * Ctor
-   * 
+   *
    * @param aData
    *        data value
    */
@@ -45,7 +48,7 @@ public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean
 
   /**
    * Ctor
-   * 
+   *
    * @param bData
    *        data value
    */
@@ -55,7 +58,10 @@ public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean
   }
 
   @Override
-  public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
+  public void appendJSONString (@Nonnull final StringBuilder aResult,
+                                final boolean bAlignAndIndent,
+                                final int nLevel,
+                                final Set <IJSONObject> aAncestors)
   {
     aResult.append (getData ().toString ());
   }
@@ -70,7 +76,7 @@ public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean
   /**
    * Tries to create a {@link JSONPropertyValueBoolean} from the passed JSON
    * string
-   * 
+   *
    * @param sJSON
    *        the JSON string to convert
    * @return the resulting object
