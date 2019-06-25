@@ -17,11 +17,8 @@
  */
 package com.phloc.json.impl.value;
 
-import java.util.Set;
-
 import javax.annotation.Nonnull;
 
-import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.JSONHelper;
 import com.phloc.json.impl.CJSONConstants;
@@ -48,10 +45,7 @@ public class JSONPropertyValueString extends AbstractJSONPropertyValue <String>
   }
 
   @Override
-  public void appendJSONString (@Nonnull final StringBuilder aResult,
-                                final boolean bAlignAndIndent,
-                                final int nLevel,
-                                final Set <IJSONObject> aAncestors)
+  public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     aResult.append (CJSONConstants.DOUBLEQUOTE)
            .append (JSONHelper.jsonEscape (getData ()))

@@ -20,7 +20,6 @@ package com.phloc.json.impl.value;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -109,10 +108,7 @@ public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> ext
 
   @Override
   @SuppressWarnings ("deprecation")
-  public void appendJSONString (final StringBuilder aResult,
-                                final boolean bAlignAndIndent,
-                                final int nLevel,
-                                final Set <IJSONObject> aAncestors)
+  public void appendJSONString (final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     appendNewLine (aResult, bAlignAndIndent);
     indent (aResult, nLevel, bAlignAndIndent);
@@ -134,11 +130,11 @@ public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> ext
       {
         // JSON object will increase the level already when passing through
         // PropertyValue method
-        aValue.appendJSONString (aResult, bAlignAndIndent, nLevel, aAncestors);
+        aValue.appendJSONString (aResult, bAlignAndIndent, nLevel);
       }
       else
       {
-        aValue.appendJSONString (aResult, bAlignAndIndent, nLevel + 1, aAncestors);
+        aValue.appendJSONString (aResult, bAlignAndIndent, nLevel + 1);
       }
 
       if (nIndex < nElementCount - 1)

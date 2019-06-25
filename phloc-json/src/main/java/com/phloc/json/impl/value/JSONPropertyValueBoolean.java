@@ -17,12 +17,9 @@
  */
 package com.phloc.json.impl.value;
 
-import java.util.Set;
-
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.string.StringParser;
-import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValue;
 
 /**
@@ -58,10 +55,7 @@ public class JSONPropertyValueBoolean extends AbstractJSONPropertyValue <Boolean
   }
 
   @Override
-  public void appendJSONString (@Nonnull final StringBuilder aResult,
-                                final boolean bAlignAndIndent,
-                                final int nLevel,
-                                final Set <IJSONObject> aAncestors)
+  public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     aResult.append (getData ().toString ());
   }

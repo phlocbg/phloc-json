@@ -42,7 +42,7 @@ public abstract class AbstractJSON implements IJSON
   public final String getJSONString (final boolean bAlignAndIndent)
   {
     final StringBuilder aResult = new StringBuilder ();
-    appendJSONString (aResult, bAlignAndIndent, 0, null);
+    appendJSONString (aResult, bAlignAndIndent, 0);
     return aResult.toString ();
   }
 

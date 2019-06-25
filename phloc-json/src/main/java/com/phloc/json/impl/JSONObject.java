@@ -859,39 +859,25 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   }
 
   @Override
-  public void appendJSONString (@Nonnull final StringBuilder aResult,
-                                final boolean bAlignAndIndent,
-                                final int nLevel,
-                                final Set <IJSONObject> aAncestors)
+  public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     appendNewLine (aResult, bAlignAndIndent);
     indent (aResult, nLevel, bAlignAndIndent);
     aResult.append (CJSONConstants.OBJECT_START);
     appendNewLine (aResult, bAlignAndIndent);
 
-    if (ContainerHelper.contains (aAncestors, this))
+    final Set <String> aPropertyNames = getAllPropertyNames ();
+    int nIndex = 0;
+    for (final String sProperty : aPropertyNames)
     {
-      LOG.warn ("Skipping JSON object at level {} in string generation as it is part of a cyclic reference. Current position: {} ",
-                nLevel,
-                aResult);
-    }
-    else
-    {
-      final Set <String> aPropertyNames = getAllPropertyNames ();
-      int nIndex = 0;
-      final Set <IJSONObject> aNewAncestors = ContainerHelper.newSet (aAncestors);
-      aNewAncestors.add (this);
-      for (final String sProperty : aPropertyNames)
+      final IJSONProperty <?> aProperty = getProperty (sProperty);
+      aProperty.appendJSONString (aResult, bAlignAndIndent, nLevel + 1);
+      if (nIndex < aPropertyNames.size () - 1)
       {
-        final IJSONProperty <?> aProperty = getProperty (sProperty);
-        aProperty.appendJSONString (aResult, bAlignAndIndent, nLevel + 1, aNewAncestors);
-        if (nIndex < aPropertyNames.size () - 1)
-        {
-          aResult.append (CJSONConstants.TOKEN_SEPARATOR);
-        }
-        appendNewLine (aResult, bAlignAndIndent);
-        nIndex++;
+        aResult.append (CJSONConstants.TOKEN_SEPARATOR);
       }
+      appendNewLine (aResult, bAlignAndIndent);
+      nIndex++;
     }
     indent (aResult, nLevel, bAlignAndIndent);
     aResult.append (CJSONConstants.OBJECT_END);

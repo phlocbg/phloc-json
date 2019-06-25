@@ -17,8 +17,6 @@
  */
 package com.phloc.json.impl;
 
-import java.util.Set;
-
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.annotations.Nonempty;
@@ -26,7 +24,6 @@ import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
 import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.string.ToStringGenerator;
-import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONProperty;
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.JSONHelper;
@@ -109,17 +106,14 @@ public final class JSONProperty <DATATYPE> extends AbstractJSON implements IJSON
   }
 
   @Override
-  public void appendJSONString (@Nonnull final StringBuilder aResult,
-                                final boolean bAlignAndIndent,
-                                final int nLevel,
-                                final Set <IJSONObject> aAncestors)
+  public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
     indent (aResult, nLevel, bAlignAndIndent);
     aResult.append (CJSONConstants.DOUBLEQUOTE)
            .append (JSONHelper.jsonEscape (this.m_sName))
            .append (CJSONConstants.DOUBLEQUOTE)
            .append (CJSONConstants.VALUE_ASSIGNMENT);
-    this.m_aValue.appendJSONString (aResult, bAlignAndIndent, nLevel, aAncestors);
+    this.m_aValue.appendJSONString (aResult, bAlignAndIndent, nLevel);
   }
 
   @Override

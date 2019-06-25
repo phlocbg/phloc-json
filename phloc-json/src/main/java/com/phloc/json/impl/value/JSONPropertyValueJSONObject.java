@@ -17,8 +17,6 @@
  */
 package com.phloc.json.impl.value;
 
-import java.util.Set;
-
 import javax.annotation.Nonnull;
 
 import com.phloc.commons.annotations.DevelopersNote;
@@ -49,12 +47,9 @@ public class JSONPropertyValueJSONObject extends AbstractJSONPropertyValue <IJSO
   }
 
   @Override
-  public void appendJSONString (@Nonnull final StringBuilder aResult,
-                                final boolean bAlignAndIndent,
-                                final int nLevel,
-                                final Set <IJSONObject> aAncestors)
+  public void appendJSONString (@Nonnull final StringBuilder aResult, final boolean bAlignAndIndent, final int nLevel)
   {
-    getData ().appendJSONString (aResult, bAlignAndIndent, nLevel + 1, aAncestors);
+    getData ().appendJSONString (aResult, bAlignAndIndent, nLevel + 1);
   }
 
   @Override
