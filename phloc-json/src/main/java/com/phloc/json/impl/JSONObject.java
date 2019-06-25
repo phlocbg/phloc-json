@@ -78,8 +78,8 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   private static final Logger LOG = LoggerFactory.getLogger (JSONObject.class);
 
   private final Map <String, IJSONProperty <?>> m_aProperties = new LinkedHashMap <String, IJSONProperty <?>> ();
-  Set <IJSONObject> m_aParents = ContainerHelper.newSet ();
-  Set <IJSONObject> m_aChildren = ContainerHelper.newSet ();
+  List <IJSONObject> m_aParents = ContainerHelper.newList ();
+  List <IJSONObject> m_aChildren = ContainerHelper.newList ();
 
   /**
    * Default Ctor. Handle with care as it by default sets a <code>null</code>
@@ -414,9 +414,9 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   }
 
   @Override
-  public Set <IJSONObject> getParentsRecursive ()
+  public List <IJSONObject> getParentsRecursive ()
   {
-    final Set <IJSONObject> aResult = ContainerHelper.newSet ();
+    final List <IJSONObject> aResult = ContainerHelper.newList ();
     for (final IJSONObject aParent : this.m_aParents)
     {
       aResult.add (aParent);
@@ -426,9 +426,9 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   }
 
   @Override
-  public Set <IJSONObject> getChildrenRecursive ()
+  public List <IJSONObject> getChildrenRecursive ()
   {
-    final Set <IJSONObject> aResult = ContainerHelper.newSet ();
+    final List <IJSONObject> aResult = ContainerHelper.newList ();
     for (final IJSONObject aChild : this.m_aChildren)
     {
       aResult.add (aChild);
@@ -437,16 +437,16 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return aResult;
   }
 
-  private Set <IJSONObject> getWithAncestors ()
+  private List <IJSONObject> getWithAncestors ()
   {
-    final Set <IJSONObject> aAncestors = getParentsRecursive ();
+    final List <IJSONObject> aAncestors = getParentsRecursive ();
     aAncestors.add (this);
     return aAncestors;
   }
 
-  private Set <IJSONObject> getWithDescendants ()
+  private List <IJSONObject> getWithDescendants ()
   {
-    final Set <IJSONObject> aDescendants = getChildrenRecursive ();
+    final List <IJSONObject> aDescendants = getChildrenRecursive ();
     aDescendants.add (this);
     return aDescendants;
   }
@@ -459,13 +459,31 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     }
     if (aChild instanceof JSONObject)
     {
-      final Set <IJSONObject> aCycles = ContainerHelper.getIntersected (getWithAncestors (),
-                                                                        ((JSONObject) aChild).getWithDescendants ());
+      final List <IJSONObject> aAncestors = getWithAncestors ();
+      final List <IJSONObject> aDescendents = ((JSONObject) aChild).getWithDescendants ();
+      final List <IJSONObject> aCycles = getIntersectedByIdentity (aAncestors, aDescendents);
       if (!ContainerHelper.isEmpty (aCycles))
       {
         throw new IllegalArgumentException ("Circle detected: Unable to set object reference from A to B when B or one of its descendants is the same as A or one of its ancestors!");
       }
     }
+  }
+
+  private static List <IJSONObject> getIntersectedByIdentity (final List <IJSONObject> aObjectsA,
+                                                              final List <IJSONObject> aObjectsB)
+  {
+    final List <IJSONObject> aIntersect = ContainerHelper.newList ();
+    for (final IJSONObject aA : aObjectsA)
+    {
+      for (final IJSONObject aB : aObjectsB)
+      {
+        if (aA == aB)
+        {
+          aIntersect.add (aA);
+        }
+      }
+    }
+    return aIntersect;
   }
 
   @Override
