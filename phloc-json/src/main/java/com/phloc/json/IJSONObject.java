@@ -743,8 +743,4 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   @Override
   @Nonnull
   IJSONObject getClone ();
-
-  List <IJSONObject> getParentsRecursive ();
-
-  List <IJSONObject> getChildrenRecursive ();
 }

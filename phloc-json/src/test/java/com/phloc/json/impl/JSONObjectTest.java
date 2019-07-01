@@ -644,6 +644,86 @@ public final class JSONObjectTest
     }
   }
 
+  @Test
+  public void testRemoveObjectProperty () throws JSONParsingException
+  {
+    final boolean bOriginalState = JSONSettings.getInstance ().isCloneProperties ();
+    try
+    {
+      JSONSettings.getInstance ().setCloneProperties (false);
+      testRemoveObjectPropertyInternal ();
+    }
+    finally
+    {
+      JSONSettings.getInstance ().setCloneProperties (bOriginalState);
+    }
+  }
+
+  @Test
+  public void testRemoveObjectListProperty () throws JSONParsingException
+  {
+    final boolean bOriginalState = JSONSettings.getInstance ().isCloneProperties ();
+    try
+    {
+      JSONSettings.getInstance ().setCloneProperties (false);
+      testRemoveObjectListPropertyInternal ();
+    }
+    finally
+    {
+      JSONSettings.getInstance ().setCloneProperties (bOriginalState);
+    }
+  }
+
+  @Test
+  public void testRemoveObjectPropertyWithCloning () throws JSONParsingException
+  {
+    final boolean bOriginalState = JSONSettings.getInstance ().isCloneProperties ();
+    try
+    {
+      JSONSettings.getInstance ().setCloneProperties (true);
+      testRemoveObjectPropertyInternal ();
+    }
+    finally
+    {
+      JSONSettings.getInstance ().setCloneProperties (bOriginalState);
+    }
+  }
+
+  @Test
+  public void testRemoveObjectListPropertyWithCloning () throws JSONParsingException
+  {
+    final boolean bOriginalState = JSONSettings.getInstance ().isCloneProperties ();
+    try
+    {
+      JSONSettings.getInstance ().setCloneProperties (true);
+      testRemoveObjectListPropertyInternal ();
+    }
+    finally
+    {
+      JSONSettings.getInstance ().setCloneProperties (bOriginalState);
+    }
+  }
+
+  private void testRemoveObjectPropertyInternal () throws JSONParsingException
+  {
+    final IJSONObject aPayload = JSONReader.parseObject ("{data:{one:{id:\"one\", val:5}, two:{two:\"two\", val:6}}, metadata:{narf:\"zoot\"}}");
+    final IJSONObject aData = aPayload.getObjectProperty ("data");
+    aPayload.removeProperty ("data");
+    final IJSONObject aOne = aData.getObjectProperty ("one");
+    aOne.set ("stuff", aPayload);
+    Assert.assertEquals (JSONReader.parseObject ("{id:\"one\", val:5, stuff:{metadata:{narf:\"zoot\"}}}"), aOne);
+  }
+
+  private void testRemoveObjectListPropertyInternal () throws JSONParsingException
+  {
+    final IJSONObject aPayload = JSONReader.parseObject ("{data:[{id:\"one\", val:5}, {two:\"two\", val:6}], metadata:{narf:\"zoot\"}}");
+    final List <IJSONObject> aData = aPayload.getObjectListProperty ("data");
+    aPayload.removeProperty ("data");
+    final IJSONObject aOne = aData.get (0);
+    aOne.set ("stuff", aPayload);
+    Assert.assertEquals (JSONReader.parseObject ("{id:\"one\", val:5, stuff:{metadata:{narf:\"zoot\"}}}"), aOne);
+  }
+
   private void _testSideEffectsObject (final boolean bClone) throws JSONParsingException
   {
     final boolean bOriginalState = JSONSettings.getInstance ().isCloneProperties ();

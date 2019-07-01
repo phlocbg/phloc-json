@@ -78,8 +78,8 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   private static final Logger LOG = LoggerFactory.getLogger (JSONObject.class);
 
   private final Map <String, IJSONProperty <?>> m_aProperties = new LinkedHashMap <String, IJSONProperty <?>> ();
-  List <IJSONObject> m_aParents = ContainerHelper.newList ();
-  List <IJSONObject> m_aChildren = ContainerHelper.newList ();
+  List <JSONObject> m_aParents = ContainerHelper.newList ();
+  List <JSONObject> m_aChildren = ContainerHelper.newList ();
 
   /**
    * Default Ctor. Handle with care as it by default sets a <code>null</code>
@@ -139,13 +139,52 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     {
       throw new NullPointerException ("property"); //$NON-NLS-1$
     }
-    this.m_aProperties.put (aProperty.getName (),
-                            eCloneStrategy == ECloneStategy.FORCE ||
-                                                  eCloneStrategy != ECloneStategy.AVOID &&
-                                                                     JSONSettings.getInstance ().isCloneProperties ()
-                                                                                                                      ? aProperty.getClone ()
-                                                                                                                      : aProperty);
+
+    final boolean bCloneProperties = JSONSettings.getInstance ().isCloneProperties ();
+    final boolean bCloneProperty = eCloneStrategy == ECloneStategy.FORCE ||
+                                   eCloneStrategy != ECloneStategy.AVOID && bCloneProperties;
+
+    List <JSONObject> aObjectsInValue = null;
+    if (!bCloneProperty)
+    {
+      aObjectsInValue = getObjectsInValue (aProperty);
+      for (final IJSONObject aChild : aObjectsInValue)
+      {
+        checkCycle (aChild);
+      }
+    }
+    this.m_aProperties.put (aProperty.getName (), bCloneProperty ? aProperty.getClone () : aProperty);
+    if (ContainerHelper.isNotEmpty (aObjectsInValue))
+    {
+      for (final JSONObject aChild : aObjectsInValue)
+      {
+        aChild.m_aParents.add (this);
+        this.m_aChildren.add (aChild);
+      }
+    }
     return this;
+  }
+
+  private static List <JSONObject> getObjectsInValue (@Nonnull final IJSONProperty <?> aProperty)
+  {
+    final List <JSONObject> aObjects = ContainerHelper.newList ();
+    final IJSONPropertyValue <?> aValue = aProperty.getValue ();
+    if (aValue instanceof JSONObject)
+    {
+      aObjects.add ((JSONObject) aValue);
+    }
+    else
+      if (aValue instanceof IJSONPropertyValueList <?>)
+      {
+        for (final Object aListElem : ((IJSONPropertyValueList <?>) aValue).getDataValues ())
+        {
+          if (aListElem instanceof JSONObject)
+          {
+            aObjects.add ((JSONObject) aListElem);
+          }
+        }
+      }
+    return aObjects;
   }
 
   @Override
@@ -399,25 +438,14 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setObjectProperty (@Nonnull final String sName, @Nonnull final IJSONObject aObject)
   {
-    final boolean bCheckCycles = !JSONSettings.getInstance ().isCloneProperties () && aObject instanceof JSONObject;
-    if (bCheckCycles)
-    {
-      checkCycle (aObject);
-    }
     setProperty (JSONProperty.create (sName, aObject, ECloneStategy.INHERIT), ECloneStategy.AVOID);
-    if (bCheckCycles)
-    {
-      ((JSONObject) aObject).m_aParents.add (this);
-      this.m_aChildren.add (aObject);
-    }
     return this;
   }
 
-  @Override
-  public List <IJSONObject> getParentsRecursive ()
+  public List <JSONObject> getParentsRecursive ()
   {
-    final List <IJSONObject> aResult = ContainerHelper.newList ();
-    for (final IJSONObject aParent : this.m_aParents)
+    final List <JSONObject> aResult = ContainerHelper.newList ();
+    for (final JSONObject aParent : this.m_aParents)
     {
       aResult.add (aParent);
       aResult.addAll (aParent.getParentsRecursive ());
@@ -425,11 +453,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return aResult;
   }
 
-  @Override
-  public List <IJSONObject> getChildrenRecursive ()
+  public List <JSONObject> getChildrenRecursive ()
   {
-    final List <IJSONObject> aResult = ContainerHelper.newList ();
-    for (final IJSONObject aChild : this.m_aChildren)
+    final List <JSONObject> aResult = ContainerHelper.newList ();
+    for (final JSONObject aChild : this.m_aChildren)
     {
       aResult.add (aChild);
       aResult.addAll (aChild.getChildrenRecursive ());
@@ -437,16 +464,16 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return aResult;
   }
 
-  private List <IJSONObject> getWithAncestors ()
+  private List <JSONObject> getWithAncestors ()
   {
-    final List <IJSONObject> aAncestors = getParentsRecursive ();
+    final List <JSONObject> aAncestors = getParentsRecursive ();
     aAncestors.add (this);
     return aAncestors;
   }
 
-  private List <IJSONObject> getWithDescendants ()
+  private List <JSONObject> getWithDescendants ()
   {
-    final List <IJSONObject> aDescendants = getChildrenRecursive ();
+    final List <JSONObject> aDescendants = getChildrenRecursive ();
     aDescendants.add (this);
     return aDescendants;
   }
@@ -459,9 +486,9 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     }
     if (aChild instanceof JSONObject)
     {
-      final List <IJSONObject> aAncestors = getWithAncestors ();
-      final List <IJSONObject> aDescendents = ((JSONObject) aChild).getWithDescendants ();
-      final List <IJSONObject> aCycles = getIntersectedByIdentity (aAncestors, aDescendents);
+      final List <JSONObject> aAncestors = getWithAncestors ();
+      final List <JSONObject> aDescendents = ((JSONObject) aChild).getWithDescendants ();
+      final List <JSONObject> aCycles = getIntersectedByIdentity (aAncestors, aDescendents);
       if (!ContainerHelper.isEmpty (aCycles))
       {
         throw new IllegalArgumentException ("Circle detected: Unable to set object reference from A to B when B or one of its descendants is the same as A or one of its ancestors!");
@@ -469,11 +496,11 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     }
   }
 
-  private static List <IJSONObject> getIntersectedByIdentity (final List <IJSONObject> aObjectsA,
-                                                              final List <IJSONObject> aObjectsB)
+  private static List <JSONObject> getIntersectedByIdentity (final List <JSONObject> aObjectsA,
+                                                             final List <JSONObject> aObjectsB)
   {
-    final List <IJSONObject> aIntersect = ContainerHelper.newList ();
-    for (final IJSONObject aA : aObjectsA)
+    final List <JSONObject> aIntersect = ContainerHelper.newList ();
+    for (final JSONObject aA : aObjectsA)
     {
       for (final IJSONObject aB : aObjectsB)
       {
@@ -666,26 +693,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     {
       aList.addValue (aObject);
     }
-    final boolean bCloneProperties = JSONSettings.getInstance ().isCloneProperties ();
-    if (!bCloneProperties)
-    {
-      for (final IJSONObject aObject : aObjectList)
-      {
-        checkCycle (aObject);
-      }
-    }
     setProperty (JSONProperty.create (sName, aList, ECloneStategy.INHERIT), ECloneStategy.AVOID);
-    if (!bCloneProperties)
-    {
-      for (final IJSONObject aObject : aObjectList)
-      {
-        if (aObject instanceof JSONObject)
-        {
-          ((JSONObject) aObject).m_aParents.add (this);
-          this.m_aChildren.add (aObject);
-        }
-      }
-    }
     return this;
   }
 
@@ -693,7 +701,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public List <IJSONObject> getObjectListProperty (@Nullable final String sName)
   {
-    final List <IJSONObject> aReturn = new ArrayList <IJSONObject> ();
+    final List <IJSONObject> aReturn = new ArrayList <> ();
     final List <?> aList = getListProperty (sName);
     if (aList != null)
     {
@@ -712,7 +720,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setStringListProperty (@Nonnull final String sName, @Nonnull final Iterable <String> aStringList)
   {
-    final IJSONPropertyValueList <JSONPropertyValueString> aList = new JSONPropertyValueList <JSONPropertyValueString> ();
+    final IJSONPropertyValueList <JSONPropertyValueString> aList = new JSONPropertyValueList <> ();
     for (final String sValue : aStringList)
     {
       aList.addValue (new JSONPropertyValueString (sValue));
@@ -724,7 +732,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setMixedListProperty (@Nonnull final String sName, @Nonnull final Iterable <?> aValues)
   {
-    final IJSONPropertyValueList <IJSONPropertyValue <?>> aList = new JSONPropertyValueList <IJSONPropertyValue <?>> ();
+    final IJSONPropertyValueList <IJSONPropertyValue <?>> aList = new JSONPropertyValueList <> ();
     for (final Object aValue : aValues)
     {
       aList.addValue (JSONUtil.getJSONValue (aValue));
@@ -736,7 +744,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setIntegerListProperty (@Nonnull final String sName, @Nonnull final int [] aIntList)
   {
-    final IJSONPropertyValueList <JSONPropertyValueInteger> aList = new JSONPropertyValueList <JSONPropertyValueInteger> ();
+    final IJSONPropertyValueList <JSONPropertyValueInteger> aList = new JSONPropertyValueList <> ();
     for (final int nValue : aIntList)
     {
       aList.addValue (new JSONPropertyValueInteger (nValue));
@@ -747,7 +755,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Override
   public JSONObject setIntegerListProperty (@Nonnull final String sName, @Nonnull final List <Integer> aIntegerList)
   {
-    final IJSONPropertyValueList <JSONPropertyValueInteger> aList = new JSONPropertyValueList <JSONPropertyValueInteger> ();
+    final IJSONPropertyValueList <JSONPropertyValueInteger> aList = new JSONPropertyValueList <> ();
     for (final Integer nValue : aIntegerList)
     {
       aList.addValue (new JSONPropertyValueInteger (nValue));
@@ -769,10 +777,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   public JSONObject setListOfStringListProperty (@Nonnull final String sName,
                                                  @Nonnull final Iterable <? extends Iterable <String>> aListOfList)
   {
-    final JSONPropertyValueList <IJSONPropertyValueList <JSONPropertyValueString>> aList = new JSONPropertyValueList <IJSONPropertyValueList <JSONPropertyValueString>> ();
+    final JSONPropertyValueList <IJSONPropertyValueList <JSONPropertyValueString>> aList = new JSONPropertyValueList <> ();
     for (final Iterable <String> aRow : aListOfList)
     {
-      final IJSONPropertyValueList <JSONPropertyValueString> aRowList = new JSONPropertyValueList <JSONPropertyValueString> ();
+      final IJSONPropertyValueList <JSONPropertyValueString> aRowList = new JSONPropertyValueList <> ();
       for (final String aCell : aRow)
       {
         aRowList.addValue (new JSONPropertyValueString (aCell));
@@ -887,7 +895,24 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public EChange removeProperty (@Nullable final String sName)
   {
-    return EChange.valueOf (this.m_aProperties.remove (sName) != null);
+    final IJSONProperty <?> aRemoved = this.m_aProperties.remove (sName);
+    if (aRemoved == null)
+    {
+      return EChange.UNCHANGED;
+    }
+    if (!JSONSettings.getInstance ().isCloneProperties ())
+    {
+      final List <JSONObject> aObjectsInValue = getObjectsInValue (aRemoved);
+      if (ContainerHelper.isNotEmpty (aObjectsInValue))
+      {
+        for (final JSONObject aChild : aObjectsInValue)
+        {
+          aChild.m_aParents.remove (this);
+          this.m_aChildren.remove (aChild);
+        }
+      }
+    }
+    return EChange.CHANGED;
   }
 
   @Override
