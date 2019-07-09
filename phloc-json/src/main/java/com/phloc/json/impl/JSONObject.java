@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -78,8 +79,8 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   private static final Logger LOG = LoggerFactory.getLogger (JSONObject.class);
 
   private final Map <String, IJSONProperty <?>> m_aProperties = new LinkedHashMap <String, IJSONProperty <?>> ();
-  List <JSONObject> m_aParents = ContainerHelper.newList ();
-  List <JSONObject> m_aChildren = ContainerHelper.newList ();
+  private final List <JSONObject> m_aParents = new CopyOnWriteArrayList <> ();
+  private final List <JSONObject> m_aChildren = new CopyOnWriteArrayList <> ();
 
   /**
    * Default Ctor. Handle with care as it by default sets a <code>null</code>

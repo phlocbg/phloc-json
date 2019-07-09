@@ -21,6 +21,12 @@
 <changelog xmlns="http://www.phloc.com/ns/changelog/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-json">
 
+  <release date="2019-07-09" version="4.1.1" />
+  <entry date="2019-07-09" category="tech" action="update">
+    <change>
+      <text locale="en">Changed parent and children container for cycle detection to a concurrent implementation to avoid problems in multi-threaded sceanrios</text>
+    </change>
+  </entry>
   <release date="2019-07-01" version="4.1.0" />
   <entry date="2019-07-01" category="tech" action="update">
     <change>
