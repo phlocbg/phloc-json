@@ -146,7 +146,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
                                    eCloneStrategy != ECloneStategy.AVOID && bCloneProperties;
 
     List <JSONObject> aObjectsInValue = null;
-    if (!bCloneProperty)
+    if (!bCloneProperty && JSONSettings.getInstance ().isDetectCycles ())
     {
       aObjectsInValue = getObjectsInValue (aProperty);
       for (final IJSONObject aChild : aObjectsInValue)
@@ -155,7 +155,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       }
     }
     this.m_aProperties.put (aProperty.getName (), bCloneProperty ? aProperty.getClone () : aProperty);
-    if (ContainerHelper.isNotEmpty (aObjectsInValue))
+    if (JSONSettings.getInstance ().isDetectCycles () && ContainerHelper.isNotEmpty (aObjectsInValue))
     {
       for (final JSONObject aChild : aObjectsInValue)
       {
@@ -443,7 +443,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return this;
   }
 
-  public List <JSONObject> getParentsRecursive ()
+  private List <JSONObject> getParentsRecursive ()
   {
     final List <JSONObject> aResult = ContainerHelper.newList ();
     for (final JSONObject aParent : this.m_aParents)
@@ -904,7 +904,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     if (!JSONSettings.getInstance ().isCloneProperties ())
     {
       final List <JSONObject> aObjectsInValue = getObjectsInValue (aRemoved);
-      if (ContainerHelper.isNotEmpty (aObjectsInValue))
+      if (JSONSettings.getInstance ().isDetectCycles () && ContainerHelper.isNotEmpty (aObjectsInValue))
       {
         for (final JSONObject aChild : aObjectsInValue)
         {

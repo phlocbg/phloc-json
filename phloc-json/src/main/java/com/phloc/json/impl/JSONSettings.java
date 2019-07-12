@@ -2,7 +2,7 @@ package com.phloc.json.impl;
 
 /**
  * JSONSettings let you steer certain behavior globally
- * 
+ *
  * @author Boris Gregorcic
  */
 public class JSONSettings
@@ -17,9 +17,11 @@ public class JSONSettings
 
   public static final boolean DEFAULT_PARSE_NULL_VALUES = false;
   public static final boolean DEFAULT_CLONE_PROPERTIES = true;
+  public static final boolean DEFAULT_CYCLE_DETECTION = false;
 
   private boolean m_bParseNullValues;
   private boolean m_bCloneProperties = DEFAULT_CLONE_PROPERTIES;
+  private boolean m_bCycleDetection = DEFAULT_CYCLE_DETECTION;
 
   /**
    * Ctor for singleton creation
@@ -31,7 +33,7 @@ public class JSONSettings
 
   /**
    * Ctor
-   * 
+   *
    * @return the singleton instance
    */
   public static JSONSettings getInstance ()
@@ -52,7 +54,7 @@ public class JSONSettings
   /**
    * Defines whether or not cloning is used when assigning properties and values
    * in order to avoid side effects between read and set values
-   * 
+   *
    * @param bCloneProperties
    *        <code>true</code> if cloning is used or <code>false</code>
    *        otherwise. The default is <code>true</code>
@@ -62,10 +64,20 @@ public class JSONSettings
     this.m_bCloneProperties = bCloneProperties;
   }
 
+  public void setCycleDetection (final boolean bDetectCycles)
+  {
+    this.m_bCycleDetection = bDetectCycles;
+  }
+
+  public boolean isDetectCycles ()
+  {
+    return this.m_bCycleDetection;
+  }
+
   /**
    * This tells you whether or not cloning is used when assigning properties and
    * values in order to avoid side effects between read and set values
-   * 
+   *
    * @return <code>true</code> if cloning is used or <code>false</code>
    *         otherwise. The default is <code>true</code> but this can be changed
    *         at runtime

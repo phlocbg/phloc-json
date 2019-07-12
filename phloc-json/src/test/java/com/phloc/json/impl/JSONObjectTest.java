@@ -606,9 +606,11 @@ public final class JSONObjectTest
   public void testSetObjectCycleWithoutCloning ()
   {
     final boolean bOriginalState = JSONSettings.getInstance ().isCloneProperties ();
+    final boolean bOriginalCycle = JSONSettings.getInstance ().isDetectCycles ();
     try
     {
       JSONSettings.getInstance ().setCloneProperties (false);
+      JSONSettings.getInstance ().setCycleDetection (true);
       final IJSONObject a = new JSONObject ();
       a.set ("id", "a");
       final IJSONObject b = new JSONObject ();
@@ -620,6 +622,7 @@ public final class JSONObjectTest
     finally
     {
       JSONSettings.getInstance ().setCloneProperties (bOriginalState);
+      JSONSettings.getInstance ().setCycleDetection (bOriginalCycle);
     }
   }
 
