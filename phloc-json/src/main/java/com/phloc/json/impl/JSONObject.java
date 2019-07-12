@@ -247,6 +247,13 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   }
 
   @Override
+  public boolean getBoolProperty (@Nullable final String sName, final boolean bDefault)
+  {
+    final Boolean aVal = getBooleanProperty (sName);
+    return aVal == null ? bDefault : aVal.booleanValue ();
+  }
+
+  @Override
   @Nonnull
   public JSONObject setBooleanProperty (@Nonnull final String sName, final boolean bDataValue)
   {
@@ -300,6 +307,13 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       return Integer.valueOf (((AbstractJSONPropertyValueNumeric <?>) aValue).getData ().intValue ());
     }
     return null;
+  }
+
+  @Override
+  public int getIntProperty (@Nullable final String sName, final int nDefault)
+  {
+    final Integer aVal = getIntegerProperty (sName);
+    return aVal == null ? nDefault : aVal.intValue ();
   }
 
   @Override

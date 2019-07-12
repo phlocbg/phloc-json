@@ -111,6 +111,17 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   Boolean getBooleanProperty (@Nullable String sName);
 
   /**
+   * Tries to resolve the boolean property with the passed name. If such a
+   * property cannot be found, the passed default value is returned.
+   * 
+   * @param sName
+   * @param bDefault
+   * @return The simple boolean value of the requested property, or the passed
+   *         default value as fall-back
+   */
+  boolean getBoolProperty (@Nullable String sName, boolean bDefault);
+
+  /**
    * An easy way to set a new boolean property in a JSON object. Existing
    * properties with the same name will be replaced!
    *
@@ -187,7 +198,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   /**
    * Tries to resolve the value using {@link #getIntegerProperty(String)}. If no
    * valid value is available, this method will throw a
-   * {@link NullPointerException} rather thatn returning null.
+   * {@link NullPointerException} rather than returning null.
    *
    * @param sName
    *        Property name
@@ -196,6 +207,17 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    */
   @Nonnull
   Integer getIntegerPropertyNonNull (@Nullable String sName);
+
+  /**
+   * Tries to resolve the integer property with the passed name. If such a
+   * property cannot be found, the passed default value is returned.
+   *
+   * @param sName
+   * @param nDefault
+   * @return The simple integer value of the requested property, or the passed
+   *         default value as fall-back
+   */
+  int getIntProperty (@Nullable String sName, int nDefault);
 
   /**
    * An easy way to set a new int property in a JSON object. Existing properties
