@@ -502,6 +502,9 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   IJSONObject setListOfListProperty (@Nonnull String sName,
                                      @Nonnull Iterable <? extends Iterable <String>> aListOfList);
 
+  JSONObject setListOfListPropertyMixed (@Nonnull String sName,
+                                         @Nonnull Iterable <? extends Iterable <Object>> aListOfList);
+
   /**
    * An easy way to set a new nested list (array of string arrays) property in a
    * JSON object. Existing properties with the same name will be replaced!

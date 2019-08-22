@@ -33,6 +33,7 @@ import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.impl.value.JSONPropertyValueInteger;
+import com.phloc.json.impl.value.JSONPropertyValueList;
 import com.phloc.json.impl.value.JSONPropertyValueString;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -508,6 +509,37 @@ public final class JSONObjectTest
     final List <String> aList = ContainerHelper.newList ("A", "B"); //$NON-NLS-1$ //$NON-NLS-2$
     aObject.setStringListProperty (PROP, aList);
     Assert.assertEquals (aList, aObject.getListProperty (PROP));
+  }
+
+  @Test
+  public void testSetListOfListPropertyMixed () throws JSONParsingException
+  {
+    final List <Object> aList1 = ContainerHelper.newList ("a", "b", "c");
+    final List <Object> aList2 = ContainerHelper.newList (Integer.valueOf (1),
+                                                          Integer.valueOf (2),
+                                                          Integer.valueOf (3));
+    final List <List <Object>> aParentList = ContainerHelper.newList ();
+    aParentList.add (aList1);
+    aParentList.add (aList2);
+    final JSONObject aJSON = new JSONObject ();
+    aJSON.setListOfListPropertyMixed (A_KEY, aParentList);
+    final String sJSON = aJSON.getJSONString ();
+    final IJSONObject aParsed = JSONReader.parseObject (sJSON);
+
+    final List <? extends IJSONPropertyValue <?>> aLists = aParsed.getListValues (A_KEY);
+    Assert.assertEquals (2, aLists.size ());
+    final IJSONPropertyValue <?> aParsedList1 = aLists.get (0);
+    Assert.assertTrue (aParsedList1 instanceof JSONPropertyValueList <?>);
+    final IJSONPropertyValue <?> aParsedList2 = aLists.get (1);
+    Assert.assertTrue (aParsedList2 instanceof JSONPropertyValueList <?>);
+    for (final Object aValue : ((JSONPropertyValueList <?>) aParsedList1).getValues ())
+    {
+      Assert.assertTrue (aValue instanceof JSONPropertyValueString);
+    }
+    for (final Object aValue : ((JSONPropertyValueList <?>) aParsedList2).getValues ())
+    {
+      Assert.assertTrue (aValue instanceof JSONPropertyValueInteger);
+    }
   }
 
   @Test
