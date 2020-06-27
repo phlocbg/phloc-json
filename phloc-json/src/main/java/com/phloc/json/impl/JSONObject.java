@@ -829,6 +829,24 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return setListOfStringListProperty (sName, aListOfList);
   }
 
+  @SuppressWarnings ("unchecked")
+  @Nonnull
+  public JSONObject setListOfListPropertyMixed (@Nonnull final String sName,
+                                                @Nonnull final Iterable <? extends Iterable <Object>> aListOfList)
+  {
+    final JSONPropertyValueList <IJSONPropertyValueList <IJSONPropertyValue <Object>>> aList = new JSONPropertyValueList <> ();
+    for (final Iterable <Object> aRow : aListOfList)
+    {
+      final IJSONPropertyValueList <IJSONPropertyValue <Object>> aRowList = new JSONPropertyValueList <> ();
+      for (final Object aCell : aRow)
+      {
+        aRowList.addValue ((IJSONPropertyValue <Object>) JSONUtil.getJSONValue (aCell));
+      }
+      aList.addValue (aRowList);
+    }
+    return setProperty (JSONProperty.create (sName, aList, ECloneStategy.AVOID), ECloneStategy.AVOID);
+  }
+
   @Override
   @Nonnull
   public JSONObject setListOfStringListProperty (@Nonnull final String sName,
