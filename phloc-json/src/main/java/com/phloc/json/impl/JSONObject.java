@@ -145,20 +145,40 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     final boolean bCloneProperty = eCloneStrategy == ECloneStategy.FORCE ||
                                    eCloneStrategy != ECloneStategy.AVOID && bCloneProperties;
 
+    final boolean bDetectSideEffects = JSONSettings.getInstance ().isDetectSideEffects ();
+    final boolean bDetectCycles = JSONSettings.getInstance ().isDetectCycles ();
+
     List <JSONObject> aObjectsInValue = null;
-    if (!bCloneProperty && JSONSettings.getInstance ().isDetectCycles ())
+    if (!bCloneProperty && bDetectCycles)
     {
       aObjectsInValue = getObjectsInValue (aProperty);
       for (final IJSONObject aChild : aObjectsInValue)
       {
         checkCycle (aChild);
       }
+      if (bDetectSideEffects)
+      {
+        final IJSONObject aSharedAncestor = getAncestorWithMultipleParentsRecursive ();
+        if (aSharedAncestor != null)
+        {
+          LOG.error ("Trying to assign property '{}' in object {} while this object is shared in ancestor {}!",
+                     aProperty.getName (),
+                     this.hashCode (),
+                     aSharedAncestor.hashCode ());
+        }
+      }
     }
     this.m_aProperties.put (aProperty.getName (), bCloneProperty ? aProperty.getClone () : aProperty);
-    if (JSONSettings.getInstance ().isDetectCycles () && ContainerHelper.isNotEmpty (aObjectsInValue))
+    if (bDetectCycles && ContainerHelper.isNotEmpty (aObjectsInValue))
     {
       for (final JSONObject aChild : aObjectsInValue)
       {
+        if (aChild.hasParents () && bDetectSideEffects)
+        {
+          LOG.warn ("Trying to assign property '{}' in object {} with a value containing object references already used in other parents (THIS MAY CAUSE SIDE EFFECTS if you change the object later). Make sure to explicitly clone objects in such cases or enable property cloning in the JSONSettings!",
+                    aProperty.getName (),
+                    this.hashCode ());
+        }
         aChild.m_aParents.add (this);
         this.m_aChildren.add (aChild);
       }
@@ -455,6 +475,28 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   {
     setProperty (JSONProperty.create (sName, aObject, ECloneStategy.INHERIT), ECloneStategy.AVOID);
     return this;
+  }
+
+  private boolean hasParents ()
+  {
+    return !this.m_aParents.isEmpty ();
+  }
+
+  private IJSONObject getAncestorWithMultipleParentsRecursive ()
+  {
+    if (this.m_aParents.size () > 1)
+    {
+      return this;
+    }
+    for (final JSONObject aParent : this.m_aParents)
+    {
+      final IJSONObject aA = aParent.getAncestorWithMultipleParentsRecursive ();
+      if (aA != null)
+      {
+        return aA;
+      }
+    }
+    return null;
   }
 
   private List <JSONObject> getParentsRecursive ()
