@@ -58,7 +58,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   private static final String PROPERTY = "a"; //$NON-NLS-1$
 
   private static final String MOCK_JSON_LIB = "com/phloc/json/mock/mockLibrary.json"; //$NON-NLS-1$
-  private static final String MOCK_JSON_LIB_FULL = "com/phloc/json/mock/mockLibraryFull.json"; //$NON-NLS-1$
+  public static final String MOCK_JSON_LIB_FULL = "com/phloc/json/mock/mockLibraryFull.json"; //$NON-NLS-1$
   private static final String MOCK_JSON_LIB_MINI = "com/phloc/json/mock/mockLibraryMini.json"; //$NON-NLS-1$
   private static final String MOCK_JSON_MODEL = "com/phloc/json/mock/modelWithEndpoints.jsonill"; //$NON-NLS-1$
 
