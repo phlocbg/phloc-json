@@ -630,6 +630,9 @@ public final class JSONObjectTest
   @Test
   public void testSideEffectsObject () throws JSONParsingException
   {
+    JSONSettings.getInstance ().setCycleDetection (true);
+    JSONSettings.getInstance ().setCloneProperties (false);
+    JSONSettings.getInstance ().setDetectSideEffects (true);
     _testSideEffectsObject (true);
     _testSideEffectsObject (false);
   }
