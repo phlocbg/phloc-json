@@ -779,6 +779,29 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   }
 
   @Override
+  @Nonnull
+  public JSONObject setDoubleListProperty (@Nonnull final String sName, @Nonnull final double [] aDoubleList)
+  {
+    final IJSONPropertyValueList <JSONPropertyValueDouble> aList = new JSONPropertyValueList <> ();
+    for (final double nValue : aDoubleList)
+    {
+      aList.addValue (new JSONPropertyValueDouble (nValue));
+    }
+    return setProperty (JSONProperty.create (sName, aList, ECloneStategy.AVOID), ECloneStategy.AVOID);
+  }
+
+  @Override
+  public JSONObject setDoubleListProperty (@Nonnull final String sName, @Nonnull final List <Double> aDoubleList)
+  {
+    final IJSONPropertyValueList <JSONPropertyValueDouble> aList = new JSONPropertyValueList <> ();
+    for (final Double nValue : aDoubleList)
+    {
+      aList.addValue (new JSONPropertyValueDouble (nValue));
+    }
+    return setProperty (JSONProperty.create (sName, aList, ECloneStategy.AVOID), ECloneStategy.AVOID);
+  }
+
+  @Override
   @Deprecated
   @Nonnull
   public JSONObject setListOfListProperty (@Nonnull final String sName,
@@ -787,6 +810,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return setListOfStringListProperty (sName, aListOfList);
   }
 
+  @Override
   @SuppressWarnings ("unchecked")
   @Nonnull
   public JSONObject setListOfListPropertyMixed (@Nonnull final String sName,
@@ -897,6 +921,22 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       return this;
     }
     return setIntegerProperty (sName, aValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull @Nonempty String sName, final double nValue)
+  {
+    return setDoubleProperty (sName, nValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull @Nonempty String sName, final @Nullable Double aValue)
+  {
+    if (aValue == null)
+    {
+      return this;
+    }
+    return setDoubleProperty (sName, aValue);
   }
 
   @Override

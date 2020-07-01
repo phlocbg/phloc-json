@@ -570,6 +570,31 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
   IJSONObject setIntegerListProperty (@Nonnull String sName, @Nonnull int [] aIntList);
 
   /**
+   * An easy way to set a new double list type property in a JSON object.
+   * Existing properties with the same name will be replaced!
+   *
+   * @param sName
+   *        Property name
+   * @param aDoubleList
+   *        Property value
+   * @return this
+   */
+  JSONObject setDoubleListProperty (@Nonnull String sName, @Nonnull List <Double> aDoubleList);
+
+  /**
+   * An easy way to set a new double list type property in a JSON object.
+   * Existing properties with the same name will be replaced!
+   *
+   * @param sName
+   *        Property name
+   * @param aDoubleList
+   *        Property value
+   * @return this
+   */
+  @Nonnull
+  IJSONObject setDoubleListProperty (@Nonnull String sName, @Nonnull double [] aDoubleList);
+
+  /**
    * An easy way to set a new integer list type property in a JSON object.
    * Existing properties with the same name will be replaced!
    *
@@ -711,6 +736,30 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
    */
   @Nonnull
   JSONObject set (@Nonnull @Nonempty String sName, @Nullable Integer aValue);
+
+  /**
+   * Sets the passed double value.
+   *
+   * @param sName
+   *        The property name
+   * @param nValue
+   *        The value to set
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull @Nonempty String sName, double nValue);
+
+  /**
+   * Sets the passed double value if it is non-null.
+   *
+   * @param sName
+   *        The property name
+   * @param aValue
+   *        The value to set, may be <code>null</code>
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull @Nonempty String sName, @Nullable Double aValue);
 
   /**
    * Tries to resolve a property with the passed name and if found, removes the
