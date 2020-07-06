@@ -10,17 +10,17 @@ public class JSONObjectString extends AbstractJSONString <IJSONObject> implement
 {
   private static final long serialVersionUID = 9016882425432375150L;
 
-  protected JSONObjectString (@Nonnull final IJSONObject aNative) throws JSONCompressException
+  public JSONObjectString (@Nonnull final IJSONObject aNative) throws JSONCompressException
   {
     super (aNative);
   }
 
-  protected JSONObjectString (@Nonnull final IJSONObject aNative, final boolean bUseZIP) throws JSONCompressException
+  public JSONObjectString (@Nonnull final IJSONObject aNative, final boolean bUseZIP) throws JSONCompressException
   {
     super (aNative, bUseZIP);
   }
 
-  protected JSONObjectString (@Nonnull final JSONObjectString aOther)
+  public JSONObjectString (@Nonnull final JSONObjectString aOther)
   {
     super (aOther);
   }
