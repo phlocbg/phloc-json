@@ -31,6 +31,7 @@ public interface IJSONPropertyValueComplex <DATATYPE> extends IJSONPropertyValue
   /**
    * {@inheritDoc}
    */
+  @Override
   @Nonnull
   IJSONPropertyValueComplex <DATATYPE> getClone ();
 }

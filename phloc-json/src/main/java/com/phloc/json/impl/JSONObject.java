@@ -1125,4 +1125,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   {
     return ToStringGenerator.getDerived (super.toString ()).append ("properties", this.m_aProperties).toString (); //$NON-NLS-1$
   }
+
+  @Override
+  public IJSONObject getAsJSON ()
+  {
+    return this;
+  }
 }

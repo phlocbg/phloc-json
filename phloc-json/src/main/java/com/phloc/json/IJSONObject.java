@@ -38,7 +38,7 @@ import com.phloc.json.impl.JSONReader;
  * @author Boris Gregorcic
  * @author Philip Helger
  */
-public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>
+public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJSONConvertible
 {
   /**
    * adds the passed property
