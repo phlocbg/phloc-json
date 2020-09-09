@@ -23,6 +23,11 @@
 
   <entry date="2020-09-08" category="tech" action="update">
     <change>
+      <text locale="en">Escape ASCII control characters (JSN-8)</text>
+    </change>
+  </entry>
+  <entry date="2020-09-08" category="tech" action="update">
+    <change>
       <text locale="en">Null safe handling of properties on getJSONString (JSN-10)</text>
     </change>
   </entry>

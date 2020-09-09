@@ -26,7 +26,6 @@ import org.junit.Test;
  * 
  * @author Philip Helger
  */
-@Deprecated
 public final class JSONHelperTest
 {
   private static final String STRING_UNESCAPED = "this is a \"test\" containing \b \t \n \f \r \\ / <>\n##+{}()"; //$NON-NLS-1$
@@ -37,5 +36,29 @@ public final class JSONHelperTest
   public void testEscape ()
   {
     assertEquals (STRING_ESCAPED, JSONHelper.jsonEscape (STRING_UNESCAPED));
+    final StringBuilder aValueWithAllBadCharacters = new StringBuilder (STRING_UNESCAPED);
+    final StringBuilder aValueWithAllBadCharactersEscaped = new StringBuilder (STRING_ESCAPED);
+    int i = 0;
+    for (final char aChar : JSONHelper.CHARS_TO_MASK)
+    {
+      aValueWithAllBadCharacters.append (aChar);
+      aValueWithAllBadCharacters.append (" and "); //$NON-NLS-1$
+      aValueWithAllBadCharactersEscaped.append (JSONHelper.CHARS_MASKED[i]);
+      aValueWithAllBadCharactersEscaped.append (" and "); //$NON-NLS-1$
+      i++;
+    }
+    assertEquals (aValueWithAllBadCharactersEscaped.toString (),
+                  JSONHelper.jsonEscape (aValueWithAllBadCharacters.toString ()));
+  }
+
+  public static String getBadString ()
+  {
+    final StringBuilder aValueWithAllBadCharacters = new StringBuilder (STRING_UNESCAPED);
+    for (final char aChar : JSONHelper.CHARS_TO_MASK)
+    {
+      aValueWithAllBadCharacters.append (aChar);
+      aValueWithAllBadCharacters.append (" and "); //$NON-NLS-1$
+    }
+    return aValueWithAllBadCharacters.toString ();
   }
 }

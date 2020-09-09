@@ -38,6 +38,7 @@ import com.phloc.json.IJSON;
 import com.phloc.json.IJSONObject;
 import com.phloc.json.IJSONPropertyValueList;
 import com.phloc.json.JSONHelper;
+import com.phloc.json.JSONHelperTest;
 import com.phloc.json.impl.value.JSONPropertyValueBigDecimal;
 import com.phloc.json.impl.value.JSONPropertyValueBoolean;
 import com.phloc.json.impl.value.JSONPropertyValueDouble;
@@ -92,11 +93,11 @@ public final class JSONReaderTest extends AbstractJSONTestCase
   @Test
   public void testInvalidJSONs ()
   {
-    testForParseException ("");
-    testForParseException ("oida");
-    testForParseException ("{");
-    testForParseException ("{a:b,}");
-    testForParseException ("{a:'b'}");
+    testForParseException (""); //$NON-NLS-1$
+    testForParseException ("oida"); //$NON-NLS-1$
+    testForParseException ("{"); //$NON-NLS-1$
+    testForParseException ("{a:b,}"); //$NON-NLS-1$
+    testForParseException ("{a:'b'}"); //$NON-NLS-1$
   }
 
   @Test
@@ -106,9 +107,9 @@ public final class JSONReaderTest extends AbstractJSONTestCase
     try
     {
       JSONSettings.getInstance ().setParseNullValues (false);
-      testForParseException ("null");
+      testForParseException ("null"); //$NON-NLS-1$
       JSONSettings.getInstance ().setParseNullValues (true);
-      final IJSON aNull = JSONReader.parse ("null");
+      final IJSON aNull = JSONReader.parse ("null"); //$NON-NLS-1$
       Assert.assertTrue (aNull instanceof JSONPropertyValueKeyword);
       Assert.assertEquals (CJSONConstants.KEYWORD_NULL, ((JSONPropertyValueKeyword) aNull).getData ());
     }
@@ -123,7 +124,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
     try
     {
       JSONReader.parse (sJSON);
-      Assert.fail ("should not have been paraseable: " + sJSON);
+      Assert.fail ("should not have been paraseable: " + sJSON); //$NON-NLS-1$
     }
     catch (final JSONParsingException e)
     {
@@ -397,11 +398,11 @@ public final class JSONReaderTest extends AbstractJSONTestCase
       JSONReader.parse (StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_LIB_FULL),
                                                          CCharset.CHARSET_UTF_8_OBJ));
       JSONStatistics.getInstance ().stop ();
-      LOG.info ("OBJECTS: " +
+      LOG.info ("OBJECTS: " + //$NON-NLS-1$
                 JSONStatistics.getInstance ().getObjectCount () +
-                " PROPERTIES: " +
+                " PROPERTIES: " + //$NON-NLS-1$
                 JSONStatistics.getInstance ().getPropertyCount () +
-                " VALUES: " +
+                " VALUES: " + //$NON-NLS-1$
                 JSONStatistics.getInstance ().getPropertyValueCount ());
     }
     finally
@@ -423,7 +424,7 @@ public final class JSONReaderTest extends AbstractJSONTestCase
     final IJSON aJSON = JSONReader.parse (StreamUtils.getAllBytesAsString (ClassPathResource.getInputStream (MOCK_JSON_MODEL),
                                                                            CCharset.CHARSET_UTF_8_OBJ));
     Assert.assertTrue (aJSON instanceof IJSONObject);
-    Assert.assertNotNull (((IJSONObject) aJSON).getStringProperty ("model"));
+    Assert.assertNotNull (((IJSONObject) aJSON).getStringProperty ("model")); //$NON-NLS-1$
   }
 
   @Test
@@ -433,14 +434,16 @@ public final class JSONReaderTest extends AbstractJSONTestCase
     assertEscaped ("aaa\\\"bbb"); //$NON-NLS-1$
     assertEscaped ("aaa\\/bbb"); //$NON-NLS-1$
     assertEscaped ("aaa\bbbb"); //$NON-NLS-1$
+    assertEscaped (JSONHelperTest.getBadString ()); // $NON-NLS-1$
   }
 
   private static void assertEscaped (final String sValue) throws JSONParsingException
   {
+    LOG.info ("value pure: {}", sValue); //$NON-NLS-1$
     final String sJSON = "{\"prop\":\"" + JSONHelper.jsonEscape (sValue) + "\"}"; //$NON-NLS-1$ //$NON-NLS-2$
+    LOG.info ("JSON String: {}", sJSON); //$NON-NLS-1$
     final IJSONObject aJSON = JSONReader.parseObject (sJSON);
     Assert.assertEquals (sValue, aJSON.getStringProperty ("prop")); //$NON-NLS-1$
 
   }
-
 }
