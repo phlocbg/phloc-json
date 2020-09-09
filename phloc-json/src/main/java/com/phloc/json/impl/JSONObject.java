@@ -159,12 +159,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       if (bDetectSideEffects)
       {
         final IJSONObject aSharedAncestor = getAncestorWithMultipleParentsRecursive ();
-        if (aSharedAncestor != null)
+        if (aSharedAncestor != null && LOG.isErrorEnabled ())
         {
-          LOG.error ("Trying to assign property '{}' in object {} while this object is shared in ancestor {}!",
+          LOG.error ("Trying to assign property '{}' in object {} while this object is shared in ancestor {}!", //$NON-NLS-1$
                      aProperty.getName (),
-                     this.hashCode (),
-                     aSharedAncestor.hashCode ());
+                     String.valueOf (this.hashCode ()),
+                     String.valueOf (aSharedAncestor.hashCode ()));
         }
       }
     }
@@ -173,11 +173,11 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     {
       for (final JSONObject aChild : aObjectsInValue)
       {
-        if (aChild.hasParents () && bDetectSideEffects)
+        if (aChild.hasParents () && bDetectSideEffects && LOG.isWarnEnabled ())
         {
-          LOG.warn ("Trying to assign property '{}' in object {} with a value containing object references already used in other parents (THIS MAY CAUSE SIDE EFFECTS if you change the object later). Make sure to explicitly clone objects in such cases or enable property cloning in the JSONSettings!",
+          LOG.warn ("Trying to assign property '{}' in object {} with a value containing object references already used in other parents (THIS MAY CAUSE SIDE EFFECTS if you change the object later). Make sure to explicitly clone objects in such cases or enable property cloning in the JSONSettings!", //$NON-NLS-1$
                     aProperty.getName (),
-                    this.hashCode ());
+                    String.valueOf (this.hashCode ()));
         }
         aChild.m_aParents.add (this);
         this.m_aChildren.add (aChild);
@@ -539,7 +539,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   {
     if (this == aChild)
     {
-      throw new IllegalArgumentException ("Circle detected: Unable to set object reference from A to B when A==B!");
+      throw new IllegalArgumentException ("Circle detected: Unable to set object reference from A to B when A==B!"); //$NON-NLS-1$
     }
     if (aChild instanceof JSONObject)
     {
@@ -548,7 +548,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       final List <JSONObject> aCycles = getIntersectedByIdentity (aAncestors, aDescendents);
       if (!ContainerHelper.isEmpty (aCycles))
       {
-        throw new IllegalArgumentException ("Circle detected: Unable to set object reference from A to B when B or one of its descendants is the same as A or one of its ancestors!");
+        throw new IllegalArgumentException ("Circle detected: Unable to set object reference from A to B when B or one of its descendants is the same as A or one of its ancestors!"); //$NON-NLS-1$
       }
     }
   }
@@ -994,6 +994,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     for (final String sProperty : aPropertyNames)
     {
       final IJSONProperty <?> aProperty = getProperty (sProperty);
+      if (aProperty == null)
+      {
+        LOG.warn ("Skipping property '{}' in generated JSON string as the corresponding property can no longer be resolved!", //$NON-NLS-1$
+                  sProperty);
+        continue;
+      }
       aProperty.appendJSONString (aResult, bAlignAndIndent, nLevel + 1);
       if (nIndex < aPropertyNames.size () - 1)
       {
