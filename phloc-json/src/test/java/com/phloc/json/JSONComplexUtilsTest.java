@@ -63,13 +63,13 @@ public final class JSONComplexUtilsTest
       aProperties.put (PROP5, null);
       final IJSONObject aObj = JSONComplexUtils.convertToJSON (aProperties);
       assertNotNull (aObj);
-      assertEquals (aObj.getAllPropertyNames ().size (), aProperties.size ());
-      assertEquals (aObj.getProperty (PROP1).getValue ().getData (), VALUE_STRING);
-      assertEquals (aObj.getProperty (PROP2).getValue ().getData (), VALUE_INTEGER);
-      assertEquals (aObj.getProperty (PROP3).getValue ().getData (), VALUE_DOUBLE);
-      assertEquals (aObj.getProperty (PROP4).getValue ().getData (), VALUE_BOOLEAN);
+      assertEquals (aProperties.size (), aObj.getAllPropertyNames ().size ());
+      assertEquals (VALUE_STRING, aObj.getProperty (PROP1).getValue ().getData ());
+      assertEquals (VALUE_INTEGER, aObj.getProperty (PROP2).getValue ().getData ());
+      assertEquals (VALUE_DOUBLE, aObj.getProperty (PROP3).getValue ().getData ());
+      assertEquals (VALUE_BOOLEAN, aObj.getProperty (PROP4).getValue ().getData ());
       assertTrue (aObj.getProperty (PROP5).getValue () instanceof JSONPropertyValueKeyword);
-      assertEquals (aObj.getProperty (PROP5).getValue ().getData (), CJSONConstants.KEYWORD_NULL);
+      assertEquals (CJSONConstants.KEYWORD_NULL, aObj.getProperty (PROP5).getValue ().getData ());
     }
   }
 }

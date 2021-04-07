@@ -31,8 +31,10 @@ import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.state.EChange;
 import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.json.IJSONObject;
+import com.phloc.json.IJSONProperty;
 import com.phloc.json.IJSONPropertyValue;
 import com.phloc.json.impl.value.JSONPropertyValueInteger;
+import com.phloc.json.impl.value.JSONPropertyValueKeyword;
 import com.phloc.json.impl.value.JSONPropertyValueList;
 import com.phloc.json.impl.value.JSONPropertyValueString;
 
@@ -172,8 +174,11 @@ public final class JSONObjectTest
       // set null
       final Object aValue = sTestString;
       aObj.setProperty (sKey, aValue, bUseTypeConverter);
+      Assert.assertEquals (sTestString, aObj.getStringProperty (sKey));
       aObj.setProperty (sKey, null, bUseTypeConverter);
-      Assert.assertNull (aObj.getProperty (sKey));
+      Assert.assertNull (aObj.getStringProperty (sKey));
+      Assert.assertTrue (aObj.hasProperty (sKey));
+      Assert.assertTrue (aObj.isNull (sKey));
     }
 
     {
@@ -239,6 +244,7 @@ public final class JSONObjectTest
       aObj.setProperty (KEY, aValue, bUseTypeConverter);
       Assert.assertEquals (aValue.toString (), aObj.getProperty (KEY).getValue ().getData ());
     }
+
   }
 
   @Test
@@ -310,6 +316,104 @@ public final class JSONObjectTest
     aValues.add (E_VAL);
     aObj.setMixedListProperty (A_KEY, aValues);
     Assert.assertEquals (aValues, aObj.getListProperty (A_KEY));
+  }
+
+  @Test
+  public void testSetMixedListPropertyWithNull ()
+  {
+    final List <Object> aValues = ContainerHelper.newList ();
+    aValues.add (A_VAL);
+    aValues.add (C_VAL);
+    aValues.add (null);
+
+    final IJSONObject aObj = new JSONObject ();
+    aObj.setMixedListProperty (A_KEY, aValues);
+    Assert.assertEquals (aValues, aObj.getListProperty (A_KEY));
+  }
+
+  @Test
+  public void testSetStringListPropertyWithNull ()
+  {
+    final List <String> aValues = ContainerHelper.newList ();
+    aValues.add (A_VAL);
+    aValues.add (B_VAL);
+    aValues.add (null);
+
+    final IJSONObject aObj = new JSONObject ();
+    aObj.setStringListProperty (A_KEY, aValues);
+    Assert.assertEquals (aValues, aObj.getListProperty (A_KEY));
+  }
+
+  @Test
+  public void testSetNull ()
+  {
+    final IJSONObject aObj = new JSONObject ();
+
+    verifyNull (aObj.set (A_KEY, (String) null));
+    verifyNull (aObj.set (A_KEY, (Integer) null));
+    verifyNull (aObj.set (A_KEY, (Double) null));
+    verifyNull (aObj.set (A_KEY, (IJSONObject) null));
+
+    verifyNull (aObj.setStringProperty (A_KEY, (String) null));
+    verifyNull (aObj.setIntegerProperty (A_KEY, (Integer) null));
+    verifyNull (aObj.setBooleanProperty (A_KEY, (Boolean) null));
+    verifyNull (aObj.setDoubleProperty (A_KEY, (Double) null));
+    verifyNull (aObj.setLongProperty (A_KEY, (Long) null));
+    verifyNull (aObj.setBigDecimalProperty (A_KEY, (BigDecimal) null));
+    verifyNull (aObj.setBigIntegerProperty (A_KEY, (BigInteger) null));
+    verifyNull (aObj.setObjectProperty (A_KEY, (IJSONObject) null));
+    verifyNull (aObj.setKeywordProperty (A_KEY, null));
+
+    verifyNullList (aObj.setStringListProperty (A_KEY, ContainerHelper.newList (new String [] { null })));
+    verifyNullList (aObj.setIntegerListProperty (A_KEY, ContainerHelper.newList (new Integer [] { null })));
+    verifyNullList (aObj.setDoubleListProperty (A_KEY, ContainerHelper.newList (new Double [] { null })));
+    verifyNullList (aObj.setObjectListProperty (A_KEY, ContainerHelper.newList (new IJSONObject [] { null })));
+    verifyNullList (aObj.setMixedListProperty (A_KEY, ContainerHelper.newList (new Object [] { null })));
+  }
+
+  private static void verifyNull (final IJSONObject aObj)
+  {
+    Assert.assertTrue (aObj.hasProperty (A_KEY));
+    Assert.assertTrue (aObj.isNull (A_KEY));
+  }
+
+  private static void verifyNullList (final IJSONObject aObj)
+  {
+    Assert.assertTrue (aObj.hasProperty (A_KEY));
+    final List <Object> aValues = aObj.getListProperty (A_KEY);
+    Assert.assertNotNull (aValues);
+    Assert.assertTrue (aValues.contains (null));
+  }
+
+  @Test
+  public void testReadWriteNull () throws JSONParsingException
+  {
+    final IJSONObject aObj = new JSONObject ();
+    aObj.setNull (A_KEY);
+    final IJSONProperty <?> aProp = aObj.getProperty (A_KEY);
+    Assert.assertTrue (aProp.getValue () instanceof JSONPropertyValueKeyword);
+    Assert.assertEquals (CJSONConstants.KEYWORD_NULL, aProp.getValue ().getData ());
+
+    final boolean bOldValue = JSONSettings.getInstance ().isParseNullValues ();
+    try
+    {
+      {
+        JSONSettings.getInstance ().setParseNullValues (false);
+        final IJSONObject aReadWrite = JSONReader.parseObject (aObj.getJSONString ());
+        // losing null values
+        Assert.assertFalse (aObj.equals (aReadWrite));
+      }
+      {
+        JSONSettings.getInstance ().setParseNullValues (true);
+        final IJSONObject aReadWrite = JSONReader.parseObject (aObj.getJSONString ());
+        // maintaining null values
+        Assert.assertTrue (aObj.equals (aReadWrite));
+      }
+    }
+    finally
+    {
+      JSONSettings.getInstance ().setParseNullValues (bOldValue);
+    }
   }
 
   @Test
@@ -514,7 +618,7 @@ public final class JSONObjectTest
   @Test
   public void testSetListOfListPropertyMixed () throws JSONParsingException
   {
-    final List <Object> aList1 = ContainerHelper.newList ("a", "b", "c");
+    final List <Object> aList1 = ContainerHelper.newList ("a", "b", "c"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final List <Object> aList2 = ContainerHelper.newList (Integer.valueOf (1),
                                                           Integer.valueOf (2),
                                                           Integer.valueOf (3));
@@ -591,7 +695,7 @@ public final class JSONObjectTest
   @Test
   public void testClone () throws JSONParsingException
   {
-    final String sJSON = "{a:[{name:\"Anton\"},{name:\"Albert\"}],b:[{name:\"Bertram\", props:[{x:\"y\"}]}]}";
+    final String sJSON = "{a:[{name:\"Anton\"},{name:\"Albert\"}],b:[{name:\"Bertram\", props:[{x:\"y\"}]}]}"; //$NON-NLS-1$
 
     final IJSONObject aJSONOrig = JSONReader.parseObject (sJSON);
 
@@ -601,28 +705,28 @@ public final class JSONObjectTest
     final IJSONObject aJSONClone = aJSONOne.getClone ();
     Assert.assertEquals (aJSONOrig.getJSONString (), aJSONClone.getJSONString ());
 
-    aJSONClone.set ("foo", "bar");
+    aJSONClone.set ("foo", "bar"); //$NON-NLS-1$ //$NON-NLS-2$
     Assert.assertEquals (aJSONOrig.getJSONString (), aJSONOne.getJSONString ());
 
     // make sure operations on clone do not affect original source (--> lists
     // had a problem here)
-    final List <IJSONObject> aValues = aJSONClone.getObjectListProperty ("a");
-    aValues.get (0).set ("age", 43);
+    final List <IJSONObject> aValues = aJSONClone.getObjectListProperty ("a"); //$NON-NLS-1$
+    aValues.get (0).set ("age", 43); //$NON-NLS-1$
     Assert.assertEquals (aJSONOrig.getJSONString (), aJSONOne.getJSONString ());
     Assert.assertNotEquals (aJSONClone.getJSONString (), aJSONOne.getJSONString ());
 
-    final List <IJSONObject> aOrigValues = aJSONOrig.getListProperty ("b");
+    final List <IJSONObject> aOrigValues = aJSONOrig.getListProperty ("b"); //$NON-NLS-1$
     final IJSONObject aBertramOrig = aOrigValues.get (0);
-    final List <IJSONObject> aClonedValues = aJSONClone.getListProperty ("b");
+    final List <IJSONObject> aClonedValues = aJSONClone.getListProperty ("b"); //$NON-NLS-1$
     final IJSONObject aBertramClone = aClonedValues.get (0);
     Assert.assertFalse (aBertramOrig == aBertramClone);
-    final List <IJSONObject> aBertramOrigProps = aBertramOrig.getListProperty ("props");
-    final List <IJSONObject> aBertramCloneProps = aBertramClone.getListProperty ("props");
+    final List <IJSONObject> aBertramOrigProps = aBertramOrig.getListProperty ("props"); //$NON-NLS-1$
+    final List <IJSONObject> aBertramCloneProps = aBertramClone.getListProperty ("props"); //$NON-NLS-1$
     Assert.assertFalse (aBertramOrigProps == aBertramCloneProps);
     final IJSONObject aBertramOrigVal = aBertramOrigProps.get (0);
     final IJSONObject aBertramCloneVal = aBertramCloneProps.get (0);
     Assert.assertFalse (aBertramOrigVal == aBertramCloneVal);
-    aBertramCloneVal.set ("w", "v");
+    aBertramCloneVal.set ("w", "v"); //$NON-NLS-1$ //$NON-NLS-2$
     Assert.assertEquals (aJSONOrig.getJSONString (), aJSONOne.getJSONString ());
     Assert.assertNotEquals (aJSONClone.getJSONString (), aJSONOne.getJSONString ());
   }
@@ -647,11 +751,11 @@ public final class JSONObjectTest
       JSONSettings.getInstance ().setCloneProperties (false);
       JSONSettings.getInstance ().setCycleDetection (true);
       final IJSONObject a = new JSONObject ();
-      a.set ("id", "a");
+      a.set ("id", "a"); //$NON-NLS-1$ //$NON-NLS-2$
       final IJSONObject b = new JSONObject ();
-      b.set ("id", "b");
-      a.set ("relates", b);
-      b.set ("relates", a);
+      b.set ("id", "b"); //$NON-NLS-1$ //$NON-NLS-2$
+      a.set ("relates", b); //$NON-NLS-1$
+      b.set ("relates", a); //$NON-NLS-1$
       this.LOG.info (a.getJSONString ());
     }
     finally
@@ -669,11 +773,11 @@ public final class JSONObjectTest
     {
       JSONSettings.getInstance ().setCloneProperties (true);
       final IJSONObject a = new JSONObject ();
-      a.set ("id", "a");
+      a.set ("id", "a"); //$NON-NLS-1$ //$NON-NLS-2$
       final IJSONObject b = new JSONObject ();
-      b.set ("id", "b");
-      a.set ("relates", b);
-      b.set ("relates", a);
+      b.set ("id", "b"); //$NON-NLS-1$ //$NON-NLS-2$
+      a.set ("relates", b); //$NON-NLS-1$
+      b.set ("relates", a); //$NON-NLS-1$
       this.LOG.info (a.getJSONString ());
     }
     finally
@@ -744,22 +848,22 @@ public final class JSONObjectTest
 
   private void testRemoveObjectPropertyInternal () throws JSONParsingException
   {
-    final IJSONObject aPayload = JSONReader.parseObject ("{data:{one:{id:\"one\", val:5}, two:{two:\"two\", val:6}}, metadata:{narf:\"zoot\"}}");
-    final IJSONObject aData = aPayload.getObjectProperty ("data");
-    aPayload.removeProperty ("data");
-    final IJSONObject aOne = aData.getObjectProperty ("one");
-    aOne.set ("stuff", aPayload);
-    Assert.assertEquals (JSONReader.parseObject ("{id:\"one\", val:5, stuff:{metadata:{narf:\"zoot\"}}}"), aOne);
+    final IJSONObject aPayload = JSONReader.parseObject ("{data:{one:{id:\"one\", val:5}, two:{two:\"two\", val:6}}, metadata:{narf:\"zoot\"}}"); //$NON-NLS-1$
+    final IJSONObject aData = aPayload.getObjectProperty ("data"); //$NON-NLS-1$
+    aPayload.removeProperty ("data"); //$NON-NLS-1$
+    final IJSONObject aOne = aData.getObjectProperty ("one"); //$NON-NLS-1$
+    aOne.set ("stuff", aPayload); //$NON-NLS-1$
+    Assert.assertEquals (JSONReader.parseObject ("{id:\"one\", val:5, stuff:{metadata:{narf:\"zoot\"}}}"), aOne); //$NON-NLS-1$
   }
 
   private void testRemoveObjectListPropertyInternal () throws JSONParsingException
   {
-    final IJSONObject aPayload = JSONReader.parseObject ("{data:[{id:\"one\", val:5}, {two:\"two\", val:6}], metadata:{narf:\"zoot\"}}");
-    final List <IJSONObject> aData = aPayload.getObjectListProperty ("data");
-    aPayload.removeProperty ("data");
+    final IJSONObject aPayload = JSONReader.parseObject ("{data:[{id:\"one\", val:5}, {two:\"two\", val:6}], metadata:{narf:\"zoot\"}}"); //$NON-NLS-1$
+    final List <IJSONObject> aData = aPayload.getObjectListProperty ("data"); //$NON-NLS-1$
+    aPayload.removeProperty ("data"); //$NON-NLS-1$
     final IJSONObject aOne = aData.get (0);
-    aOne.set ("stuff", aPayload);
-    Assert.assertEquals (JSONReader.parseObject ("{id:\"one\", val:5, stuff:{metadata:{narf:\"zoot\"}}}"), aOne);
+    aOne.set ("stuff", aPayload); //$NON-NLS-1$
+    Assert.assertEquals (JSONReader.parseObject ("{id:\"one\", val:5, stuff:{metadata:{narf:\"zoot\"}}}"), aOne); //$NON-NLS-1$
   }
 
   private void _testSideEffectsObject (final boolean bClone) throws JSONParsingException
@@ -768,25 +872,25 @@ public final class JSONObjectTest
     try
     {
       JSONSettings.getInstance ().setCloneProperties (bClone);
-      final String sJSON = "{a:{name:\"Anton\"},b:{name:\"Bertram\"}}";
+      final String sJSON = "{a:{name:\"Anton\"},b:{name:\"Bertram\"}}"; //$NON-NLS-1$
 
       final IJSONObject aJSONOrig = JSONReader.parseObject (sJSON);
       final IJSONObject aJSONTwo = new JSONObject ();
 
-      final IJSONObject aObject = aJSONOrig.getObjectProperty ("a");
-      aJSONTwo.set ("a", aObject);
-      Assert.assertEquals (aJSONOrig.getObjectProperty ("a").getJSONString (),
-                           aJSONTwo.getObjectProperty ("a").getJSONString ());
-      aObject.set ("age", 14);
+      final IJSONObject aObject = aJSONOrig.getObjectProperty ("a"); //$NON-NLS-1$
+      aJSONTwo.set ("a", aObject); //$NON-NLS-1$
+      Assert.assertEquals (aJSONOrig.getObjectProperty ("a").getJSONString (), //$NON-NLS-1$
+                           aJSONTwo.getObjectProperty ("a").getJSONString ()); //$NON-NLS-1$
+      aObject.set ("age", 14); //$NON-NLS-1$
       if (bClone)
       {
-        Assert.assertNotEquals (aJSONOrig.getObjectProperty ("a").getJSONString (),
-                                aJSONTwo.getObjectProperty ("a").getJSONString ());
+        Assert.assertNotEquals (aJSONOrig.getObjectProperty ("a").getJSONString (), //$NON-NLS-1$
+                                aJSONTwo.getObjectProperty ("a").getJSONString ()); //$NON-NLS-1$
       }
       else
       {
-        Assert.assertEquals (aJSONOrig.getObjectProperty ("a").getJSONString (),
-                             aJSONTwo.getObjectProperty ("a").getJSONString ());
+        Assert.assertEquals (aJSONOrig.getObjectProperty ("a").getJSONString (), //$NON-NLS-1$
+                             aJSONTwo.getObjectProperty ("a").getJSONString ()); //$NON-NLS-1$
       }
     }
     finally
@@ -808,23 +912,23 @@ public final class JSONObjectTest
     try
     {
       JSONSettings.getInstance ().setCloneProperties (bClone);
-      final String sJSON = "{a:{name:\"Anton\"},b:{name:\"Bertram\"}}";
+      final String sJSON = "{a:{name:\"Anton\"},b:{name:\"Bertram\"}}"; //$NON-NLS-1$
 
       final IJSONObject aJSONOrig = JSONReader.parseObject (sJSON);
       final IJSONObject aJSONAdded = new JSONObject ();
-      aJSONAdded.set ("x", "y");
-      aJSONOrig.set ("added", aJSONAdded);
+      aJSONAdded.set ("x", "y"); //$NON-NLS-1$ //$NON-NLS-2$
+      aJSONOrig.set ("added", aJSONAdded); //$NON-NLS-1$
 
-      Assert.assertEquals (aJSONOrig.getObjectProperty ("added").getJSONString (), aJSONAdded.getJSONString ());
+      Assert.assertEquals (aJSONOrig.getObjectProperty ("added").getJSONString (), aJSONAdded.getJSONString ()); //$NON-NLS-1$
 
-      aJSONAdded.set ("y", "z");
+      aJSONAdded.set ("y", "z"); //$NON-NLS-1$ //$NON-NLS-2$
       if (bClone)
       {
-        Assert.assertNotEquals (aJSONOrig.getObjectProperty ("added").getJSONString (), aJSONAdded.getJSONString ());
+        Assert.assertNotEquals (aJSONOrig.getObjectProperty ("added").getJSONString (), aJSONAdded.getJSONString ()); //$NON-NLS-1$
       }
       else
       {
-        Assert.assertEquals (aJSONOrig.getObjectProperty ("added").getJSONString (), aJSONAdded.getJSONString ());
+        Assert.assertEquals (aJSONOrig.getObjectProperty ("added").getJSONString (), aJSONAdded.getJSONString ()); //$NON-NLS-1$
       }
     }
     finally

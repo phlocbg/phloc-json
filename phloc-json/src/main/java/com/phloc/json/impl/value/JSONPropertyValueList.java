@@ -98,10 +98,18 @@ public class JSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> ext
   @ReturnsMutableCopy
   public List <Object> getDataValues ()
   {
-    final List <Object> aDataValues = new ArrayList <Object> ();
+    final List <Object> aDataValues = new ArrayList <> ();
     for (final DATATYPE aValue : getData ())
     {
-      aDataValues.add (aValue.getData ());
+      final Object aData = aValue.getData ();
+      if (aValue instanceof JSONPropertyValueKeyword && CJSONConstants.KEYWORD_NULL.equals (aData))
+      {
+        aDataValues.add (null);
+      }
+      else
+      {
+        aDataValues.add (aData);
+      }
     }
     return aDataValues;
   }

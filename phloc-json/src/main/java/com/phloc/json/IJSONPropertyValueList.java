@@ -29,8 +29,7 @@ import javax.annotation.Nonnull;
  * @param <DATATYPE>
  *        The concrete {@link IJSONPropertyValue} type to use
  */
-public interface IJSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> extends
-                                                                                  IJSONPropertyValueComplex <List <DATATYPE>>
+public interface IJSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>> extends IJSONPropertyValueComplex <List <DATATYPE>>
 {
   /**
    * @return the list of {@link IJSONPropertyValue}s
@@ -68,6 +67,7 @@ public interface IJSONPropertyValueList <DATATYPE extends IJSONPropertyValue <?>
   /**
    * {@inheritDoc}
    */
+  @Override
   @Nonnull
   IJSONPropertyValueList <DATATYPE> getClone ();
 }

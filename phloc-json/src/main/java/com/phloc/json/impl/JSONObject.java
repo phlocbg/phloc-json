@@ -169,7 +169,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
       }
     }
     this.m_aProperties.put (aProperty.getName (), bCloneProperty ? aProperty.getClone () : aProperty);
-    if (bDetectCycles && ContainerHelper.isNotEmpty (aObjectsInValue))
+    if (bDetectCycles && aObjectsInValue != null)
     {
       for (final JSONObject aChild : aObjectsInValue)
       {
@@ -186,6 +186,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     return this;
   }
 
+  @Nonnull
   private static List <JSONObject> getObjectsInValue (@Nonnull final IJSONProperty <?> aProperty)
   {
     final List <JSONObject> aObjects = ContainerHelper.newList ();
@@ -283,8 +284,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   @Override
   @Nonnull
-  public JSONObject setBooleanProperty (@Nonnull final String sName, @Nonnull final Boolean aDataValue)
+  public JSONObject setBooleanProperty (@Nonnull final String sName, @Nullable final Boolean aDataValue)
   {
+    if (aDataValue == null)
+    {
+      return setNull (sName);
+    }
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueBoolean (aDataValue), ECloneStategy.AVOID),
                         ECloneStategy.AVOID);
   }
@@ -311,8 +316,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   @Override
   @Nonnull
-  public JSONObject setDoubleProperty (@Nonnull final String sName, @Nonnull final Double aDataValue)
+  public JSONObject setDoubleProperty (@Nonnull final String sName, @Nullable final Double aDataValue)
   {
+    if (aDataValue == null)
+    {
+      return setNull (sName);
+    }
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueDouble (aDataValue), ECloneStategy.AVOID),
                         ECloneStategy.AVOID);
   }
@@ -358,8 +367,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   @Override
   @Nonnull
-  public JSONObject setIntegerProperty (@Nonnull final String sName, @Nonnull final Integer aDataValue)
+  public JSONObject setIntegerProperty (@Nonnull final String sName, @Nullable final Integer aDataValue)
   {
+    if (aDataValue == null)
+    {
+      return setNull (sName);
+    }
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueInteger (aDataValue), ECloneStategy.AVOID),
                         ECloneStategy.AVOID);
   }
@@ -386,8 +399,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   @Override
   @Nonnull
-  public JSONObject setLongProperty (@Nonnull final String sName, @Nonnull final Long aDataValue)
+  public JSONObject setLongProperty (@Nonnull final String sName, @Nullable final Long aDataValue)
   {
+    if (aDataValue == null)
+    {
+      return setNull (sName);
+    }
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueLong (aDataValue), ECloneStategy.AVOID),
                         ECloneStategy.AVOID);
   }
@@ -406,8 +423,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   @Override
   @Nonnull
-  public JSONObject setKeywordProperty (@Nonnull final String sName, @Nonnull final String sDataValue)
+  public JSONObject setKeywordProperty (@Nonnull final String sName, @Nullable final String sDataValue)
   {
+    if (sDataValue == null)
+    {
+      return setNull (sName);
+    }
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueKeyword (sDataValue), ECloneStategy.AVOID),
                         ECloneStategy.AVOID);
   }
@@ -471,8 +492,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   @Override
   @Nonnull
-  public JSONObject setObjectProperty (@Nonnull final String sName, @Nonnull final IJSONObject aObject)
+  public JSONObject setObjectProperty (@Nonnull final String sName, @Nullable final IJSONObject aObject)
   {
+    if (aObject == null)
+    {
+      return setNull (sName);
+    }
     setProperty (JSONProperty.create (sName, aObject, ECloneStategy.INHERIT), ECloneStategy.AVOID);
     return this;
   }
@@ -599,8 +624,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   @Override
   @Nonnull
-  public JSONObject setStringProperty (@Nonnull final String sName, @Nonnull final String sDataValue)
+  public JSONObject setStringProperty (@Nonnull final String sName, @Nullable final String sDataValue)
   {
+    if (sDataValue == null)
+    {
+      return setNull (sName);
+    }
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueString (sDataValue), ECloneStategy.AVOID),
                         ECloneStategy.AVOID);
   }
@@ -630,8 +659,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   @Override
   @Nonnull
-  public JSONObject setBigIntegerProperty (@Nonnull final String sName, @Nonnull final BigInteger aDataValue)
+  public JSONObject setBigIntegerProperty (@Nonnull final String sName, @Nullable final BigInteger aDataValue)
   {
+    if (aDataValue == null)
+    {
+      return setNull (sName);
+    }
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueBigInteger (aDataValue), ECloneStategy.AVOID),
                         ECloneStategy.AVOID);
   }
@@ -650,8 +683,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   @Override
   @Nonnull
-  public JSONObject setBigDecimalProperty (@Nonnull final String sName, @Nonnull final BigDecimal aDataValue)
+  public JSONObject setBigDecimalProperty (@Nonnull final String sName, @Nullable final BigDecimal aDataValue)
   {
+    if (aDataValue == null)
+    {
+      return setNull (sName);
+    }
     return setProperty (JSONProperty.create (sName, new JSONPropertyValueBigDecimal (aDataValue), ECloneStategy.AVOID),
                         ECloneStategy.AVOID);
   }
@@ -672,8 +709,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   {
     if (aValue == null)
     {
-      removeProperty (sName);
-      return this;
+      return setNull (sName);
     }
     if (aValue instanceof IJSONObject)
     {
@@ -745,7 +781,11 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   public JSONObject setObjectListProperty (@Nonnull final String sName,
                                            @Nonnull final Iterable <? extends IJSONObject> aObjectList)
   {
-    final IJSONPropertyValueList <IJSONObject> aList = new JSONPropertyValueList <IJSONObject> ();
+    if (ContainerHelper.containsAnyNullElement (aObjectList))
+    {
+      return setMixedListProperty (sName, aObjectList);
+    }
+    final IJSONPropertyValueList <IJSONObject> aList = new JSONPropertyValueList <> ();
     for (final IJSONObject aObject : aObjectList)
     {
       aList.addValue (aObject);
@@ -777,6 +817,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nonnull
   public JSONObject setStringListProperty (@Nonnull final String sName, @Nonnull final Iterable <String> aStringList)
   {
+    if (ContainerHelper.containsAnyNullElement (aStringList))
+    {
+      return setMixedListProperty (sName, aStringList);
+    }
     final IJSONPropertyValueList <JSONPropertyValueString> aList = new JSONPropertyValueList <> ();
     for (final String sValue : aStringList)
     {
@@ -812,6 +856,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Override
   public JSONObject setIntegerListProperty (@Nonnull final String sName, @Nonnull final List <Integer> aIntegerList)
   {
+    if (ContainerHelper.containsAnyNullElement (aIntegerList))
+    {
+      return setMixedListProperty (sName, aIntegerList);
+    }
     final IJSONPropertyValueList <JSONPropertyValueInteger> aList = new JSONPropertyValueList <> ();
     for (final Integer nValue : aIntegerList)
     {
@@ -835,6 +883,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Override
   public JSONObject setDoubleListProperty (@Nonnull final String sName, @Nonnull final List <Double> aDoubleList)
   {
+    if (ContainerHelper.containsAnyNullElement (aDoubleList))
+    {
+      return setMixedListProperty (sName, aDoubleList);
+    }
     final IJSONPropertyValueList <JSONPropertyValueDouble> aList = new JSONPropertyValueList <> ();
     for (final Double nValue : aDoubleList)
     {
@@ -900,6 +952,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
                          @Nullable final String sValue,
                          final boolean bEmitEmptyValue)
   {
+    if (bEmitEmptyValue && sValue == null)
+    {
+      return setNull (sName);
+    }
     if (sValue != null && (bEmitEmptyValue || StringHelper.hasText (sValue)))
     {
       setStringProperty (sName, sValue);
@@ -918,6 +974,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
                          @Nullable final IJSONObject aValue,
                          final boolean bEmitEmptyValue)
   {
+    if (bEmitEmptyValue && aValue == null)
+    {
+      return setNull (sName);
+    }
     if (aValue != null && (bEmitEmptyValue || !aValue.isEmpty ()))
     {
       setObjectProperty (sName, aValue);
@@ -958,10 +1018,6 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Override
   public JSONObject set (final @Nonnull @Nonempty String sName, final @Nullable Integer aValue)
   {
-    if (aValue == null)
-    {
-      return this;
-    }
     return setIntegerProperty (sName, aValue);
   }
 
@@ -974,11 +1030,41 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Override
   public JSONObject set (final @Nonnull @Nonempty String sName, final @Nullable Double aValue)
   {
-    if (aValue == null)
-    {
-      return this;
-    }
     return setDoubleProperty (sName, aValue);
+  }
+
+  @Override
+  public JSONObject setNull (final @Nonnull @Nonempty String sName)
+  {
+    return setKeywordProperty (sName, CJSONConstants.KEYWORD_NULL);
+  }
+
+  @Override
+  public boolean isNull (final @Nonnull @Nonempty String sName)
+  {
+    final IJSONProperty <?> aProp = getProperty (sName);
+    if (aProp == null)
+    {
+      return true;
+    }
+    final IJSONPropertyValue <?> aVal = aProp.getValue ();
+    if (aVal instanceof JSONPropertyValueKeyword)
+    {
+      return CJSONConstants.KEYWORD_NULL.equals (((JSONPropertyValueKeyword) aVal).getData ());
+    }
+    return false;
+  }
+
+  @Override
+  public boolean hasProperty (@Nonnull @Nonempty final String sName)
+  {
+    return this.m_aProperties.containsKey (sName);
+  }
+
+  @Override
+  public boolean hasPropertyNonnull (@Nonnull @Nonempty final String sName)
+  {
+    return !isNull (sName);
   }
 
   @Override

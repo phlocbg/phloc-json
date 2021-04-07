@@ -73,12 +73,12 @@ public final class JacksonHelper
   @Nonnull
   public static JsonNode parseToNode (@Nonnull final String sJSON) throws JSONParsingException
   {
-    try
+    try (NonBlockingStringReader aReader = new NonBlockingStringReader (sJSON))
     {
-      final JsonNode aNode = createObjectMapper ().readTree (new NonBlockingStringReader (sJSON));
+      final JsonNode aNode = createObjectMapper ().readTree (aReader);
       if (aNode == null)
       {
-        throw new JSONParsingException ("no conent to map");
+        throw new JSONParsingException ("no conent to map"); //$NON-NLS-1$
       }
       return aNode;
     }

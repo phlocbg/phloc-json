@@ -4,8 +4,8 @@ import javax.annotation.Nullable;
 
 public enum ECloneStategy
 {
- FORCE ("force"),
- AVOID ("avoid"),
+ FORCE ("force"), //$NON-NLS-1$
+ AVOID ("avoid"), //$NON-NLS-1$
  INHERIT ("inherit"); //$NON-NLS-1$
 
   private String m_sID;

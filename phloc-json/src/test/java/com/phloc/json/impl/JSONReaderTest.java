@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,6 +37,7 @@ import com.phloc.commons.string.StringParser;
 import com.phloc.json.AbstractJSONTestCase;
 import com.phloc.json.IJSON;
 import com.phloc.json.IJSONObject;
+import com.phloc.json.IJSONProperty;
 import com.phloc.json.IJSONPropertyValueList;
 import com.phloc.json.JSONHelper;
 import com.phloc.json.JSONHelperTest;
@@ -44,6 +46,7 @@ import com.phloc.json.impl.value.JSONPropertyValueBoolean;
 import com.phloc.json.impl.value.JSONPropertyValueDouble;
 import com.phloc.json.impl.value.JSONPropertyValueInteger;
 import com.phloc.json.impl.value.JSONPropertyValueKeyword;
+import com.phloc.json.impl.value.JSONPropertyValueList;
 import com.phloc.json.impl.value.JSONPropertyValueString;
 
 /**
@@ -112,6 +115,71 @@ public final class JSONReaderTest extends AbstractJSONTestCase
       final IJSON aNull = JSONReader.parse ("null"); //$NON-NLS-1$
       Assert.assertTrue (aNull instanceof JSONPropertyValueKeyword);
       Assert.assertEquals (CJSONConstants.KEYWORD_NULL, ((JSONPropertyValueKeyword) aNull).getData ());
+    }
+    finally
+    {
+      JSONSettings.getInstance ().setParseNullValues (bOldValue);
+    }
+  }
+
+  @Test
+  public void testParseNullProperty () throws JSONParsingException
+  {
+    final boolean bOldValue = JSONSettings.getInstance ().isParseNullValues ();
+    try
+    {
+      {
+        JSONSettings.getInstance ().setParseNullValues (false);
+        final IJSONObject aJSON = JSONReader.parseObject ("{a:\"a\", b:null}"); //$NON-NLS-1$
+        final IJSON aNull = aJSON.getProperty ("b"); //$NON-NLS-1$
+        Assert.assertNull (aNull);
+      }
+      {
+        JSONSettings.getInstance ().setParseNullValues (true);
+        final IJSONObject aJSON = JSONReader.parseObject ("{a:\"a\", b:null}"); //$NON-NLS-1$
+        final IJSONProperty <?> aNull = aJSON.getProperty ("b"); //$NON-NLS-1$
+        Assert.assertTrue (aNull.getValue () instanceof JSONPropertyValueKeyword);
+        Assert.assertEquals (CJSONConstants.KEYWORD_NULL, ((JSONPropertyValueKeyword) aNull.getValue ()).getData ());
+      }
+    }
+    finally
+    {
+      JSONSettings.getInstance ().setParseNullValues (bOldValue);
+    }
+  }
+
+  @Test
+  public void testParseNullListElem () throws JSONParsingException
+  {
+    final boolean bOldValue = JSONSettings.getInstance ().isParseNullValues ();
+    try
+    {
+      {
+        JSONSettings.getInstance ().setParseNullValues (false);
+        final IJSONObject aJSON = JSONReader.parseObject ("{list:[\"a\", null]}"); //$NON-NLS-1$
+        final IJSONProperty <?> aList = aJSON.getProperty ("list"); //$NON-NLS-1$
+        Assert.assertTrue (aList.getValue () instanceof JSONPropertyValueList <?>);
+        final List <?> aElements = ((JSONPropertyValueList <?>) aList.getValue ()).getData ();
+        Assert.assertEquals (1, aElements.size ());
+      }
+      {
+        JSONSettings.getInstance ().setParseNullValues (true);
+        final IJSONObject aJSON = JSONReader.parseObject ("{list:[\"a\", null]}"); //$NON-NLS-1$
+        final IJSONProperty <?> aList = aJSON.getProperty ("list"); //$NON-NLS-1$
+        Assert.assertTrue (aList.getValue () instanceof JSONPropertyValueList <?>);
+        {
+          final List <?> aElements = ((JSONPropertyValueList <?>) aList.getValue ()).getData ();
+          Assert.assertEquals (2, aElements.size ());
+          Assert.assertTrue (aElements.get (1) instanceof JSONPropertyValueKeyword);
+          Assert.assertEquals (CJSONConstants.KEYWORD_NULL, ((JSONPropertyValueKeyword) aElements.get (1)).getData ());
+        }
+        {
+          final List <?> aElements = aJSON.getListProperty ("list"); //$NON-NLS-1$
+          Assert.assertEquals (2, aElements.size ());
+          Assert.assertEquals ("a", aElements.get (0)); //$NON-NLS-1$
+          Assert.assertNull (aElements.get (1));
+        }
+      }
     }
     finally
     {

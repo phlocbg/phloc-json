@@ -24,7 +24,6 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import com.phloc.commons.collections.ContainerHelper;
-import com.phloc.json.impl.CJSONConstants;
 import com.phloc.json.impl.JSONObject;
 
 /**
@@ -82,7 +81,7 @@ public final class JSONComplexUtils
         if (aValue == null)
         {
           // Special null keyword
-          aJSON.setKeywordProperty (sPropertyName, CJSONConstants.KEYWORD_NULL);
+          aJSON.setNull (sPropertyName);
         }
         else
           if (aValue instanceof IJSONConvertible)

@@ -19,6 +19,7 @@ import com.phloc.commons.locale.LocaleCache;
 import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.text.IMultiLingualText;
 import com.phloc.commons.text.impl.MultiLingualText;
+import com.phloc.json.impl.CJSONConstants;
 import com.phloc.json.impl.JSONObject;
 import com.phloc.json.impl.JSONReader;
 import com.phloc.json.impl.value.JSONPropertyValueBigDecimal;
@@ -26,6 +27,7 @@ import com.phloc.json.impl.value.JSONPropertyValueBigInteger;
 import com.phloc.json.impl.value.JSONPropertyValueBoolean;
 import com.phloc.json.impl.value.JSONPropertyValueDouble;
 import com.phloc.json.impl.value.JSONPropertyValueInteger;
+import com.phloc.json.impl.value.JSONPropertyValueKeyword;
 import com.phloc.json.impl.value.JSONPropertyValueList;
 import com.phloc.json.impl.value.JSONPropertyValueLong;
 import com.phloc.json.impl.value.JSONPropertyValueString;
@@ -279,7 +281,7 @@ public final class JSONUtil
   {
     if (aValue == null)
     {
-      return null;
+      return new JSONPropertyValueKeyword (CJSONConstants.KEYWORD_NULL);
     }
     if (aValue instanceof IJSONPropertyValue <?>)
     {

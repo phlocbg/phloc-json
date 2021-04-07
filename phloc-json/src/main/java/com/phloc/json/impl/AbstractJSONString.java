@@ -32,7 +32,7 @@ public abstract class AbstractJSONString <T extends IJSON> extends AbstractJSON 
 
   protected AbstractJSONString (@Nonnull final T aNative, final boolean bUseZIP) throws JSONCompressException
   {
-    ValueEnforcer.notNull (aNative, "aNative");
+    ValueEnforcer.notNull (aNative, "aNative"); //$NON-NLS-1$
     final String sUnzipped = aNative.getJSONString (false);
     this.m_bZipped = bUseZIP;
     if (this.m_bZipped)
@@ -44,7 +44,7 @@ public abstract class AbstractJSONString <T extends IJSON> extends AbstractJSON 
       }
       catch (final IOException aEx)
       {
-        throw new JSONCompressException ("Failed to zip JSON", aEx);
+        throw new JSONCompressException ("Failed to zip JSON", aEx); //$NON-NLS-1$
       }
     }
     else
@@ -56,7 +56,7 @@ public abstract class AbstractJSONString <T extends IJSON> extends AbstractJSON 
 
   protected AbstractJSONString (@Nonnull final AbstractJSONString <T> aOther)
   {
-    ValueEnforcer.notNull (aOther, "aOther");
+    ValueEnforcer.notNull (aOther, "aOther"); //$NON-NLS-1$
     this.m_sJSONString = aOther.m_sJSONString;
     this.m_sJSONStringZipped = ArrayHelper.getCopy (aOther.m_sJSONStringZipped);
     this.m_bZipped = aOther.m_bZipped;
@@ -67,7 +67,7 @@ public abstract class AbstractJSONString <T extends IJSON> extends AbstractJSON 
   {
     if (bAlignAndIndent && LOG.isDebugEnabled ())
     {
-      LOG.debug ("Indentation and alignment is not supported for JSONString for the sake of memory efficiency!");
+      LOG.debug ("Indentation and alignment is not supported for JSONString for the sake of memory efficiency!"); //$NON-NLS-1$
     }
     try
     {
@@ -75,7 +75,7 @@ public abstract class AbstractJSONString <T extends IJSON> extends AbstractJSON 
     }
     catch (final IOException aEx)
     {
-      throw new IllegalStateException ("Failed to unzip JSON", aEx);
+      throw new IllegalStateException ("Failed to unzip JSON", aEx); //$NON-NLS-1$
     }
 
   }
@@ -110,7 +110,7 @@ public abstract class AbstractJSONString <T extends IJSON> extends AbstractJSON 
   {
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("jsonstring", this.m_sJSONString) //$NON-NLS-1$
-                            .append ("zipped", this.m_bZipped)
+                            .append ("zipped", this.m_bZipped) //$NON-NLS-1$
                             .toString ();
   }
 }
