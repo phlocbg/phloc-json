@@ -38,6 +38,7 @@ import com.phloc.commons.annotations.ReturnsMutableCopy;
 import com.phloc.commons.collections.ContainerHelper;
 import com.phloc.commons.equals.EqualsUtils;
 import com.phloc.commons.hash.HashCodeGenerator;
+import com.phloc.commons.id.IHasID;
 import com.phloc.commons.state.EChange;
 import com.phloc.commons.string.StringHelper;
 import com.phloc.commons.string.ToStringGenerator;
@@ -1034,9 +1035,87 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   }
 
   @Override
+  public JSONObject set (final @Nonnull IHasID <String> aName, final @Nullable String sValue)
+  {
+    return set (aName.getID (), sValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull IHasID <String> aName,
+                         final @Nullable String sValue,
+                         final boolean bHandleEmptyValue)
+  {
+    return set (aName.getID (), sValue, bHandleEmptyValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull IHasID <String> aName, final @Nullable IJSONObject aValue)
+  {
+    return set (aName.getID (), aValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull IHasID <String> aName,
+                         final @Nullable IJSONObject aValue,
+                         final boolean bHandleEmptyValue)
+  {
+    return set (aName.getID (), aValue, bHandleEmptyValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull IHasID <String> aName, final @Nullable List <IJSONObject> aValue)
+  {
+    return set (aName.getID (), aValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull IHasID <String> aName,
+                         final @Nullable List <IJSONObject> aValue,
+                         final boolean bEmitEmptyValue)
+  {
+    return set (aName.getID (), aValue, bEmitEmptyValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull IHasID <String> aName, final boolean bValue)
+  {
+    return set (aName.getID (), bValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull IHasID <String> aName, final int nValue)
+  {
+    return set (aName.getID (), nValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull IHasID <String> aName, final @Nullable Integer aValue)
+  {
+    return set (aName.getID (), aValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull IHasID <String> aName, final double nValue)
+  {
+    return set (aName.getID (), nValue);
+  }
+
+  @Override
+  public JSONObject set (final @Nonnull IHasID <String> aName, final @Nullable Double aValue)
+  {
+    return set (aName.getID (), aValue);
+  }
+
+  @Override
   public JSONObject setNull (final @Nonnull @Nonempty String sName)
   {
     return setKeywordProperty (sName, CJSONConstants.KEYWORD_NULL);
+  }
+
+  @Override
+  public JSONObject setNull (final @Nonnull IHasID <String> aName)
+  {
+    return setNull (aName.getID ());
   }
 
   @Override
@@ -1056,15 +1135,33 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   }
 
   @Override
+  public boolean isNull (final @Nonnull IHasID <String> aName)
+  {
+    return isNull (aName.getID ());
+  }
+
+  @Override
   public boolean hasProperty (@Nonnull @Nonempty final String sName)
   {
     return this.m_aProperties.containsKey (sName);
   }
 
   @Override
+  public boolean hasProperty (final @Nonnull IHasID <String> aName)
+  {
+    return hasProperty (aName.getID ());
+  }
+
+  @Override
   public boolean hasPropertyNonnull (@Nonnull @Nonempty final String sName)
   {
     return !isNull (sName);
+  }
+
+  @Override
+  public boolean hasPropertyNonnull (final @Nonnull IHasID <String> aName)
+  {
+    return hasPropertyNonnull (aName.getID ());
   }
 
   @Override

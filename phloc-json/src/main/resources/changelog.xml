@@ -22,6 +22,11 @@
   xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-json">
 
 
+  <entry date="2021-04-07" category="api" action="add">
+    <change>
+      <text locale="en">IJSONObject.set using IHasID as property name (JSN-11)</text>
+    </change>
+  </entry>
   <entry date="2021-04-07" category="api" action="update">
     <change>
       <text locale="en">IJSON: Allow null values (JSN-12)</text>

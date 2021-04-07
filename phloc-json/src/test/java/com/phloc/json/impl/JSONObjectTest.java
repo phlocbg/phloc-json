@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.phloc.commons.collections.ContainerHelper;
+import com.phloc.commons.id.IHasID;
 import com.phloc.commons.state.EChange;
 import com.phloc.commons.typeconvert.TypeConverter;
 import com.phloc.json.IJSONObject;
@@ -53,6 +54,14 @@ public final class JSONObjectTest
   private static final String PROP = "property"; //$NON-NLS-1$
   private static final String KEY = "testProperty"; //$NON-NLS-1$
   private static final String A_KEY = "A"; //$NON-NLS-1$
+  private static final IHasID <String> A_KEY_HOLDER = new IHasID <String> ()
+  {
+    @Override
+    public String getID ()
+    {
+      return A_KEY;
+    }
+  };
   private static final String B_KEY = "B"; //$NON-NLS-1$
   private static final String C_KEY = "C"; //$NON-NLS-1$
   private static final String A_VAL = "AAAA"; //$NON-NLS-1$
@@ -347,28 +356,78 @@ public final class JSONObjectTest
   @Test
   public void testSetNull ()
   {
-    final IJSONObject aObj = new JSONObject ();
+    verifyNull (new JSONObject ().setNull (A_KEY));
+    verifyNull (new JSONObject ().setNull (A_KEY_HOLDER));
 
-    verifyNull (aObj.set (A_KEY, (String) null));
-    verifyNull (aObj.set (A_KEY, (Integer) null));
-    verifyNull (aObj.set (A_KEY, (Double) null));
-    verifyNull (aObj.set (A_KEY, (IJSONObject) null));
+    Assert.assertTrue (new JSONObject ().setNull (A_KEY).isNull (A_KEY_HOLDER));
+    Assert.assertTrue (new JSONObject ().setNull (A_KEY_HOLDER).isNull (A_KEY));
 
-    verifyNull (aObj.setStringProperty (A_KEY, (String) null));
-    verifyNull (aObj.setIntegerProperty (A_KEY, (Integer) null));
-    verifyNull (aObj.setBooleanProperty (A_KEY, (Boolean) null));
-    verifyNull (aObj.setDoubleProperty (A_KEY, (Double) null));
-    verifyNull (aObj.setLongProperty (A_KEY, (Long) null));
-    verifyNull (aObj.setBigDecimalProperty (A_KEY, (BigDecimal) null));
-    verifyNull (aObj.setBigIntegerProperty (A_KEY, (BigInteger) null));
-    verifyNull (aObj.setObjectProperty (A_KEY, (IJSONObject) null));
-    verifyNull (aObj.setKeywordProperty (A_KEY, null));
+    Assert.assertTrue (new JSONObject ().setNull (A_KEY).hasProperty (A_KEY_HOLDER));
+    Assert.assertTrue (new JSONObject ().setNull (A_KEY_HOLDER).hasProperty (A_KEY));
 
-    verifyNullList (aObj.setStringListProperty (A_KEY, ContainerHelper.newList (new String [] { null })));
-    verifyNullList (aObj.setIntegerListProperty (A_KEY, ContainerHelper.newList (new Integer [] { null })));
-    verifyNullList (aObj.setDoubleListProperty (A_KEY, ContainerHelper.newList (new Double [] { null })));
-    verifyNullList (aObj.setObjectListProperty (A_KEY, ContainerHelper.newList (new IJSONObject [] { null })));
-    verifyNullList (aObj.setMixedListProperty (A_KEY, ContainerHelper.newList (new Object [] { null })));
+    verifyNull (new JSONObject ().set (A_KEY, (String) null));
+    verifyNull (new JSONObject ().set (A_KEY, (Integer) null));
+    verifyNull (new JSONObject ().set (A_KEY, (Double) null));
+    verifyNull (new JSONObject ().set (A_KEY, (IJSONObject) null));
+
+    verifyNull (new JSONObject ().setStringProperty (A_KEY, (String) null));
+    verifyNull (new JSONObject ().setIntegerProperty (A_KEY, (Integer) null));
+    verifyNull (new JSONObject ().setBooleanProperty (A_KEY, (Boolean) null));
+    verifyNull (new JSONObject ().setDoubleProperty (A_KEY, (Double) null));
+    verifyNull (new JSONObject ().setLongProperty (A_KEY, (Long) null));
+    verifyNull (new JSONObject ().setBigDecimalProperty (A_KEY, (BigDecimal) null));
+    verifyNull (new JSONObject ().setBigIntegerProperty (A_KEY, (BigInteger) null));
+    verifyNull (new JSONObject ().setObjectProperty (A_KEY, (IJSONObject) null));
+    verifyNull (new JSONObject ().setKeywordProperty (A_KEY, null));
+
+    verifyNullList (new JSONObject ().setStringListProperty (A_KEY, ContainerHelper.newList (new String [] { null })));
+    verifyNullList (new JSONObject ().setIntegerListProperty (A_KEY,
+                                                              ContainerHelper.newList (new Integer [] { null })));
+    verifyNullList (new JSONObject ().setDoubleListProperty (A_KEY, ContainerHelper.newList (new Double [] { null })));
+    verifyNullList (new JSONObject ().setObjectListProperty (A_KEY,
+                                                             ContainerHelper.newList (new IJSONObject [] { null })));
+    verifyNullList (new JSONObject ().setMixedListProperty (A_KEY, ContainerHelper.newList (new Object [] { null })));
+  }
+
+  @Test
+  public void testSet ()
+  {
+    verifyValue (new JSONObject ().set (A_KEY, A_VAL), A_VAL);
+    verifyValue (new JSONObject ().set (A_KEY_HOLDER, A_VAL), A_VAL);
+
+    verifyValue (new JSONObject ().set (A_KEY, Integer.valueOf (5)), Integer.valueOf (5));
+    verifyValue (new JSONObject ().set (A_KEY_HOLDER, Integer.valueOf (5)), Integer.valueOf (5));
+
+    verifyValue (new JSONObject ().set (A_KEY, 5), Integer.valueOf (5));
+    verifyValue (new JSONObject ().set (A_KEY_HOLDER, 5), Integer.valueOf (5));
+
+    verifyValue (new JSONObject ().set (A_KEY, Double.valueOf (6)), Double.valueOf (6));
+    verifyValue (new JSONObject ().set (A_KEY_HOLDER, Double.valueOf (6)), Double.valueOf (6));
+
+    verifyValue (new JSONObject ().set (A_KEY, 6.0), Double.valueOf (6));
+    verifyValue (new JSONObject ().set (A_KEY_HOLDER, 6.0), Double.valueOf (6));
+
+    verifyValue (new JSONObject ().set (A_KEY, true), Boolean.TRUE);
+    verifyValue (new JSONObject ().set (A_KEY_HOLDER, true), Boolean.TRUE);
+
+    final IJSONObject aObject = new JSONObject ().set ("foo", "bar"); //$NON-NLS-1$ //$NON-NLS-2$
+
+    verifyValue (new JSONObject ().set (A_KEY, aObject), aObject);
+    verifyValue (new JSONObject ().set (A_KEY_HOLDER, aObject), aObject);
+
+    final List <IJSONObject> aList = ContainerHelper.newList (aObject);
+    verifyValue (new JSONObject ().set (A_KEY, aList), aList);
+    verifyValue (new JSONObject ().set (A_KEY_HOLDER, aList), aList);
+
+    Assert.assertTrue (new JSONObject ().set (A_KEY, A_VAL).hasPropertyNonnull (A_KEY_HOLDER));
+    Assert.assertTrue (new JSONObject ().set (A_KEY_HOLDER, A_VAL).hasPropertyNonnull (A_KEY));
+
+  }
+
+  private static void verifyValue (final IJSONObject aObj, final Object aValue)
+  {
+    Assert.assertTrue (aObj.hasProperty (A_KEY));
+    Assert.assertEquals (aValue, aObj.getPropertyValueData (A_KEY));
   }
 
   private static void verifyNull (final IJSONObject aObj)

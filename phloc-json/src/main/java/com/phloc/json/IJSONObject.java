@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.phloc.commons.annotations.Nonempty;
+import com.phloc.commons.id.IHasID;
 import com.phloc.commons.state.EChange;
 import com.phloc.json.impl.JSONObject;
 import com.phloc.json.impl.JSONReader;
@@ -642,8 +643,7 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
   IJSONObject setProperty (@Nonnull String sName, @Nullable Object aValue, boolean bUseTypeConverter);
 
   /**
-   * Sets the passed string property if the value is not <code>null</code>.
-   * Empty values will still be set.
+   * Sets the passed string property.
    *
    * @param sName
    *        The property name
@@ -655,8 +655,20 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
   JSONObject set (@Nonnull @Nonempty String sName, @Nullable String sValue);
 
   /**
-   * Sets the passed string property if the value is not <code>null</code>.
-   * Empty values will be set according to the passed flag.
+   * Sets the passed string property.
+   *
+   * @param aName
+   *        The property name
+   * @param sValue
+   *        The value to set, may be <code>null</code>
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull IHasID <String> aName, @Nullable String sValue);
+
+  /**
+   * Sets the passed string property. Empty values will be set according to the
+   * passed flag.
    *
    * @param sName
    *        The property name
@@ -671,8 +683,23 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
   JSONObject set (@Nonnull @Nonempty String sName, @Nullable String sValue, boolean bHandleEmptyValue);
 
   /**
-   * Sets the passed object property if the value is not <code>null</code>.
-   * Empty object values will still be set.
+   * Sets the passed string property. Empty values will be set according to the
+   * passed flag.
+   *
+   * @param aName
+   *        The property name
+   * @param sValue
+   *        The value to set, may be <code>null</code>
+   * @param bHandleEmptyValue
+   *        Whether or not empty values should be set, default is
+   *        <code>true</code>
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull IHasID <String> aName, @Nullable String sValue, boolean bHandleEmptyValue);
+
+  /**
+   * Sets the passed object property.
    *
    * @param sName
    *        The property name
@@ -684,8 +711,20 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
   JSONObject set (@Nonnull @Nonempty String sName, @Nullable IJSONObject aValue);
 
   /**
-   * Sets the passed object property if the value is not <code>null</code>.
-   * Empty values will be set according to the passed flag.
+   * Sets the passed object property.
+   *
+   * @param aName
+   *        The property name
+   * @param aValue
+   *        The value to set, may be <code>null</code>
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull IHasID <String> aName, @Nullable IJSONObject aValue);
+
+  /**
+   * Sets the passed object property. Empty values will be set according to the
+   * passed flag.
    *
    * @param sName
    *        The property name
@@ -699,11 +738,33 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
   @Nonnull
   JSONObject set (@Nonnull @Nonempty String sName, @Nullable IJSONObject aValue, boolean bHandleEmptyValue);
 
+  /**
+   * Sets the passed object property. Empty values will be set according to the
+   * passed flag.
+   *
+   * @param aName
+   *        The property name
+   * @param aValue
+   *        The value to set, may be <code>null</code>
+   * @param bHandleEmptyValue
+   *        Whether or not empty values should be set, default is
+   *        <code>true</code>
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull IHasID <String> aName, @Nullable IJSONObject aValue, boolean bHandleEmptyValue);
+
   @Nonnull
   JSONObject set (@Nonnull @Nonempty String sName, @Nullable List <IJSONObject> aValue);
 
   @Nonnull
+  JSONObject set (@Nonnull IHasID <String> aName, @Nullable List <IJSONObject> aValue);
+
+  @Nonnull
   JSONObject set (@Nonnull @Nonempty String sName, @Nullable List <IJSONObject> aValue, boolean bEmitEmptyValue);
+
+  @Nonnull
+  JSONObject set (@Nonnull IHasID <String> aName, @Nullable List <IJSONObject> aValue, boolean bEmitEmptyValue);
 
   /**
    * Sets the passed boolean value.
@@ -718,6 +779,18 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
   JSONObject set (@Nonnull @Nonempty String sName, boolean bValue);
 
   /**
+   * Sets the passed boolean value.
+   *
+   * @param aName
+   *        The property name
+   * @param bValue
+   *        The value to set
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull IHasID <String> aName, boolean bValue);
+
+  /**
    * Sets the passed integer value.
    *
    * @param sName
@@ -728,6 +801,18 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
    */
   @Nonnull
   JSONObject set (@Nonnull @Nonempty String sName, int nValue);
+
+  /**
+   * Sets the passed integer value.
+   *
+   * @param aName
+   *        The property name
+   * @param nValue
+   *        The value to set
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull IHasID <String> aName, int nValue);
 
   /**
    * Sets the passed integer value if it is non-null.
@@ -742,6 +827,18 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
   JSONObject set (@Nonnull @Nonempty String sName, @Nullable Integer aValue);
 
   /**
+   * Sets the passed integer value if it is non-null.
+   *
+   * @param aName
+   *        The property name
+   * @param aValue
+   *        The value to set, may be <code>null</code>
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull IHasID <String> aName, @Nullable Integer aValue);
+
+  /**
    * Sets the passed double value.
    *
    * @param sName
@@ -752,6 +849,18 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
    */
   @Nonnull
   JSONObject set (@Nonnull @Nonempty String sName, double nValue);
+
+  /**
+   * Sets the passed double value.
+   *
+   * @param aName
+   *        The property name
+   * @param nValue
+   *        The value to set
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull IHasID <String> aName, double nValue);
 
   /**
    * Sets the passed double value if it is non-null.
@@ -766,6 +875,18 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
   JSONObject set (@Nonnull @Nonempty String sName, @Nullable Double aValue);
 
   /**
+   * Sets the passed double value if it is non-null.
+   *
+   * @param aName
+   *        The property name
+   * @param aValue
+   *        The value to set, may be <code>null</code>
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject set (@Nonnull IHasID <String> aName, @Nullable Double aValue);
+
+  /**
    * Sets the passed property with a <code>null</code> value.
    *
    * @param sName
@@ -774,6 +895,16 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
    */
   @Nonnull
   JSONObject setNull (@Nonnull @Nonempty String sName);
+
+  /**
+   * Sets the passed property with a <code>null</code> value.
+   *
+   * @param aName
+   *        The property name
+   * @return this for chaining, never <code>null</code>
+   */
+  @Nonnull
+  JSONObject setNull (@Nonnull IHasID <String> aName);
 
   /**
    * Checks if the passed property is null (unset, or null).
@@ -787,6 +918,17 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
   boolean isNull (@Nonnull @Nonempty String sName);
 
   /**
+   * Checks if the passed property is null (unset, or null).
+   *
+   * @param aName
+   *        The property name
+   * @return Whether or not the specified property is effectively
+   *         <code>null</code>
+   */
+  @Nonnull
+  boolean isNull (@Nonnull IHasID <String> aName);
+
+  /**
    * Checks if the object contains a property with the passed name
    * 
    * @param sName
@@ -796,6 +938,15 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
   boolean hasProperty (@Nonnull @Nonempty String sName);
 
   /**
+   * Checks if the object contains a property with the passed name
+   * 
+   * @param aName
+   *        The property name
+   * @return Whether or not such a property is contained
+   */
+  boolean hasProperty (@Nonnull IHasID <String> aName);
+
+  /**
    * Checks if the object contains a non-null property with the passed name
    * 
    * @param sName
@@ -803,6 +954,15 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
    * @return Whether or not such a property is contained
    */
   boolean hasPropertyNonnull (@Nonnull @Nonempty String sName);
+
+  /**
+   * Checks if the object contains a non-null property with the passed name
+   * 
+   * @param aName
+   *        The property name
+   * @return Whether or not such a property is contained
+   */
+  boolean hasPropertyNonnull (@Nonnull IHasID <String> aName);
 
   /**
    * Tries to resolve a property with the passed name and if found, removes the
