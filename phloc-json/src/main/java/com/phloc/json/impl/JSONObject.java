@@ -997,6 +997,10 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
                          @Nullable final List <IJSONObject> aValue,
                          final boolean bEmitEmptyValue)
   {
+    if (bEmitEmptyValue && aValue == null)
+    {
+      return setNull (sName);
+    }
     if (aValue != null && (bEmitEmptyValue || !aValue.isEmpty ()))
     {
       setObjectListProperty (sName, aValue);
