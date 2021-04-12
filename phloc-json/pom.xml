@@ -27,7 +27,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>phloc-json</artifactId>
-  <version>4.1.8-SNAPSHOT</version>
+  <version>4.1.8</version>
   <packaging>bundle</packaging>
   <name>phloc-json</name>
   <description>Library for read and writing JSON objects in a typesafe manner</description>
@@ -45,7 +45,7 @@
     <connection>scm:git:https://github.com/phlocbg/phloc-json</connection>
     <developerConnection>scm:git:https://github.com/phlocbg/phloc-json</developerConnection>
   <url>http://github.com/phlocbg/phloc-json</url>
-    <tag>HEAD</tag>
+    <tag>phloc-json-4.1.8</tag>
 
 </scm>   
   <organization>
