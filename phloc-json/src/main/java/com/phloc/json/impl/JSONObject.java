@@ -1254,7 +1254,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
         final IJSONProperty <?> aProperty = aObjectToApply.getProperty (sPropName, true);
         if (aProperty != null)
         {
-          setProperty (sPropName, aObjectToApply.getProperty (sPropName).getValue ());
+          setProperty (sPropName, aProperty.getValue ());
           eChange = EChange.CHANGED;
         }
       }

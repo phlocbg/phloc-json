@@ -390,6 +390,24 @@ public final class JSONObjectTest
   }
 
   @Test
+  public void testApplyNull ()
+  {
+    final IJSONObject aObj1 = new JSONObject ();
+    aObj1.set (A_KEY, A_VAL);
+    aObj1.setNull (B_KEY);
+
+    final IJSONObject aObj2 = new JSONObject ();
+    aObj2.set (C_KEY, C_VAL);
+    aObj2.setNull (A_KEY);
+
+    aObj1.apply (aObj2);
+    Assert.assertTrue (aObj1.isNull (A_KEY));
+    Assert.assertTrue (aObj1.isNull (B_KEY));
+    Assert.assertEquals (aObj1.getIntegerProperty (C_KEY), C_VAL);
+
+  }
+
+  @Test
   public void testSet ()
   {
     verifyValue (new JSONObject ().set (A_KEY, A_VAL), A_VAL);
