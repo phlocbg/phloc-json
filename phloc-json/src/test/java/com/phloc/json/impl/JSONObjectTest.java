@@ -449,7 +449,8 @@ public final class JSONObjectTest
   {
     final IJSONObject aObj = new JSONObject ();
     aObj.setNull (A_KEY);
-    final IJSONProperty <?> aProp = aObj.getProperty (A_KEY);
+    Assert.assertNull (aObj.getProperty (A_KEY));
+    final IJSONProperty <?> aProp = aObj.getProperty (A_KEY, true);
     Assert.assertTrue (aProp.getValue () instanceof JSONPropertyValueKeyword);
     Assert.assertEquals (CJSONConstants.KEYWORD_NULL, aProp.getValue ().getData ());
 

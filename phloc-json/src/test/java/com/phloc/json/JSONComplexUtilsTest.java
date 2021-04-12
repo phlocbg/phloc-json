@@ -19,6 +19,7 @@ package com.phloc.json;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
@@ -68,8 +69,9 @@ public final class JSONComplexUtilsTest
       assertEquals (VALUE_INTEGER, aObj.getProperty (PROP2).getValue ().getData ());
       assertEquals (VALUE_DOUBLE, aObj.getProperty (PROP3).getValue ().getData ());
       assertEquals (VALUE_BOOLEAN, aObj.getProperty (PROP4).getValue ().getData ());
-      assertTrue (aObj.getProperty (PROP5).getValue () instanceof JSONPropertyValueKeyword);
-      assertEquals (CJSONConstants.KEYWORD_NULL, aObj.getProperty (PROP5).getValue ().getData ());
+      assertTrue (aObj.getProperty (PROP5, true).getValue () instanceof JSONPropertyValueKeyword);
+      assertEquals (CJSONConstants.KEYWORD_NULL, aObj.getProperty (PROP5, true).getValue ().getData ());
+      assertNull (aObj.getProperty (PROP5));
     }
   }
 }

@@ -214,6 +214,22 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Nullable
   public IJSONProperty <?> getProperty (@Nullable final String sName)
   {
+    return getProperty (sName, false);
+  }
+
+  @Override
+  @Nullable
+  public IJSONProperty <?> getProperty (@Nullable final String sName, final boolean bReturnNull)
+  {
+    final IJSONProperty <?> aProperty = this.m_aProperties.get (sName);
+    if (aProperty == null)
+    {
+      return null;
+    }
+    if (this.isNull (sName) && !bReturnNull)
+    {
+      return null;
+    }
     return this.m_aProperties.get (sName);
   }
 
@@ -1125,7 +1141,11 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   @Override
   public boolean isNull (final @Nonnull @Nonempty String sName)
   {
-    final IJSONProperty <?> aProp = getProperty (sName);
+    return isNull (this.m_aProperties.get (sName));
+  }
+
+  private static boolean isNull (final IJSONProperty <?> aProp)
+  {
     if (aProp == null)
     {
       return true;
@@ -1180,7 +1200,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     int nIndex = 0;
     for (final String sProperty : aPropertyNames)
     {
-      final IJSONProperty <?> aProperty = getProperty (sProperty);
+      final IJSONProperty <?> aProperty = getProperty (sProperty, true);
       if (aProperty == null)
       {
         LOG.warn ("Skipping property '{}' in generated JSON string as the corresponding property can no longer be resolved!", //$NON-NLS-1$
@@ -1231,8 +1251,12 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     {
       for (final String sPropName : aObjectToApply.getAllPropertyNames ())
       {
-        setProperty (sPropName, aObjectToApply.getProperty (sPropName).getValue ());
-        eChange = EChange.CHANGED;
+        final IJSONProperty <?> aProperty = aObjectToApply.getProperty (sPropName, true);
+        if (aProperty != null)
+        {
+          setProperty (sPropName, aObjectToApply.getProperty (sPropName).getValue ());
+          eChange = EChange.CHANGED;
+        }
       }
     }
     return eChange;
@@ -1244,7 +1268,7 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
     EChange eChange = EChange.UNCHANGED;
     if (aObjectToApply != null)
     {
-      final IJSONProperty <?> aProperty = aObjectToApply.getProperty (sPropertyName);
+      final IJSONProperty <?> aProperty = aObjectToApply.getProperty (sPropertyName, true);
       if (aProperty != null)
       {
         this.setProperty (aProperty, ECloneStategy.FORCE);

@@ -131,13 +131,13 @@ public final class JSONReaderTest extends AbstractJSONTestCase
       {
         JSONSettings.getInstance ().setParseNullValues (false);
         final IJSONObject aJSON = JSONReader.parseObject ("{a:\"a\", b:null}"); //$NON-NLS-1$
-        final IJSON aNull = aJSON.getProperty ("b"); //$NON-NLS-1$
+        final IJSON aNull = aJSON.getProperty ("b", true); //$NON-NLS-1$
         Assert.assertNull (aNull);
       }
       {
         JSONSettings.getInstance ().setParseNullValues (true);
         final IJSONObject aJSON = JSONReader.parseObject ("{a:\"a\", b:null}"); //$NON-NLS-1$
-        final IJSONProperty <?> aNull = aJSON.getProperty ("b"); //$NON-NLS-1$
+        final IJSONProperty <?> aNull = aJSON.getProperty ("b", true); //$NON-NLS-1$
         Assert.assertTrue (aNull.getValue () instanceof JSONPropertyValueKeyword);
         Assert.assertEquals (CJSONConstants.KEYWORD_NULL, ((JSONPropertyValueKeyword) aNull.getValue ()).getData ());
       }

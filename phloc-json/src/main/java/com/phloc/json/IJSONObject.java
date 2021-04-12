@@ -63,6 +63,20 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
   IJSONProperty <?> getProperty (@Nullable String sName);
 
   /**
+   * Get the property with the specified name
+   *
+   * @param sName
+   *        name of the requested property
+   * @param bReturnNull
+   *        Whether or not <code>null</code> keyword properties should be
+   *        returned if explicitly set
+   * @return the corresponding {@link IJSONProperty} if found, <code>null</code>
+   *         otherwise
+   */
+  @Nullable
+  IJSONProperty <?> getProperty (@Nullable String sName, boolean bReturnNull);
+
+  /**
    * Get the data value of the specified property directly
    *
    * @param sName

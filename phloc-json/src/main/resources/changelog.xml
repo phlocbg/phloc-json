@@ -22,6 +22,12 @@
   xsi:schemaLocation="http://www.phloc.com/ns/changelog/1.0 schemas/changelog-1.0.xsd" version="1.0" component="phloc-json">
 
 
+  <release date="2021-04-12" version="4.1.8" />
+  <entry date="2021-04-12" category="api" action="update">
+    <change>
+      <text locale="en">IJSON: Allow null values (JSN-12) - not returning null keyword properties on getProperty by default for backwards compatibility</text>
+    </change>
+  </entry>
   <release date="2021-04-09" version="4.1.7" />
   <entry date="2021-04-07" category="api" action="add">
     <change>
