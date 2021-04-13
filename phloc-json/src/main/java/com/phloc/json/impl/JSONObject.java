@@ -942,6 +942,24 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
 
   @Override
   @Nonnull
+  public JSONObject setListOfObjectListProperty (@Nonnull final String sName,
+                                                 @Nonnull final List <List <IJSONObject>> aListOfList)
+  {
+    final JSONPropertyValueList <IJSONPropertyValueList <IJSONObject>> aList = new JSONPropertyValueList <> ();
+    for (final List <IJSONObject> aRow : aListOfList)
+    {
+      final IJSONPropertyValueList <IJSONObject> aRowList = new JSONPropertyValueList <> ();
+      for (final IJSONObject aCell : aRow)
+      {
+        aRowList.addValue (aCell);
+      }
+      aList.addValue (aRowList);
+    }
+    return setProperty (JSONProperty.create (sName, aList, ECloneStategy.AVOID), ECloneStategy.AVOID);
+  }
+
+  @Override
+  @Nonnull
   public JSONObject setListOfStringListProperty (@Nonnull final String sName,
                                                  @Nonnull final Iterable <? extends Iterable <String>> aListOfList)
   {
