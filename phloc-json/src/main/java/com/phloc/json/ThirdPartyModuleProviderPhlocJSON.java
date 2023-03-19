@@ -30,7 +30,7 @@ import com.phloc.commons.version.Version;
  * Implement this SPI interface if your JAR file contains external third party
  * modules.
  * 
- * @author Philip Helger
+ * @author Boris Gregorcic
  */
 @IsSPIImplementation
 public final class ThirdPartyModuleProviderPhlocJSON implements IThirdPartyModuleProviderSPI
@@ -38,8 +38,8 @@ public final class ThirdPartyModuleProviderPhlocJSON implements IThirdPartyModul
   public static final IThirdPartyModule JACKSON = new ThirdPartyModule ("Jackson", //$NON-NLS-1$
                                                                         "codehaus", //$NON-NLS-1$
                                                                         ELicense.APACHE2,
-                                                                        new Version (2, 6, 3),
-                                                                        "https://github.com/FasterXML"); //$NON-NLS-1$
+                                                                        new Version (2, 14, 2),
+                                                                        "https://github.com/FasterXML/jackson"); //$NON-NLS-1$
 
   @Override
   @Nullable
