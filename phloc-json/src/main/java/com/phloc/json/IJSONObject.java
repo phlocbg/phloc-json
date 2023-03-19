@@ -1013,6 +1013,38 @@ public interface IJSONObject extends IJSONPropertyValueComplex <IJSONObject>, IJ
   EChange apply (@Nullable IJSONObject aObjectToApply, @Nonnull @Nonempty String sPropertyName);
 
   /**
+   * Applies all properties from source object to this object by merging object
+   * properties recursively. For every applied property that is an object
+   * property (value is IJSONObject), the property will not be overwritten in
+   * this (target) object, but all contained properties of the object value are
+   * processed and merged. For any of these nested properties that are object
+   * values them selves, the merging will applied recursively
+   * 
+   * @param aSource
+   *        Source object whose properties are to be applied to the target
+   *        object
+   * @return The resulting object (also modified by side effect)
+   */
+  IJSONObject applyMergingObjects (final IJSONObject aSource);
+
+  /**
+   * Applies the specified property from source object to this object by merging
+   * object properties recursively. For every applied property that is an object
+   * property (value is IJSONObject), the property will not be overwritten in
+   * this (target) object, but all contained properties of the object value are
+   * processed and merged. For any of these nested properties that are object
+   * values them selves, the merging will applied recursively
+   * 
+   * @param aSource
+   *        Source object whose properties are to be applied to the target
+   *        object
+   * @param sPropertyName
+   *        The property to apply
+   * @return The resulting object (also modified by side effect)
+   */
+  IJSONObject applyMergingObjects (final IJSONObject aSource, @Nonnull @Nonempty String sPropertyName);
+
+  /**
    * @return <code>true</code> if this object contains not parse-able property
    *         values
    */

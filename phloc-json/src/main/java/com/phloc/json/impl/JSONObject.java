@@ -1297,6 +1297,48 @@ public class JSONObject extends AbstractJSONPropertyValue <IJSONObject> implemen
   }
 
   @Override
+  public IJSONObject applyMergingObjects (final IJSONObject aSource)
+  {
+    if (aSource == null)
+    {
+      return this;
+    }
+    for (final String sProperty : aSource.getAllPropertyNames ())
+    {
+      applyMergingObjects (aSource, sProperty);
+    }
+    return this;
+  }
+
+  @Override
+  public IJSONObject applyMergingObjects (final IJSONObject aSource, @Nonnull @Nonempty final String sProperty)
+  {
+    if (aSource == null)
+    {
+      return this;
+    }
+    final IJSONProperty <?> aProperty = aSource.getProperty (sProperty);
+    if (aProperty != null)
+    {
+      final IJSONPropertyValue <?> aValue = aProperty.getValue ();
+      if (aValue instanceof IJSONObject)
+      {
+        IJSONObject aTarget = getObjectProperty (sProperty);
+        if (aTarget == null)
+        {
+          aTarget = new JSONObject ();
+        }
+        set (sProperty, aTarget.applyMergingObjects ((IJSONObject) aValue));
+      }
+      else
+      {
+        apply (aSource, sProperty);
+      }
+    }
+    return this;
+  }
+
+  @Override
   public boolean containsNotParsableProperty ()
   {
     for (final IJSONProperty <?> aProperty : this.m_aProperties.values ())

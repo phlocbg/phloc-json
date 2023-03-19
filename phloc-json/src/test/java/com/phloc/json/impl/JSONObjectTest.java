@@ -296,6 +296,30 @@ public final class JSONObjectTest
   }
 
   @Test
+  public void testApplyMergingObjects () throws JSONParsingException
+  {
+    final String sA = "{\"x\":\"foo\",\"y\":{\"narf\":\"zoot\",\"z\":{\"k\":3,\"l\":7},\"values\":[1,2,3,4,5]}}"; //$NON-NLS-1$
+    final String sB = "{\"y\":{\"narf\":\"puit\",\"z\":{\"m\":42},\"values\":[8,9]}}"; //$NON-NLS-1$
+    final String sC = "{\"x\":\"foo\",\"y\":{\"narf\":\"puit\",\"z\":{\"k\":3,\"l\":7,\"m\":42},\"values\":[8,9]}}"; //$NON-NLS-1$
+    final IJSONObject aA = JSONReader.parseObject (sA);
+    final IJSONObject aB = JSONReader.parseObject (sB);
+    final IJSONObject aC = aA.applyMergingObjects (aB);
+    Assert.assertEquals (sC, aC.getJSONString ());
+  }
+
+  @Test
+  public void testApplyMergingObjectsProp () throws JSONParsingException
+  {
+    final String sA = "{\"x\":\"foo\",\"y\":{\"narf\":\"zoot\",\"z\":{\"k\":3,\"l\":7},\"values\":[1,2,3,4,5]},\"a\":{\"b\":\"foo\"}}"; //$NON-NLS-1$
+    final String sB = "{\"y\":{\"narf\":\"puit\",\"z\":{\"m\":42},\"values\":[8,9]},\"a\":{\"c\":\"foo too\"}}"; //$NON-NLS-1$
+    final String sC = "{\"x\":\"foo\",\"y\":{\"narf\":\"puit\",\"z\":{\"k\":3,\"l\":7,\"m\":42},\"values\":[8,9]},\"a\":{\"b\":\"foo\"}}"; //$NON-NLS-1$
+    final IJSONObject aA = JSONReader.parseObject (sA);
+    final IJSONObject aB = JSONReader.parseObject (sB);
+    final IJSONObject aC = aA.applyMergingObjects (aB, "y");
+    Assert.assertEquals (sC, aC.getJSONString ());
+  }
+
+  @Test
   public void testGetPropertyValueData ()
   {
     final IJSONObject aObj = new JSONObject ();
